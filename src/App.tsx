@@ -24,6 +24,23 @@ import { DashboardLayout } from './layouts/DashboardLayout';
 import { Dashboard } from './pages/Dashboard';
 import { Projects } from './pages/Projects';
 import { Settings } from './pages/Settings';
+import { DashboardDeployments } from './pages/DashboardDeployments';
+import { DashboardTemplates } from './pages/DashboardTemplates';
+import { DashboardIntegrations } from './pages/DashboardIntegrations';
+import { DashboardNewProject } from './pages/DashboardNewProject';
+
+import { ProjectLayout } from './layouts/ProjectLayout';
+import { ProjectOverview } from './pages/ProjectOverview';
+import { NativeIDE } from './pages/NativeIDE';
+
+import { MarketplaceLayout } from './layouts/MarketplaceLayout';
+import { DashboardMarketplace } from './pages/DashboardMarketplace';
+
+import { AuthLayout } from './layouts/AuthLayout';
+import { Login } from './pages/Login';
+import { SignUp } from './pages/SignUp';
+
+import { AuthProvider } from './contexts/AuthContext';
 
 function MarketingLayout() {
   return (
@@ -40,9 +57,16 @@ function MarketingLayout() {
 
 export default function App() {
   return (
-    <Router>
-      <ScrollToTop />
-      <Routes>
+    <AuthProvider>
+      <Router>
+        <ScrollToTop />
+        <Routes>
+        {/* Auth Routes */}
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+        </Route>
+
         <Route element={<MarketingLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/features" element={<Features />} />
@@ -60,9 +84,24 @@ export default function App() {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
+          <Route path="deployments" element={<DashboardDeployments />} />
+          <Route path="templates" element={<DashboardTemplates />} />
+          <Route path="integrations" element={<DashboardIntegrations />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="new" element={<DashboardNewProject />} />
+        </Route>
+
+        <Route path="/dashboard/projects/:projectId" element={<ProjectLayout />}>
+          <Route index element={<ProjectOverview />} />
+        </Route>
+
+        <Route path="/dashboard/projects/:projectId/editor" element={<NativeIDE />} />
+
+        <Route path="/dashboard/integrations/marketplace" element={<MarketplaceLayout />}>
+          <Route index element={<DashboardMarketplace />} />
         </Route>
       </Routes>
-    </Router>
+      </Router>
+    </AuthProvider>
   );
 }

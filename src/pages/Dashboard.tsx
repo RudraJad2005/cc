@@ -1,111 +1,153 @@
-import { Plus, GitBranch, Terminal, Activity, MoreHorizontal } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Plus, GitBranch, Clock, ArrowRight, FolderOpen, Loader2 } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
+
+function getRelativeTime(dateString: string) {
+  const diff = Date.now() - new Date(dateString).getTime();
+  const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return 'Just now';
+  if (minutes < 60) return `${minutes}m`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h`;
+  return `${Math.floor(hours / 24)}d`;
+}
 
 export function Dashboard() {
+  const { user } = useAuth();
+  const userName = user?.email?.split('@')[0] || 'Developer';
+
+  const [projects, setProjects] = useState<any[]>([]);
+  const [activity, setActivity] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      if (!user) return;
+      
+      const [projectsRes, activityRes] = await Promise.all([
+        supabase.from('projects').select('*').order('created_at', { ascending: false }).limit(4),
+        supabase.from('activity').select('*').order('created_at', { ascending: false }).limit(5)
+      ]);
+
+      if (projectsRes.data) setProjects(projectsRes.data);
+      if (activityRes.data) setActivity(activityRes.data);
+      setLoading(false);
+    }
+    
+    fetchData();
+  }, [user]);
+
   return (
-    <div className="p-6 md:p-8 max-w-6xl mx-auto w-full">
-      <div className="flex items-center justify-between mb-8">
-         <h1 className="text-2xl font-semibold tracking-tight">Overview</h1>
-         <Link to="/dashboard/projects" className="bg-white text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors flex items-center gap-2">
-            <Plus className="w-4 h-4" /> New Project
-         </Link>
+    <div className="flex flex-col gap-10">
+      
+      {/* Header */}
+      <div className="flex items-center justify-between">
+         <div className="flex items-center gap-4">
+            <h1 className="text-2xl font-semibold tracking-tight">Overview</h1>
+         </div>
+         <div className="flex items-center gap-3">
+            <Link to="/dashboard/new" className="bg-white text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors flex items-center gap-2">
+               <Plus className="w-4 h-4" /> Add New...
+            </Link>
+         </div>
       </div>
 
-      {/* Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-         {[
-           { label: "Active Deployments", value: "14", trend: "+2 this week" },
-           { label: "Compute Hours", value: "342h", trend: "-12% vs last month" },
-           { label: "Collaborators", value: "8", trend: "+1 this week" },
-         ].map((stat, i) => (
-           <div key={i} className="flex flex-col p-5 bg-white/[0.01] border border-white/[0.08] rounded-xl hover:bg-white/[0.03] transition-colors">
-              <span className="text-[#888] text-sm mb-2 font-medium">{stat.label}</span>
-              <div className="flex items-end justify-between">
-                <span className="text-3xl font-semibold tracking-tight">{stat.value}</span>
-                <span className="text-xs text-[#888] mb-1">{stat.trend}</span>
+      {loading ? (
+        <div className="flex items-center justify-center py-20">
+           <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+           
+           {/* Left Column: Projects */}
+           <div className="lg:col-span-2 flex flex-col gap-6">
+              <div className="flex items-center justify-between">
+                 <h2 className="text-sm font-medium text-gray-400">Recent Projects</h2>
+                 <Link to="/dashboard/projects" className="text-sm text-gray-500 hover:text-white transition-colors flex items-center gap-1">
+                    View All <ArrowRight className="w-3 h-3" />
+                 </Link>
+              </div>
+              
+              {projects.length === 0 ? (
+                 <div className="flex flex-col items-center justify-center py-16 px-6 border border-white/[0.08] border-dashed rounded-xl bg-[#020202]">
+                    <div className="w-12 h-12 rounded-full bg-white/[0.05] flex items-center justify-center mb-4">
+                       <FolderOpen className="w-6 h-6 text-gray-400" />
+                    </div>
+                    <h3 className="text-lg font-medium text-white mb-2">No projects yet</h3>
+                    <p className="text-sm text-gray-400 text-center max-w-sm mb-6">Get started by creating your first project or importing an existing repository.</p>
+                    <Link to="/dashboard/new" className="bg-white text-black px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                       Create Project
+                    </Link>
+                 </div>
+              ) : (
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {projects.map((project) => (
+                      <Link key={project.id} to={`/dashboard/projects/${project.name}`} className="group p-5 rounded-xl border border-white/[0.1] bg-[#050505] hover:border-white/[0.2] hover:bg-[#0a0a0a] transition-all flex flex-col gap-4">
+                         <div className="flex items-start justify-between">
+                            <div className="flex items-center gap-3">
+                               <div className="w-8 h-8 rounded-full border border-white/[0.1] bg-[#0A0A0A] flex items-center justify-center shrink-0">
+                                  <img src={project.icon || 'https://cdn.simpleicons.org/github/white'} alt={project.framework} className="w-3.5 h-3.5 object-contain" />
+                               </div>
+                               <div>
+                                  <h3 className="font-semibold text-white group-hover:text-blue-400 transition-colors">{project.name}</h3>
+                                  <p className="text-xs text-gray-500 font-mono">{project.url}</p>
+                               </div>
+                            </div>
+                         </div>
+                         
+                         <div className="flex items-center gap-4 text-xs text-gray-400 mt-2">
+                            <div className="flex items-center gap-1.5">
+                               <GitBranch className="w-3.5 h-3.5" /> {project.branch}
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                               <Clock className="w-3.5 h-3.5" /> {getRelativeTime(project.created_at)}
+                            </div>
+                         </div>
+                      </Link>
+                    ))}
+                    
+                    <Link to="/dashboard/new" className="p-5 rounded-xl border border-white/[0.05] border-dashed bg-transparent hover:border-white/[0.2] hover:bg-white/[0.02] transition-all flex flex-col items-center justify-center gap-2 min-h-[140px] text-gray-500 hover:text-white group">
+                       <div className="w-10 h-10 rounded-full border border-white/[0.1] bg-[#050505] flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <Plus className="w-5 h-5" />
+                       </div>
+                       <span className="text-sm font-medium">Import Project</span>
+                    </Link>
+                 </div>
+              )}
+           </div>
+
+           {/* Right Column: Activity */}
+           <div className="flex flex-col gap-6">
+              <h2 className="text-sm font-medium text-gray-400">Activity</h2>
+              
+              <div className="rounded-xl border border-white/[0.1] bg-[#050505] flex flex-col overflow-hidden">
+                 {activity.length === 0 ? (
+                    <div className="p-8 text-center text-sm text-gray-500">
+                       No recent activity.
+                    </div>
+                 ) : (
+                    activity.map((event) => (
+                       <div key={event.id} className="flex items-start gap-4 p-4 border-b border-white/[0.05] last:border-0 hover:bg-white/[0.02] transition-colors">
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 shrink-0 border border-white/[0.1]"></div>
+                          <div className="flex-1 min-w-0">
+                             <p className="text-sm text-gray-300">
+                                <span className="font-medium text-white">{userName}</span> {event.action} <span className="font-mono text-xs bg-white/[0.1] px-1 py-0.5 rounded text-white">{event.target}</span>
+                             </p>
+                             <p className="text-xs text-gray-500 mt-1">{getRelativeTime(event.created_at)} ago</p>
+                          </div>
+                          {event.status === 'success' && <div className="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 shadow-[0_0_8px_#10b981]"></div>}
+                          {event.status === 'building' && <div className="w-2 h-2 rounded-full bg-amber-500 mt-1.5 animate-pulse shadow-[0_0_8px_#f59e0b]"></div>}
+                       </div>
+                    ))
+                 )}
               </div>
            </div>
-         ))}
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 flex flex-col gap-6">
-          <h2 className="text-lg font-medium tracking-tight">Recent Projects</h2>
-          
-          <div className="flex flex-col gap-3">
-            {[
-               { name: "acme-corp-web", status: "Ready", time: "2m ago", env: "Production", icon: <GitBranch className="w-4 h-4" /> },
-               { name: "internal-dashboard-v2", status: "Building", time: "15m ago", env: "Preview", icon: <Terminal className="w-4 h-4" /> },
-               { name: "payment-service", status: "Ready", time: "2h ago", env: "Production", icon: <Activity className="w-4 h-4" /> }
-            ].map((p, i) => (
-               <div key={i} className="flex items-center justify-between p-4 bg-white/[0.01] border border-white/[0.05] rounded-xl hover:border-white/[0.15] transition-colors group cursor-pointer">
-                  <div className="flex items-center gap-4">
-                     <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${p.status === 'Ready' ? 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20' : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'}`}>
-                        {p.icon}
-                     </div>
-                     <div className="flex flex-col">
-                        <span className="font-medium text-sm text-white group-hover:text-indigo-400 transition-colors">{p.name}</span>
-                        <div className="flex items-center gap-2 text-xs text-[#666] mt-1 hover:cursor-pointer">
-                           <span>alex-rivera/main</span>
-                        </div>
-                     </div>
-                  </div>
-                  
-                  <div className="flex flex-col items-end hidden sm:flex">
-                     <div className="flex items-center gap-2 mb-1">
-                        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded border border-white/[0.08] bg-white/[0.02] text-[10px] uppercase tracking-wider text-[#a1a1aa] font-mono">
-                           {p.env}
-                        </div>
-                        <span className="text-xs text-[#71717a] font-mono">{p.time}</span>
-                     </div>
-                     <div className="flex items-center gap-1.5">
-                        <span className="relative flex h-2 w-2">
-                          <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${p.status === 'Ready' ? 'bg-green-400' : 'bg-blue-400'}`}></span>
-                          <span className={`relative inline-flex rounded-full h-2 w-2 ${p.status === 'Ready' ? 'bg-green-500' : 'bg-blue-500'}`}></span>
-                        </span>
-                        <span className="text-xs text-white capitalize">{p.status}</span>
-                     </div>
-                  </div>
-                  
-                  <div className="sm:hidden text-[#888]">
-                     <MoreHorizontal className="w-5 h-5" />
-                  </div>
-               </div>
-            ))}
-          </div>
-          
-          <div className="mt-2">
-            <Link to="/dashboard/projects" className="text-sm text-[#888] hover:text-white transition-colors flex items-center gap-2 w-max">
-              View all projects <span>&rarr;</span>
-            </Link>
-          </div>
         </div>
+      )}
 
-        <div className="flex flex-col gap-6">
-           <h2 className="text-lg font-medium tracking-tight">Activity Log</h2>
-           
-           <div className="p-5 border border-white/[0.05] rounded-xl bg-white/[0.01] flex flex-col gap-6">
-              {[
-                 { action: "Deployed to Production", project: "acme-corp-web", time: "2m ago" },
-                 { action: "Pushed commit to main", project: "acme-corp-web", time: "5m ago" },
-                 { action: "Added environment variable", project: "payment-service", time: "1h ago" },
-                 { action: "Invited user sarah@example.com", project: "internal-dashboard-v2", time: "3h ago" },
-              ].map((log, i) => (
-                 <div key={i} className="flex gap-4 relative">
-                    {i !== 3 && <div className="absolute left-[3px] top-6 bottom-[-24px] w-px bg-white/[0.05]" />}
-                    <div className="w-2 h-2 rounded-full bg-[#333] shrink-0 mt-1.5 z-10 box-content border-4 border-[#010101]" />
-                    <div className="flex flex-col gap-1 w-full">
-                       <span className="text-sm text-gray-300">{log.action}</span>
-                       <div className="flex items-center justify-between">
-                         <span className="text-[11px] text-[#666] font-mono">{log.project}</span>
-                         <span className="text-[11px] text-[#555] font-mono">{log.time}</span>
-                       </div>
-                    </div>
-                 </div>
-              ))}
-           </div>
-        </div>
-      </div>
     </div>
   );
 }

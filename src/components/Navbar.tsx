@@ -42,10 +42,10 @@ export function Navbar() {
            <Github className="w-4 h-4" />
         </a>
         <div className="hidden lg:block w-px h-4 bg-white/10 mx-1" />
-        <Link to="/auth/login" className="px-4 py-2 text-[13px] font-medium text-gray-300 hover:text-white transition-colors">
+        <Link to="/login" className="px-4 py-2 text-[13px] font-medium text-gray-300 hover:text-white transition-colors">
           Log In
         </Link>
-        <Link to="/auth/signup" className="bg-white text-black hover:bg-gray-200 rounded-full px-5 py-2 text-[13px] font-medium shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all">
+        <Link to="/signup" className="bg-white text-black hover:bg-gray-200 rounded-full px-5 py-2 text-[13px] font-medium shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all">
           Start for free
         </Link>
       </div>
