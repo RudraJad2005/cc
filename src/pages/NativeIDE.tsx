@@ -8,7 +8,7 @@ import { AIChat } from '../components/ide/AIChat';
 import { SearchPanel } from '../components/ide/SearchPanel';
 import { ApiKeyModal } from '../components/ide/ApiKeyModal';
 import { SourceControlPanel } from '../components/ide/SourceControlPanel';
-import { ArrowLeft, Loader2, Globe, Users, Play, Save, Files, Search, GitBranch, Settings, TerminalSquare, Sparkles } from 'lucide-react';
+import { ArrowLeft, Loader2, Globe, Users, Play, Save, Files, Search, GitBranch, Settings, TerminalSquare, Sparkles, Maximize, Minimize } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 // Singleton promise to prevent booting multiple times during React StrictMode or HMR
@@ -48,6 +48,8 @@ export function NativeIDE() {
   const [fileContent, setFileContent] = useState<string>('');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isStarting, setIsStarting] = useState(false);
+  const [isPreviewFullscreen, setIsPreviewFullscreen] = useState(false);
   
   type SidebarTab = 'explorer' | 'search' | 'git' | null;
   const [activeSidebar, setActiveSidebar] = useState<SidebarTab>('explorer');
@@ -302,12 +304,22 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 
   const handleRunProject = async () => {
     if (!webcontainer) return;
+    setIsStarting(true);
     try {
-      // Just start the dev server in the background, it will trigger server-ready
-      await webcontainer.spawn('npm', ['install']);
-      await webcontainer.spawn('npm', ['run', 'dev']);
+      // Install dependencies first and WAIT for it to finish
+      const installProcess = await webcontainer.spawn('npm', ['install']);
+      const exitCode = await installProcess.exit;
+      
+      if (exitCode === 0) {
+        // Only run dev server after successful installation
+        await webcontainer.spawn('npm', ['run', 'dev']);
+      } else {
+        console.error('Installation failed with exit code', exitCode);
+      }
     } catch (e) {
       console.error(e);
+    } finally {
+      setIsStarting(false);
     }
   };
 
@@ -386,10 +398,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           {!previewUrl && (
             <button 
               onClick={handleRunProject}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-blue-500 hover:bg-blue-600 transition-colors text-white text-xs font-medium shadow-[0_0_15px_rgba(59,130,246,0.2)]"
+              disabled={isStarting}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-md bg-blue-500 transition-colors text-white text-xs font-medium shadow-[0_0_15px_rgba(59,130,246,0.2)] ${isStarting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'}`}
             >
-              <Play className="w-3.5 h-3.5 fill-current" />
-              Run Project
+              {isStarting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5 fill-current" />}
+              {isStarting ? 'Installing...' : 'Run Project'}
             </button>
           )}
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
@@ -485,18 +498,27 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 
             {/* Preview Area */}
             {previewUrl && (
-              <div className="w-1/2 min-w-[300px] h-full bg-white flex flex-col relative">
+              <div className={`${isPreviewFullscreen ? 'fixed inset-0 z-50' : 'w-1/2 min-w-[300px] h-full'} bg-white flex flex-col relative`}>
                 <div className="h-10 bg-white border-b border-gray-200 flex items-center px-4 justify-between shrink-0 shadow-sm z-10">
                   <div className="flex items-center gap-2 bg-gray-100 rounded-md px-3 py-1.5 text-xs text-gray-600 w-full max-w-sm truncate border border-gray-200">
                     <Globe className="w-3.5 h-3.5 shrink-0" />
                     <span className="truncate">{previewUrl}</span>
                   </div>
-                  <button 
-                    onClick={() => setPreviewUrl(null)}
-                    className="text-gray-400 hover:text-red-500 text-xs px-2"
-                  >
-                    Close
-                  </button>
+                  <div className="flex items-center">
+                    <button 
+                      onClick={() => setIsPreviewFullscreen(!isPreviewFullscreen)}
+                      className="text-gray-400 hover:text-black hover:bg-black/10 rounded p-1.5 transition-colors mr-1"
+                      title="Toggle Fullscreen"
+                    >
+                      {isPreviewFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
+                    </button>
+                    <button 
+                      onClick={() => setPreviewUrl(null)}
+                      className="text-gray-400 hover:text-red-500 text-xs px-2 font-medium"
+                    >
+                      Close
+                    </button>
+                  </div>
                 </div>
                 <iframe src={previewUrl} className="w-full flex-1 border-none bg-white" />
               </div>
@@ -530,7 +552,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
               onMouseDown={() => setIsResizingAiChat(true)}
             />
             <div className="shrink-0 h-full bg-[#0A0A0A] z-20" style={{ width: aiChatWidth }}>
-              <AIChat onClose={() => setIsAiChatOpen(false)} />
+              <AIChat 
+                onClose={() => setIsAiChatOpen(false)} 
+                webcontainer={webcontainer}
+                onFileSystemChange={() => handleSave(true)}
+                projectId={projectId!}
+              />
             </div>
           </>
         )}

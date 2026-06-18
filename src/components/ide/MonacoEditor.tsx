@@ -6,6 +6,16 @@ import { MonacoBinding } from 'y-monaco';
 import { WebContainer } from '@webcontainer/api';
 import { supabase } from '../../lib/supabase';
 
+const getLanguage = (path: string) => {
+  if (path.endsWith('.ts') || path.endsWith('.tsx')) return 'typescript';
+  if (path.endsWith('.js') || path.endsWith('.jsx')) return 'javascript';
+  if (path.endsWith('.json')) return 'json';
+  if (path.endsWith('.css')) return 'css';
+  if (path.endsWith('.html')) return 'html';
+  if (path.endsWith('.py')) return 'python';
+  return 'plaintext';
+};
+
 interface MonacoEditorProps {
   projectId: string;
   filePath: string | null;
@@ -15,6 +25,7 @@ interface MonacoEditorProps {
 
 export function MonacoEditor({ projectId, filePath, initialContent, webcontainer }: MonacoEditorProps) {
   const editorRef = useRef<any>(null);
+  const monacoRef = useRef<any>(null);
   const bindingRef = useRef<any>(null);
   const providerRef = useRef<any>(null);
   const ydocRef = useRef<Y.Doc | null>(null);
@@ -172,6 +183,7 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
 
   const handleEditorDidMount = (editor: any, monaco: any) => {
     editorRef.current = editor;
+    monacoRef.current = monaco;
     
     // Add custom theme matching our dashboard
     monaco.editor.defineTheme('collab-dark', {
@@ -198,6 +210,14 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
       }
     });
     monaco.editor.setTheme('collab-dark');
+    
+    // Explicitly set the language for the current file
+    if (filePath) {
+      const model = editor.getModel();
+      if (model) {
+        monaco.editor.setModelLanguage(model, getLanguage(filePath));
+      }
+    }
 
     setIsEditorReady(true);
   };
@@ -246,10 +266,20 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
        const disposable = model.onDidChangeContent(() => {
           const value = model.getValue();
           webcontainer.fs.writeFile(filePath, value).catch(console.error);
-       });
-       return () => disposable.dispose();
+        });
+        return () => disposable.dispose();
     }
   }, [filePath, webcontainer, isEditorReady, yProvider]);
+
+  // Force language update whenever filePath changes
+  useEffect(() => {
+    if (editorRef.current && monacoRef.current && filePath) {
+      const model = editorRef.current.getModel();
+      if (model) {
+        monacoRef.current.editor.setModelLanguage(model, getLanguage(filePath));
+      }
+    }
+  }, [filePath]);
 
   if (!filePath) {
     return (
@@ -262,16 +292,6 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
     );
   }
 
-  const getLanguage = (path: string) => {
-    if (path.endsWith('.ts') || path.endsWith('.tsx')) return 'typescript';
-    if (path.endsWith('.js') || path.endsWith('.jsx')) return 'javascript';
-    if (path.endsWith('.json')) return 'json';
-    if (path.endsWith('.css')) return 'css';
-    if (path.endsWith('.html')) return 'html';
-    if (path.endsWith('.py')) return 'python';
-    return 'plaintext';
-  };
-
   return (
     <div className="w-full h-full bg-[#000] flex flex-col">
       <div className="flex bg-[#050505] border-b border-white/[0.05]">
@@ -283,7 +303,6 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
         <Editor
           path={filePath}
           height="100%"
-          defaultLanguage="typescript"
           language={getLanguage(filePath)}
           theme="collab-dark"
           options={{
