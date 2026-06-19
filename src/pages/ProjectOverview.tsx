@@ -212,10 +212,35 @@ export function ProjectOverview() {
 
   const handleOAuthLink = async () => {
     setIsLinkingGithub(true);
-    await supabase.auth.linkIdentity({ 
-      provider: 'github', 
-      options: { scopes: 'repo' } 
-    });
+    
+    try {
+      const { error: linkError } = await supabase.auth.linkIdentity({ 
+        provider: 'github', 
+        options: { 
+          scopes: 'repo',
+          redirectTo: window.location.href
+        } 
+      });
+
+      if (linkError) {
+        // If already linked or fails, fallback to standard OAuth sign-in to upgrade scopes
+        const { error: signInError } = await supabase.auth.signInWithOAuth({
+          provider: 'github',
+          options: {
+            scopes: 'repo',
+            redirectTo: window.location.href
+          }
+        });
+        
+        if (signInError) {
+          console.error('Failed to authenticate with GitHub:', signInError);
+          setIsLinkingGithub(false);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      setIsLinkingGithub(false);
+    }
   };
 
   const handleSaveEnvVars = async () => {
