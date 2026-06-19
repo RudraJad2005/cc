@@ -9,7 +9,7 @@ import { SearchPanel } from '../components/ide/SearchPanel';
 import { ApiKeyModal } from '../components/ide/ApiKeyModal';
 import { SourceControlPanel } from '../components/ide/SourceControlPanel';
 import { EditorTabs } from '../components/ide/EditorTabs';
-import { ArrowLeft, Loader2, Globe, Users, Play, Save, Files, Search, GitBranch, Settings, TerminalSquare, Sparkles, Maximize, Minimize } from 'lucide-react';
+import { ArrowLeft, Loader2, Globe, Users, Play, Save, Files, Search, GitBranch, Settings, TerminalSquare, Sparkles, Maximize2, Minimize2, Palette, Share2, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { getTemplate } from '../lib/templates';
 import { useCollab } from '../hooks/useCollab';
@@ -81,6 +81,14 @@ export function NativeIDE() {
   const [isResizingAiChat, setIsResizingAiChat] = useState(false);
 
   const [isOwner, setIsOwner] = useState(false);
+
+  // Theme State
+  const [ideTheme, setIdeTheme] = useState(() => localStorage.getItem('cc-theme') || 'theme-dark');
+  const [showThemeMenu, setShowThemeMenu] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('cc-theme', ideTheme);
+  }, [ideTheme]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -337,10 +345,11 @@ export function NativeIDE() {
 
   if (loading) {
     return (
-      <div className="w-full h-screen bg-[#050505] flex flex-col items-center justify-center text-white">
-        <Loader2 className="w-12 h-12 text-blue-500 animate-spin mb-6" />
-        <h2 className="text-xl font-medium tracking-tight">Booting Native OS</h2>
-        <p className="text-gray-500 mt-2 text-sm">Initializing Node.js in your browser...</p>
+      <div className={`flex items-center justify-center min-h-screen bg-[var(--ide-base,#000)] ${ideTheme}`}>
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+          <p className="text-[var(--ide-text-muted,#9ca3af)] font-medium animate-pulse">Initializing Virtual Workspace...</p>
+        </div>
       </div>
     );
   }
@@ -360,63 +369,10 @@ export function NativeIDE() {
   }
 
   return (
-    <div className="flex flex-col w-full h-screen bg-[#000] text-white overflow-hidden">
+    <div className={`flex h-screen w-full overflow-hidden text-[var(--ide-text,#fff)] bg-[var(--ide-base,#000)] ${ideTheme}`}>
       
-      {/* IDE Header */}
-      <div className="h-14 border-b border-white/[0.05] bg-[#050505] flex items-center justify-between px-4 shrink-0">
-        <div className="flex items-center gap-4">
-          <Link 
-            to={`/dashboard/projects/${projectId}`}
-            className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white/[0.1] transition-colors border border-white/[0.05]"
-          >
-            <ArrowLeft className="w-4 h-4" />
-          </Link>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-gradient-to-tr from-blue-500 to-purple-500"></div>
-            <span className="font-medium text-sm">{projectId}</span>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button 
-            onClick={() => setIsTerminalOpen(!isTerminalOpen)}
-            className={`p-1.5 rounded-md transition-colors ${isTerminalOpen ? 'bg-white/[0.1] text-white' : 'text-gray-400 hover:text-white hover:bg-white/[0.05]'}`}
-            title="Toggle Terminal"
-          >
-            <TerminalSquare className="w-4 h-4" />
-          </button>
-          
-          <button 
-            onClick={handleSave}
-            disabled={isSaving}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-md transition-colors text-white text-xs font-medium border border-white/[0.1] hover:bg-white/[0.05] ${isSaving ? 'opacity-50 cursor-not-allowed' : ''}`}
-          >
-            {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-            {isSaving ? 'Saving...' : 'Save Files'}
-          </button>
-          
-          {!previewUrl && (
-            <button 
-              onClick={handleRunProject}
-              disabled={isStarting}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-md bg-blue-500 transition-colors text-white text-xs font-medium shadow-[0_0_15px_rgba(59,130,246,0.2)] ${isStarting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'}`}
-            >
-              {isStarting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5 fill-current" />}
-              {isStarting ? 'Installing...' : 'Run Project'}
-            </button>
-          )}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
-            <Users className="w-3.5 h-3.5" />
-            Multiplayer Live
-          </div>
-        </div>
-      </div>
-
-      {/* Main IDE Layout */}
-      <div className="flex-1 flex overflow-hidden">
-        
-        {/* Activity Bar */}
-        <div className="w-12 shrink-0 border-r border-white/[0.05] bg-[#050505] flex flex-col items-center py-4 gap-4 z-20">
+      {/* Activity Bar */}
+      <div className="w-12 shrink-0 flex flex-col items-center py-4 bg-[var(--ide-panel-darker,#050505)] border-r border-[var(--ide-border,rgba(255,255,255,0.05))] z-20">
           <button 
             onClick={() => toggleSidebar('explorer')}
             className={`p-2 rounded-xl transition-colors ${activeSidebar === 'explorer' ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}
@@ -446,7 +402,41 @@ export function NativeIDE() {
             <Sparkles className="w-6 h-6 stroke-[1.5]" />
           </button>
           <div className="flex-1"></div>
-          <button className="p-2 text-gray-500 hover:text-gray-300 transition-colors mb-2" title="Settings">
+          
+          <div className="relative">
+            <button 
+              onClick={() => setShowThemeMenu(!showThemeMenu)}
+              className="p-2 text-[var(--ide-text-muted)] hover:text-[var(--ide-text)] transition-colors mb-2" 
+              title="Themes"
+            >
+              <Palette className="w-6 h-6 stroke-[1.5]" />
+            </button>
+            {showThemeMenu && (
+              <div className="absolute bottom-0 left-full ml-2 w-48 bg-[var(--ide-panel-lighter)] border border-[var(--ide-border)] rounded-lg shadow-xl overflow-hidden z-50">
+                <div className="px-3 py-2 border-b border-[var(--ide-border)]">
+                  <span className="text-xs font-semibold text-[var(--ide-text-muted)] uppercase tracking-wider">Color Theme</span>
+                </div>
+                <div className="p-1 flex flex-col">
+                  {[
+                    { id: 'theme-dark', name: 'Dark (Default)' },
+                    { id: 'theme-light', name: 'Light' },
+                    { id: 'theme-dracula', name: 'Dracula' },
+                    { id: 'theme-oceanic', name: 'Oceanic' }
+                  ].map(theme => (
+                    <button
+                      key={theme.id}
+                      onClick={() => { setIdeTheme(theme.id); setShowThemeMenu(false); }}
+                      className={`text-left px-3 py-2 text-sm rounded-md transition-colors ${ideTheme === theme.id ? 'bg-[var(--ide-active)] text-blue-400' : 'text-[var(--ide-text)] hover:bg-[var(--ide-hover)]'}`}
+                    >
+                      {theme.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <button className="p-2 text-[var(--ide-text-muted)] hover:text-[var(--ide-text)] transition-colors mb-2" title="Settings">
             <Settings className="w-6 h-6 stroke-[1.5]" />
           </button>
         </div>
@@ -454,7 +444,7 @@ export function NativeIDE() {
         {/* Sidebar */}
         {activeSidebar && (
           <>
-            <div className="shrink-0 flex flex-col bg-[#0A0A0A] z-10" style={{ width: sidebarWidth }}>
+            <div className="shrink-0 flex flex-col bg-[var(--ide-panel)] z-10" style={{ width: sidebarWidth }}>
               {activeSidebar === 'explorer' && (
                 <FileTree 
                   projectId={projectId!}
@@ -478,24 +468,70 @@ export function NativeIDE() {
             </div>
             {/* Sidebar Splitter */}
             <div 
-              className={`w-1 cursor-col-resize transition-colors z-20 shrink-0 ${isResizingSidebar ? 'bg-blue-500' : 'bg-white/[0.05] hover:bg-blue-500/50'}`}
+              className="w-1 cursor-col-resize hover:bg-[var(--ide-border-hover)] bg-[var(--ide-border)] transition-colors z-20 shrink-0"
               onMouseDown={() => setIsResizingSidebar(true)}
             />
           </>
         )}
 
         {/* Center: Editor, Preview & Terminal */}
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex-1 flex flex-col min-w-0 bg-[var(--ide-base)]">
           
+          {/* Header */}
+          <div className="h-14 flex items-center justify-between px-4 border-b border-[var(--ide-border)] bg-[var(--ide-panel-darker)] shrink-0">
+            <div className="flex items-center gap-4">
+              <Link 
+                to={`/dashboard/projects/${projectId}`}
+                className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white/[0.1] transition-colors border border-white/[0.05]"
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </Link>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 rounded bg-gradient-to-tr from-blue-500 to-purple-500"></div>
+                <span className="font-medium text-sm">{projectId}</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button 
+                onClick={() => setIsTerminalOpen(!isTerminalOpen)}
+                className={`p-1.5 rounded-md transition-colors ${isTerminalOpen ? 'bg-white/[0.1] text-white' : 'text-gray-400 hover:text-white hover:bg-white/[0.05]'}`}
+                title="Toggle Terminal"
+              >
+                <TerminalSquare className="w-4 h-4" />
+              </button>
+              
+              <button 
+                onClick={handleSave}
+                disabled={isSaving}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-md transition-colors text-white text-xs font-medium border border-white/[0.1] hover:bg-white/[0.05] ${isSaving ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                {isSaving ? 'Saving...' : 'Save Files'}
+              </button>
+              
+              {!previewUrl && (
+                <button 
+                  onClick={handleRunProject}
+                  disabled={isStarting}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-md bg-blue-500 transition-colors text-white text-xs font-medium shadow-[0_0_15px_rgba(59,130,246,0.2)] ${isStarting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'}`}
+                >
+                  {isStarting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5 fill-current" />}
+                  {isStarting ? 'Installing...' : 'Run Project'}
+                </button>
+              )}
+            </div>
+          </div>
+
           {/* Top: Editor & Preview Split */}
           <div className="flex-1 min-h-0 flex">
             
             {/* Editor Area */}
-            <div className={`flex-1 min-w-0 flex bg-[#050505] relative ${previewUrl ? 'border-r border-white/[0.05]' : ''}`}>
+            <div className={`flex-1 min-w-0 flex bg-[var(--ide-panel-darker)] relative ${previewUrl ? 'border-r border-[var(--ide-border)]' : ''}`}>
               {editorGroups.map((group, index) => (
                 <div 
                   key={group.id} 
-                  className={`flex-1 flex flex-col min-w-0 ${index > 0 ? 'border-l border-white/[0.05]' : ''}`}
+                  className={`flex-1 flex flex-col min-w-0 ${index > 0 ? 'border-l border-[var(--ide-border)]' : ''}`}
                   onClick={() => setActiveGroupId(group.id)}
                 >
                   <EditorTabs
@@ -524,6 +560,7 @@ export function NativeIDE() {
                       webcontainer={webcontainer}
                       ydoc={ydoc}
                       provider={provider}
+                      theme={ideTheme}
                     />
                     
                     {/* Drag Drop Zone */}
@@ -574,25 +611,35 @@ export function NativeIDE() {
 
             {/* Preview Area */}
             {previewUrl && (
-              <div className={`${isPreviewFullscreen ? 'fixed inset-0 z-50' : 'w-1/2 min-w-[300px] h-full'} bg-white flex flex-col relative`}>
-                <div className="h-10 bg-white border-b border-gray-200 flex items-center px-4 justify-between shrink-0 shadow-sm z-10">
-                  <div className="flex items-center gap-2 bg-gray-100 rounded-md px-3 py-1.5 text-xs text-gray-600 w-full max-w-sm truncate border border-gray-200">
-                    <Globe className="w-3.5 h-3.5 shrink-0" />
-                    <span className="truncate">{previewUrl}</span>
+              <div className={`${isPreviewFullscreen ? 'fixed inset-0 z-50' : 'w-1/2 min-w-[300px] h-full'} bg-[var(--ide-base)] flex flex-col relative`}>
+                <div className="h-10 flex items-center justify-between px-3 border-b border-[var(--ide-border)] bg-[var(--ide-panel-darker)]">
+                  <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-xs font-medium">
+                    <Globe className="w-4 h-4" />
+                    Preview
                   </div>
-                  <div className="flex items-center">
+                  <div className="flex items-center gap-2">
                     <button 
                       onClick={() => setIsPreviewFullscreen(!isPreviewFullscreen)}
-                      className="text-gray-400 hover:text-black hover:bg-black/10 rounded p-1.5 transition-colors mr-1"
-                      title="Toggle Fullscreen"
+                      className="p-1 hover:bg-[var(--ide-hover)] rounded text-[var(--ide-text-muted)] hover:text-[var(--ide-text)] transition-colors"
+                      title={isPreviewFullscreen ? "Exit Fullscreen" : "Fullscreen"}
                     >
-                      {isPreviewFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
+                      {isPreviewFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
                     </button>
+                    <a 
+                      href={previewUrl}
+                      target="_blank"
+                      rel="noopener noreferrer" 
+                      className="p-1 hover:bg-[var(--ide-hover)] rounded text-[var(--ide-text-muted)] hover:text-[var(--ide-text)] transition-colors"
+                      title="Open in new tab"
+                    >
+                      <Share2 className="w-3.5 h-3.5" />
+                    </a>
                     <button 
                       onClick={() => setPreviewUrl(null)}
-                      className="text-gray-400 hover:text-red-500 text-xs px-2 font-medium"
+                      className="p-1 hover:bg-red-500/20 rounded text-[var(--ide-text-muted)] hover:text-red-400 transition-colors"
+                      title="Close Preview"
                     >
-                      Close
+                      <X className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
@@ -602,32 +649,26 @@ export function NativeIDE() {
             
           </div>
 
-          {/* Terminal Splitter */}
+          {/* Terminal / Panel Area */}
           {isTerminalOpen && (
-            <div 
-              className={`h-1 cursor-row-resize transition-colors z-20 shrink-0 ${isResizingTerminal ? 'bg-blue-500' : 'bg-white/[0.05] hover:bg-blue-500/50'}`}
-              onMouseDown={() => setIsResizingTerminal(true)}
-            />
-          )}
-
-          {/* Terminal Area */}
-          {isTerminalOpen && (
-            <div className="shrink-0 bg-[#050505] relative z-10 flex flex-col" style={{ height: terminalHeight }}>
+            <div className="flex flex-col shrink-0 border-t border-[var(--ide-border)] bg-[var(--ide-panel)] z-10" style={{ height: terminalHeight }}>
+              <div 
+                className="h-1 cursor-row-resize hover:bg-[var(--ide-border-hover)] bg-[var(--ide-border)] transition-colors -mt-1 z-20"
+                onMouseDown={() => setIsResizingTerminal(true)}
+              />
               <TerminalTabs webcontainer={webcontainer} onClose={() => setIsTerminalOpen(false)} />
             </div>
           )}
-
         </div>
 
-        {/* AI Chat Sidebar */}
+        {/* AI Chat Right Sidebar */}
         {isAiChatOpen && (
           <>
-            {/* AI Chat Splitter */}
             <div 
-              className={`w-1 cursor-col-resize transition-colors z-20 shrink-0 ${isResizingAiChat ? 'bg-blue-500' : 'bg-white/[0.05] hover:bg-blue-500/50'}`}
+              className="w-1 cursor-col-resize hover:bg-[var(--ide-border-hover)] bg-[var(--ide-border)] transition-colors z-20 shrink-0"
               onMouseDown={() => setIsResizingAiChat(true)}
             />
-            <div className="shrink-0 h-full bg-[#0A0A0A] z-20" style={{ width: aiChatWidth }}>
+            <div className="shrink-0 flex flex-col bg-[var(--ide-panel)] z-10" style={{ width: aiChatWidth }}>
               <AIChat 
                 onClose={() => setIsAiChatOpen(false)} 
                 webcontainer={webcontainer}
@@ -637,8 +678,6 @@ export function NativeIDE() {
             </div>
           </>
         )}
-
-      </div>
 
       {/* Modals */}
       {showApiKeyModal && (

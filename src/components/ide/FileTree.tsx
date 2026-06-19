@@ -182,7 +182,7 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
   const getFileIcon = (name: string) => {
     const ext = name.split('.').pop()?.toLowerCase();
     if (name === 'package.json') return <Braces className="w-4 h-4 text-red-400" />;
-    if (name.startsWith('.env')) return <Settings className="w-4 h-4 text-gray-400" />;
+    if (name.startsWith('.env')) return <Settings className="w-4 h-4 text-[var(--ide-text-muted)]" />;
     
     switch (ext) {
       case 'ts':
@@ -204,7 +204,7 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
         return <Code className="w-4 h-4 text-orange-400" />;
       case 'md':
       case 'txt':
-        return <FileText className="w-4 h-4 text-gray-400" />;
+        return <FileText className="w-4 h-4 text-[var(--ide-text-muted)]" />;
       case 'png':
       case 'jpg':
       case 'jpeg':
@@ -213,7 +213,7 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
       case 'ico':
         return <ImageIcon className="w-4 h-4 text-green-400" />;
       default:
-        return <FileIcon className="w-4 h-4 text-gray-400" />;
+        return <FileIcon className="w-4 h-4 text-[var(--ide-text-muted)]" />;
     }
   };
 
@@ -231,14 +231,14 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
               e.dataTransfer.effectAllowed = 'copyMove';
             }
           }}
-          className={`group flex items-center justify-between py-1 px-2 cursor-pointer hover:bg-white/[0.05] transition-colors ${isSelected ? 'bg-blue-500/10 text-blue-400' : 'text-gray-300'}`}
+          className={`group flex items-center justify-between py-1 px-2 cursor-pointer hover:bg-[var(--ide-hover)] transition-colors ${isSelected ? 'bg-blue-500/10 text-blue-400' : 'text-[var(--ide-text)]'}`}
           style={{ paddingLeft: `${(depth * 12) + 8}px` }}
           onClick={() => node.isDirectory ? handleToggleFolder(node) : handleFileClick(node)}
         >
           <div className="flex items-center gap-1.5 min-w-0">
             {node.isDirectory ? (
               <>
-                {isExpanded ? <ChevronDown className="w-3.5 h-3.5 text-gray-500 shrink-0" /> : <ChevronRight className="w-3.5 h-3.5 text-gray-500 shrink-0" />}
+                {isExpanded ? <ChevronDown className="w-3.5 h-3.5 text-[var(--ide-text-muted)] shrink-0" /> : <ChevronRight className="w-3.5 h-3.5 text-[var(--ide-text-muted)] shrink-0" />}
                 {isExpanded ? <FolderOpen className="w-4 h-4 text-blue-400 shrink-0" /> : <Folder className="w-4 h-4 text-blue-400 shrink-0" />}
               </>
             ) : (
@@ -260,7 +260,7 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
                     setCreateParentPath(node.path);
                     if (!isExpanded) handleToggleFolder(node);
                   }}
-                  className="p-1 hover:bg-white/[0.1] rounded transition-colors text-gray-500 hover:text-white"
+                  className="p-1 hover:bg-[var(--ide-hover)] rounded transition-colors text-[var(--ide-text-muted)] hover:text-[var(--ide-text)]"
                   title="New File"
                 >
                   <FilePlus className="w-3.5 h-3.5" />
@@ -272,7 +272,7 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
                     setCreateParentPath(node.path);
                     if (!isExpanded) handleToggleFolder(node);
                   }}
-                  className="p-1 hover:bg-white/[0.1] rounded transition-colors text-gray-500 hover:text-white"
+                  className="p-1 hover:bg-[var(--ide-hover)] rounded transition-colors text-[var(--ide-text-muted)] hover:text-[var(--ide-text)]"
                   title="New Folder"
                 >
                   <FolderPlus className="w-3.5 h-3.5" />
@@ -281,7 +281,7 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
             )}
             <button 
               onClick={(e) => handleDelete(e, node)}
-              className="p-1 hover:bg-red-500/20 hover:text-red-400 rounded transition-colors text-gray-500"
+              className="p-1 hover:bg-red-500/20 hover:text-red-400 rounded transition-colors text-[var(--ide-text-muted)]"
               title="Delete"
             >
               <Trash2 className="w-3.5 h-3.5" />
@@ -297,7 +297,7 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
             {isCreating && createParentPath === node.path && (
                <div className="py-1 px-2 flex items-center gap-1.5" style={{ paddingLeft: `${((depth + 1) * 12) + 8}px` }}>
                  <span className="w-3.5 shrink-0"></span>
-                 {isCreating === 'folder' ? <Folder className="w-4 h-4 text-blue-400" /> : <FileIcon className="w-4 h-4 text-gray-400" />}
+                 {isCreating === 'folder' ? <Folder className="w-4 h-4 text-blue-400" /> : <FileIcon className="w-4 h-4 text-[var(--ide-text-muted)]" />}
                  <form onSubmit={handleCreateSubmit} className="flex-1">
                    <input 
                      autoFocus
@@ -305,7 +305,7 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
                      value={createName}
                      onChange={e => setCreateName(e.target.value)}
                      onKeyDown={(e) => { if (e.key === 'Escape') setIsCreating(null) }}
-                     className="w-full bg-[#111] border border-blue-500/50 rounded px-1.5 py-0.5 text-[13px] text-white focus:outline-none"
+                     className="w-full bg-[var(--ide-panel-lighter)] border border-blue-500/50 rounded px-1.5 py-0.5 text-[13px] text-[var(--ide-text)] focus:outline-none"
                      placeholder={isCreating === 'folder' ? 'Folder name...' : 'File name...'}
                    />
                  </form>
@@ -320,12 +320,12 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
   const [isExplorerExpanded, setIsExplorerExpanded] = useState(true);
 
   return (
-    <div className="flex flex-col w-full h-full overflow-y-auto overflow-x-hidden bg-[#0A0A0A] border-r border-white/[0.05]">
+    <div className="flex flex-col w-full h-full overflow-y-auto overflow-x-hidden bg-[var(--ide-panel)] border-r border-[var(--ide-border)]">
       
       {/* Explorer Header Accordion */}
       <button 
         onClick={() => setIsExplorerExpanded(!isExplorerExpanded)}
-        className="flex items-center justify-between w-full px-2 py-2 text-xs font-semibold text-gray-400 hover:text-white transition-colors uppercase tracking-wider bg-[#050505] sticky top-0 z-10 group"
+        className="flex items-center justify-between w-full px-2 py-2 text-xs font-semibold text-[var(--ide-text-muted)] hover:text-[var(--ide-text)] transition-colors uppercase tracking-wider bg-[var(--ide-panel-darker)] sticky top-0 z-10 group"
       >
         <div className="flex items-center">
           {isExplorerExpanded ? <ChevronDown className="w-4 h-4 mr-1" /> : <ChevronRight className="w-4 h-4 mr-1" />}
@@ -334,14 +334,14 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <div 
             onClick={(e) => { e.stopPropagation(); setIsCreating('file'); setCreateParentPath('/'); if(!isExplorerExpanded) setIsExplorerExpanded(true); }}
-            className="p-1 hover:bg-white/[0.1] rounded text-gray-400 hover:text-white transition-colors"
+            className="p-1 hover:bg-[var(--ide-hover)] rounded text-[var(--ide-text-muted)] hover:text-[var(--ide-text)] transition-colors"
             title="New File"
           >
             <FilePlus className="w-3.5 h-3.5" />
           </div>
           <div 
             onClick={(e) => { e.stopPropagation(); setIsCreating('folder'); setCreateParentPath('/'); if(!isExplorerExpanded) setIsExplorerExpanded(true); }}
-            className="p-1 hover:bg-white/[0.1] rounded text-gray-400 hover:text-white transition-colors"
+            className="p-1 hover:bg-[var(--ide-hover)] rounded text-[var(--ide-text-muted)] hover:text-[var(--ide-text)] transition-colors"
             title="New Folder"
           >
             <FolderPlus className="w-3.5 h-3.5" />
@@ -356,7 +356,7 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
       {isCreating && createParentPath === '/' && (
         <div className="py-1 px-2 flex items-center gap-1.5 pl-[8px]">
           <span className="w-3.5 shrink-0"></span>
-          {isCreating === 'folder' ? <Folder className="w-4 h-4 text-blue-400" /> : <FileIcon className="w-4 h-4 text-gray-400" />}
+          {isCreating === 'folder' ? <Folder className="w-4 h-4 text-blue-400" /> : <FileIcon className="w-4 h-4 text-[var(--ide-text-muted)]" />}
           <form onSubmit={handleCreateSubmit} className="flex-1">
             <input 
               autoFocus
@@ -364,7 +364,7 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
               value={createName}
               onChange={e => setCreateName(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Escape') setIsCreating(null) }}
-              className="w-full bg-[#111] border border-blue-500/50 rounded px-1.5 py-0.5 text-[13px] text-white focus:outline-none"
+              className="w-full bg-[var(--ide-panel-lighter)] border border-blue-500/50 rounded px-1.5 py-0.5 text-[13px] text-[var(--ide-text)] focus:outline-none"
               placeholder={isCreating === 'folder' ? 'Folder name...' : 'File name...'}
             />
           </form>
@@ -372,7 +372,7 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
       )}
 
       {tree.length === 0 ? (
-        <div className="px-4 py-2 text-xs text-gray-500">Loading filesystem...</div>
+        <div className="px-4 py-2 text-xs text-[var(--ide-text-muted)]">Loading filesystem...</div>
       ) : (
         tree.map(node => renderNode(node, 0))
       )}

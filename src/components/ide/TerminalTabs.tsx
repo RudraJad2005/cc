@@ -55,21 +55,21 @@ export function TerminalTabs({ webcontainer, onClose }: TerminalTabsProps) {
   };
 
   return (
-    <div className="flex flex-col w-full h-full bg-[#050505]">
+    <div className="flex flex-col w-full h-full bg-[var(--ide-panel-darker)]">
       {/* Header Tabs */}
-      <div className="flex items-center justify-between border-b border-white/[0.05] bg-[#0A0A0A] pr-2 shrink-0">
+      <div className="flex items-center justify-between border-b border-[var(--ide-border)] bg-[var(--ide-panel)] pr-2 shrink-0">
         <div className="flex items-center overflow-x-auto no-scrollbar flex-1">
           {tabs.map(tab => (
             <div 
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`group flex items-center gap-2 px-3 py-2 cursor-pointer border-r border-white/[0.05] min-w-[120px] max-w-[200px] text-xs font-medium transition-colors ${activeTab === tab.id ? 'bg-[#050505] text-blue-400 border-t-2 border-t-blue-500' : 'bg-[#0A0A0A] text-gray-500 hover:bg-[#111] border-t-2 border-t-transparent'}`}
+              className={`group flex items-center gap-2 px-3 py-2 cursor-pointer border-r border-[var(--ide-border)] min-w-[120px] max-w-[200px] text-xs font-medium transition-colors ${activeTab === tab.id ? 'bg-[var(--ide-panel-darker)] text-blue-400 border-t-2 border-t-blue-500' : 'bg-[var(--ide-panel)] text-[var(--ide-text-muted)] hover:bg-[var(--ide-panel-lighter)] border-t-2 border-t-transparent'}`}
             >
               {tab.type === 'node' ? <MonitorPlay className="w-3.5 h-3.5 shrink-0" /> : tab.type === 'git' ? <GitBranch className="w-3.5 h-3.5 shrink-0" /> : <TerminalSquare className="w-3.5 h-3.5 shrink-0" />}
               <span className="truncate flex-1">{tab.name}</span>
               <button 
                 onClick={(e) => handleCloseTab(e, tab.id)}
-                className={`p-0.5 rounded hover:bg-white/[0.1] hover:text-white transition-colors ${activeTab === tab.id ? 'text-gray-400' : 'text-gray-600 opacity-0 group-hover:opacity-100'}`}
+                className={`p-0.5 rounded hover:bg-[var(--ide-hover)] hover:text-[var(--ide-text)] transition-colors ${activeTab === tab.id ? 'text-[var(--ide-text-muted)]' : 'text-gray-600 opacity-0 group-hover:opacity-100'}`}
               >
                 <X className="w-3 h-3" />
               </button>
@@ -81,31 +81,31 @@ export function TerminalTabs({ webcontainer, onClose }: TerminalTabsProps) {
           <div className="relative flex items-center mr-2" ref={dropdownRef}>
             <button 
               onClick={() => handleAddTab('bash')}
-              className="p-1.5 text-gray-500 hover:text-white hover:bg-white/[0.1] rounded transition-colors"
+              className="p-1.5 text-[var(--ide-text-muted)] hover:text-[var(--ide-text)] hover:bg-[var(--ide-hover)] rounded transition-colors"
               title="New Terminal"
             >
               <Plus className="w-4 h-4" />
             </button>
             <button 
               onClick={() => setShowDropdown(!showDropdown)}
-              className="p-1.5 text-gray-500 hover:text-white hover:bg-white/[0.1] rounded transition-colors"
+              className="p-1.5 text-[var(--ide-text-muted)] hover:text-[var(--ide-text)] hover:bg-[var(--ide-hover)] rounded transition-colors"
               title="Launch Profile"
             >
               <ChevronDown className="w-3 h-3" />
             </button>
             
             {showDropdown && (
-              <div className="absolute top-full right-0 mt-1 w-40 bg-[#111] border border-white/[0.1] rounded-lg shadow-xl overflow-hidden z-50">
+              <div className="absolute top-full right-0 mt-1 w-40 bg-[var(--ide-panel-lighter)] border border-[var(--ide-border-hover)] rounded-lg shadow-xl overflow-hidden z-50">
                 <button 
                   onClick={() => handleAddTab('bash')}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-blue-500/20 transition-colors text-left"
+                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[var(--ide-text)] hover:text-[var(--ide-text)] hover:bg-blue-500/20 transition-colors text-left"
                 >
                   <TerminalSquare className="w-4 h-4" />
                   Bash
                 </button>
                 <button 
                   onClick={() => handleAddTab('node')}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-green-500/20 transition-colors text-left"
+                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[var(--ide-text)] hover:text-[var(--ide-text)] hover:bg-green-500/20 transition-colors text-left"
                 >
                   <MonitorPlay className="w-4 h-4" />
                   Node.js
@@ -118,7 +118,7 @@ export function TerminalTabs({ webcontainer, onClose }: TerminalTabsProps) {
 
           <button 
             onClick={onClose}
-            className="p-1 rounded hover:bg-white/[0.1] text-gray-500 hover:text-white transition-colors"
+            className="p-1 rounded hover:bg-[var(--ide-hover)] text-[var(--ide-text-muted)] hover:text-[var(--ide-text)] transition-colors"
             title="Close Terminal Area"
           >
             <X className="w-4 h-4" />

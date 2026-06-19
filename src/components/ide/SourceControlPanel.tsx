@@ -263,9 +263,9 @@ export function SourceControlPanel({ webcontainer, ydoc, onPullComplete }: Sourc
   };
 
   return (
-    <div className="flex flex-col w-full h-full bg-[#0A0A0A] overflow-y-auto no-scrollbar">
-      <div className="p-4 border-b border-white/[0.05]">
-        <span className="text-xs font-semibold text-gray-500 tracking-wider uppercase flex items-center gap-2">
+    <div className="flex flex-col w-full h-full bg-[var(--ide-panel)] overflow-y-auto no-scrollbar">
+      <div className="p-4 border-b border-[var(--ide-border)]">
+        <span className="text-xs font-semibold text-[var(--ide-text-muted)] tracking-wider uppercase flex items-center gap-2">
           <GitBranch className="w-4 h-4" />
           Source Control
         </span>
@@ -275,9 +275,9 @@ export function SourceControlPanel({ webcontainer, ydoc, onPullComplete }: Sourc
         {/* Repo Configuration */}
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-gray-400">GitHub Repository URL</label>
+            <label className="text-xs font-medium text-[var(--ide-text-muted)]">GitHub Repository URL</label>
             <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-gray-500 group-focus-within:text-white">
+              <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-[var(--ide-text-muted)] group-focus-within:text-[var(--ide-text)]">
                 <Github className="w-4 h-4" />
               </div>
               <input
@@ -286,16 +286,16 @@ export function SourceControlPanel({ webcontainer, ydoc, onPullComplete }: Sourc
                 onChange={(e) => setRepoUrl(e.target.value)}
                 placeholder="https://github.com/owner/repo"
                 disabled={isConnected}
-                className={`w-full bg-[#111] border border-white/[0.1] rounded-lg px-3 py-2 pl-9 text-sm text-white focus:outline-none focus:border-white/[0.2] transition-colors ${isConnected ? 'opacity-70 cursor-not-allowed' : ''}`}
+                className={`w-full bg-[var(--ide-panel-lighter)] border border-[var(--ide-border-hover)] rounded-lg px-3 py-2 pl-9 text-sm text-[var(--ide-text)] focus:outline-none focus:border-white/[0.2] transition-colors ${isConnected ? 'opacity-70 cursor-not-allowed' : ''}`}
               />
             </div>
-            {isConnected && <p className="text-[10px] text-gray-500 mt-0.5">Managed by project dashboard.</p>}
+            {isConnected && <p className="text-[10px] text-[var(--ide-text-muted)] mt-0.5">Managed by project dashboard.</p>}
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-gray-400">Branch Name</label>
+            <label className="text-xs font-medium text-[var(--ide-text-muted)]">Branch Name</label>
             <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-gray-500 group-focus-within:text-white">
+              <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-[var(--ide-text-muted)] group-focus-within:text-[var(--ide-text)]">
                 <GitBranch className="w-4 h-4" />
               </div>
               <input
@@ -303,23 +303,23 @@ export function SourceControlPanel({ webcontainer, ydoc, onPullComplete }: Sourc
                 value={branch}
                 onChange={(e) => setBranch(e.target.value)}
                 placeholder="main"
-                className="w-full bg-[#111] border border-white/[0.1] rounded-lg px-3 py-2 pl-9 text-sm text-white focus:outline-none focus:border-white/[0.2] transition-colors"
+                className="w-full bg-[var(--ide-panel-lighter)] border border-[var(--ide-border-hover)] rounded-lg px-3 py-2 pl-9 text-sm text-[var(--ide-text)] focus:outline-none focus:border-white/[0.2] transition-colors"
               />
             </div>
           </div>
         </div>
 
-        <hr className="border-white/[0.05]" />
+        <hr className="border-[var(--ide-border)]" />
 
         {/* Commit section */}
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-gray-400">Commit Message</label>
+            <label className="text-xs font-medium text-[var(--ide-text-muted)]">Commit Message</label>
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Update project files"
-              className="w-full bg-[#111] border border-white/[0.1] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-white/[0.2] transition-colors resize-none h-20"
+              className="w-full bg-[var(--ide-panel-lighter)] border border-[var(--ide-border-hover)] rounded-lg px-3 py-2 text-sm text-[var(--ide-text)] focus:outline-none focus:border-white/[0.2] transition-colors resize-none h-20"
             />
           </div>
 
@@ -355,7 +355,7 @@ export function SourceControlPanel({ webcontainer, ydoc, onPullComplete }: Sourc
                 </button>
                 <button
                   onClick={executePull}
-                  className="px-3 py-1.5 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors font-medium"
+                  className="px-3 py-1.5 rounded-lg bg-red-500 text-[var(--ide-text)] hover:bg-red-600 transition-colors font-medium"
                 >
                   Confirm Force Pull
                 </button>
@@ -367,7 +367,7 @@ export function SourceControlPanel({ webcontainer, ydoc, onPullComplete }: Sourc
             <button
               onClick={handlePullClick}
               disabled={isPulling || isPushing || !webcontainer || isPullWarningOpen}
-              className="flex-1 bg-transparent border border-white/[0.1] text-white hover:bg-white/[0.05] disabled:opacity-50 disabled:cursor-not-allowed font-medium py-2.5 rounded-lg transition-all flex items-center justify-center gap-2 text-sm"
+              className="flex-1 bg-transparent border border-[var(--ide-border-hover)] text-[var(--ide-text)] hover:bg-[var(--ide-hover)] disabled:opacity-50 disabled:cursor-not-allowed font-medium py-2.5 rounded-lg transition-all flex items-center justify-center gap-2 text-sm"
             >
               {isPulling ? (
                 <>

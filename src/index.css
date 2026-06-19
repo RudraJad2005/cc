@@ -9,6 +9,69 @@
   --color-bg: #080808;
   --color-bg-deep: #050505;
   --color-line: rgba(255, 255, 255, 0.08);
+
+  --color-ide-base: var(--ide-base);
+  --color-ide-panel: var(--ide-panel);
+  --color-ide-border: var(--ide-border);
+  --color-ide-border-hover: var(--ide-border-hover);
+  --color-ide-text: var(--ide-text);
+  --color-ide-text-muted: var(--ide-text-muted);
+  --color-ide-hover: var(--ide-hover);
+  --color-ide-active: var(--ide-active);
+}
+
+@layer base {
+  :root, .theme-dark {
+    --ide-base: #000000;
+    --ide-panel: #0A0A0A;
+    --ide-panel-darker: #050505;
+    --ide-panel-lighter: #111111;
+    --ide-border: rgba(255, 255, 255, 0.05);
+    --ide-border-hover: rgba(255, 255, 255, 0.1);
+    --ide-text: #ffffff;
+    --ide-text-muted: #9ca3af;
+    --ide-hover: rgba(255, 255, 255, 0.05);
+    --ide-active: rgba(59, 130, 246, 0.1);
+  }
+
+  .theme-light {
+    --ide-base: #f3f4f6;
+    --ide-panel: #ffffff;
+    --ide-panel-darker: #e5e7eb;
+    --ide-panel-lighter: #f9fafb;
+    --ide-border: rgba(0, 0, 0, 0.1);
+    --ide-border-hover: rgba(0, 0, 0, 0.2);
+    --ide-text: #111827;
+    --ide-text-muted: #6b7280;
+    --ide-hover: rgba(0, 0, 0, 0.05);
+    --ide-active: rgba(59, 130, 246, 0.1);
+  }
+
+  .theme-dracula {
+    --ide-base: #282a36;
+    --ide-panel: #21222c;
+    --ide-panel-darker: #191a21;
+    --ide-panel-lighter: #282a36;
+    --ide-border: #44475a;
+    --ide-border-hover: #6272a4;
+    --ide-text: #f8f8f2;
+    --ide-text-muted: #6272a4;
+    --ide-hover: rgba(255, 255, 255, 0.05);
+    --ide-active: rgba(189, 147, 249, 0.2);
+  }
+
+  .theme-oceanic {
+    --ide-base: #0f172a;
+    --ide-panel: #1e293b;
+    --ide-panel-darker: #020617;
+    --ide-panel-lighter: #334155;
+    --ide-border: rgba(255, 255, 255, 0.1);
+    --ide-border-hover: rgba(255, 255, 255, 0.2);
+    --ide-text: #f8fafc;
+    --ide-text-muted: #94a3b8;
+    --ide-hover: rgba(255, 255, 255, 0.05);
+    --ide-active: rgba(56, 189, 248, 0.15);
+  }
 }
 
 @layer base {
@@ -31,9 +94,9 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--ide-border-hover, rgba(255, 255, 255, 0.1));
     border-radius: 9999px;
-    border: 2px solid #080808;
+    border: 2px solid var(--ide-panel, #0A0A0A);
   }
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.18);

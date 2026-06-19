@@ -18,7 +18,7 @@ export function EditorTabs({ tabs, activeTab, onTabClick, onTabClose, onSplitEdi
 
   return (
     <div 
-      className={`flex bg-[#050505] border-b overflow-x-auto no-scrollbar relative items-center min-h-[36px] transition-colors ${isDragOver ? 'border-blue-500 bg-blue-500/10' : 'border-white/[0.05]'}`}
+      className={`flex bg-[var(--ide-panel-darker)] border-b overflow-x-auto no-scrollbar relative items-center min-h-[36px] transition-colors ${isDragOver ? 'border-blue-500 bg-blue-500/10' : 'border-[var(--ide-border)]'}`}
       onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
       onDragLeave={() => setIsDragOver(false)}
       onDrop={(e) => {
@@ -36,10 +36,10 @@ export function EditorTabs({ tabs, activeTab, onTabClick, onTabClose, onSplitEdi
           <div
             key={tab}
             onClick={() => onTabClick(tab)}
-            className={`group flex items-center gap-2 px-3 py-2 text-xs font-medium cursor-pointer border-r border-white/[0.05] min-w-[120px] max-w-[200px] transition-colors ${
+            className={`group flex items-center gap-2 px-3 py-2 text-xs font-medium cursor-pointer border-r border-[var(--ide-border)] min-w-[120px] max-w-[200px] transition-colors ${
               isActive 
-                ? 'bg-[#000] text-blue-400 border-t-2 border-t-blue-500' 
-                : 'bg-[#0a0a0a] text-gray-500 hover:bg-[#111] hover:text-gray-300 border-t-2 border-t-transparent'
+                ? 'bg-[var(--ide-base)] text-blue-400 border-t-2 border-t-blue-500' 
+                : 'bg-[#0a0a0a] text-[var(--ide-text-muted)] hover:bg-[var(--ide-panel-lighter)] hover:text-[var(--ide-text)] border-t-2 border-t-transparent'
             }`}
           >
             <span className="truncate flex-1" title={tab}>{filename}</span>
@@ -59,7 +59,7 @@ export function EditorTabs({ tabs, activeTab, onTabClick, onTabClose, onSplitEdi
       {showSplitButton && onSplitEditor && (
         <button 
           onClick={onSplitEditor}
-          className="absolute right-2 p-1.5 text-gray-500 hover:text-white hover:bg-white/10 rounded-md transition-colors"
+          className="absolute right-2 p-1.5 text-[var(--ide-text-muted)] hover:text-[var(--ide-text)] hover:bg-white/10 rounded-md transition-colors"
           title="Split Editor Right"
         >
           <LayoutPanelLeft className="w-4 h-4" />

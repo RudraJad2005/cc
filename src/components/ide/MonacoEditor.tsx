@@ -22,9 +22,10 @@ interface MonacoEditorProps {
   webcontainer: WebContainer | null;
   ydoc: Y.Doc | null;
   provider: { awareness: awarenessProtocol.Awareness } | null;
+  theme?: string;
 }
 
-export function MonacoEditor({ projectId, filePath, initialContent, webcontainer, ydoc, provider }: MonacoEditorProps) {
+export function MonacoEditor({ projectId, filePath, initialContent, webcontainer, ydoc, provider, theme = 'theme-dark' }: MonacoEditorProps) {
   const editorRef = useRef<any>(null);
   const monacoRef = useRef<any>(null);
   const bindingRef = useRef<any>(null);
@@ -38,12 +39,10 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
     monacoRef.current = monaco;
     
     // Add custom theme matching our dashboard
-    monaco.editor.defineTheme('collab-dark', {
+    monaco.editor.defineTheme('theme-dark', {
       base: 'vs-dark',
       inherit: true,
-      rules: [
-        { background: '000000' }
-      ],
+      rules: [{ background: '000000' }],
       colors: {
         'editor.background': '#000000',
         'editor.lineHighlightBackground': '#ffffff05',
@@ -58,10 +57,51 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
         'editorSuggestWidget.border': '#ffffff10',
         'editorSuggestWidget.foreground': '#cccccc',
         'editorSuggestWidget.selectedBackground': '#ffffff15',
-        'editorSuggestWidget.highlightForeground': '#3b82f6',
       }
     });
-    monaco.editor.setTheme('collab-dark');
+
+    monaco.editor.defineTheme('theme-light', {
+      base: 'vs',
+      inherit: true,
+      rules: [{ background: 'f3f4f6' }],
+      colors: {
+        'editor.background': '#f3f4f6',
+        'editor.lineHighlightBackground': '#00000005',
+        'editorLineNumber.foreground': '#999999',
+        'editorLineNumber.activeForeground': '#000000',
+        'editorSuggestWidget.background': '#ffffff',
+      }
+    });
+
+    monaco.editor.defineTheme('theme-dracula', {
+      base: 'vs-dark',
+      inherit: true,
+      rules: [{ background: '282a36' }],
+      colors: {
+        'editor.background': '#282a36',
+        'editor.lineHighlightBackground': '#44475a80',
+        'editorLineNumber.foreground': '#6272a4',
+        'editorLineNumber.activeForeground': '#f8f8f2',
+        'editorSuggestWidget.background': '#21222c',
+        'editorSuggestWidget.border': '#44475a',
+      }
+    });
+
+    monaco.editor.defineTheme('theme-oceanic', {
+      base: 'vs-dark',
+      inherit: true,
+      rules: [{ background: '0f172a' }],
+      colors: {
+        'editor.background': '#0f172a',
+        'editor.lineHighlightBackground': '#ffffff0a',
+        'editorLineNumber.foreground': '#475569',
+        'editorLineNumber.activeForeground': '#f8fafc',
+        'editorSuggestWidget.background': '#1e293b',
+        'editorSuggestWidget.border': '#334155',
+      }
+    });
+
+    monaco.editor.setTheme(theme);
     
     // Explicitly set the language for the current file
     if (filePath) {
@@ -132,6 +172,13 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
         return () => disposable.dispose();
     }
   }, [filePath, webcontainer, isEditorReady, ydoc, provider]);
+
+  // Update theme when it changes
+  useEffect(() => {
+    if (monacoRef.current) {
+      monacoRef.current.editor.setTheme(theme);
+    }
+  }, [theme]);
 
   // Force language update whenever filePath changes
   useEffect(() => {
