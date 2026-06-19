@@ -28,7 +28,9 @@ export function ProjectOverview() {
   // GitHub Integration States
   const [fileSystem, setFileSystem] = useState<any>(null);
   const [githubRepo, setGithubRepo] = useState<string | null>(null);
+  const [githubToken, setGithubToken] = useState<string | null>(null);
   const [githubInput, setGithubInput] = useState('');
+  const [githubTokenInput, setGithubTokenInput] = useState('');
   const [isLinkingGithub, setIsLinkingGithub] = useState(false);
   const [latestCommit, setLatestCommit] = useState<{ message: string; author: string; date: string } | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -63,7 +65,8 @@ export function ProjectOverview() {
               const config = JSON.parse(data.file_system[githubConfigKey].file.contents);
               if (config.repo) {
                 setGithubRepo(config.repo);
-                fetchGithubData(config.repo);
+                if (config.token) setGithubToken(config.token);
+                fetchGithubData(config.repo, config.token);
               }
             } catch(e) {}
           }
@@ -106,10 +109,16 @@ export function ProjectOverview() {
     fetchProjectData();
   }, [projectId]);
 
-  const fetchGithubData = async (repo: string) => {
+  const fetchGithubData = async (repo: string, token?: string | null) => {
     setIsSyncing(true);
     try {
-      const response = await fetch(`https://api.github.com/repos/${repo}/commits`);
+      const headers: Record<string, string> = {};
+      const activeToken = token || githubToken;
+      if (activeToken) {
+        headers['Authorization'] = `Bearer ${activeToken}`;
+      }
+      
+      const response = await fetch(`https://api.github.com/repos/${repo}/commits`, { headers });
       if (response.ok) {
         const commits = await response.json();
         if (commits.length > 0) {
@@ -133,6 +142,7 @@ export function ProjectOverview() {
     
     setIsLinkingGithub(true);
     const repo = githubInput.trim();
+    const token = githubTokenInput.trim();
     
     try {
       // Create new config file
@@ -140,7 +150,7 @@ export function ProjectOverview() {
         ...fileSystem,
         '.cc-github.json': {
           file: {
-            contents: JSON.stringify({ repo })
+            contents: JSON.stringify({ repo, token: token || undefined })
           }
         }
       };
@@ -150,12 +160,13 @@ export function ProjectOverview() {
       
       setFileSystem(newFileSystem);
       setGithubRepo(repo);
-      setIsLinkingGithub(false);
+      setGithubToken(token || null);
+      await fetchGithubData(repo, token);
       setGithubInput('');
-      
-      fetchGithubData(repo);
+      setGithubTokenInput('');
     } catch (e) {
-      console.error('Failed to save github link:', e);
+      console.error('Failed to link github:', e);
+    } finally {
       setIsLinkingGithub(false);
     }
   };
@@ -342,12 +353,10 @@ export function ProjectOverview() {
                 </div>
                 <div>
                   <h3 className="text-white font-medium text-sm">Connect Repository</h3>
-                  <p className="text-xs text-gray-500 mt-1 max-w-sm mx-auto">
-                    Link a public GitHub repository to view live commit statuses and sync code directly into your IDE.
-                  </p>
+                  <p className="text-sm text-gray-500 mt-2 max-w-sm text-center">Link a public or private GitHub repository to view live commit statuses and sync code directly into your IDE.</p>
                 </div>
-                <div className="flex items-center gap-2 mt-2 w-full max-w-md">
-                  <div className="relative flex-1">
+                <div className="flex flex-col gap-3 w-full max-w-md mt-4">
+                  <div className="relative w-full">
                     <LinkIcon className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input 
                       type="text" 
@@ -357,12 +366,22 @@ export function ProjectOverview() {
                       className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-lg pl-9 pr-4 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-blue-500/50"
                     />
                   </div>
+                  <div className="relative w-full">
+                    <Key className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <input 
+                      type="password" 
+                      placeholder="GitHub PAT (optional, for private repos)" 
+                      value={githubTokenInput}
+                      onChange={(e) => setGithubTokenInput(e.target.value)}
+                      className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-lg pl-9 pr-4 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-blue-500/50"
+                    />
+                  </div>
                   <button 
                     onClick={handleLinkGithub}
                     disabled={isLinkingGithub || !githubInput}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-black font-medium text-sm hover:bg-gray-200 transition-colors disabled:opacity-50"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-white text-black font-medium text-sm hover:bg-gray-200 transition-colors disabled:opacity-50"
                   >
-                    {isLinkingGithub ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Connect'}
+                    {isLinkingGithub ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Connect Repository'}
                   </button>
                 </div>
               </div>
@@ -409,7 +428,7 @@ export function ProjectOverview() {
                     <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} /> Sync
                   </button>
                   <button 
-                    onClick={() => { setGithubRepo(null); setLatestCommit(null); }}
+                    onClick={() => { setGithubRepo(null); setGithubToken(null); setLatestCommit(null); }}
                     className="flex items-center gap-2 px-3 py-2 rounded-lg border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-colors text-sm"
                   >
                     Disconnect
