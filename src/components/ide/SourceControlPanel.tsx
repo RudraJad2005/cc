@@ -11,8 +11,11 @@ export function SourceControlPanel({ webcontainer }: SourceControlPanelProps) {
   const [repoUrl, setRepoUrl] = useState('');
   const [branch, setBranch] = useState('main');
   const [message, setMessage] = useState('Initial commit from IDE');
+  const [isConnected, setIsConnected] = useState(false);
   
   const [isPushing, setIsPushing] = useState(false);
+  const [isPulling, setIsPulling] = useState(false);
+  const [isPullWarningOpen, setIsPullWarningOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
@@ -26,7 +29,10 @@ export function SourceControlPanel({ webcontainer }: SourceControlPanelProps) {
         .then((content) => {
           try {
             const config = JSON.parse(content);
-            if (config.repo) setRepoUrl(config.repo);
+            if (config.repo) {
+              setRepoUrl(`https://github.com/${config.repo}`);
+              setIsConnected(true);
+            }
           } catch(e) {}
         })
         .catch(() => {});
@@ -158,6 +164,94 @@ export function SourceControlPanel({ webcontainer }: SourceControlPanelProps) {
     }
   };
 
+  const handlePullClick = () => {
+    setIsPullWarningOpen(true);
+  };
+
+  const executePull = async () => {
+    if (!webcontainer) return;
+    if (!repoUrl || !branch) {
+      setError('Please provide a repository URL and branch name');
+      return;
+    }
+
+    setIsPullWarningOpen(false);
+    setIsPulling(true);
+    setError(null);
+    setSuccess(false);
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.provider_token;
+      
+      if (!token) {
+        throw new Error('No GitHub access token found. Please ensure you logged in via GitHub.');
+      }
+
+      const match = repoUrl.match(/github\.com\/([^/]+)\/([^/.]+)/);
+      if (!match) throw new Error("Invalid GitHub URL");
+      const owner = match[1];
+      const repo = match[2];
+
+      const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/vnd.github.v3+json'
+      };
+
+      // 1. Get latest commit for branch
+      const refRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/ref/heads/${branch}`, { headers });
+      if (!refRes.ok) throw new Error(`Failed to fetch branch ${branch}`);
+      const refData = await refRes.json();
+      const commitSha = refData.object.sha;
+
+      // 2. Get tree recursively
+      const treeRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees/${commitSha}?recursive=1`, { headers });
+      if (!treeRes.ok) throw new Error('Failed to fetch file tree');
+      const treeData = await treeRes.json();
+
+      // 3. Process each blob
+      for (const item of treeData.tree) {
+        if (item.type === 'blob') {
+          try {
+            const blobRes = await fetch(item.url, { headers });
+            const blobData = await blobRes.json();
+            
+            let content = '';
+            if (blobData.encoding === 'base64') {
+              // Decode base64 in browser safely
+              content = decodeURIComponent(escape(window.atob(blobData.content)));
+            } else {
+              content = blobData.content;
+            }
+
+            // Ensure parent directories exist
+            const parts = item.path.split('/');
+            if (parts.length > 1) {
+              const dir = parts.slice(0, -1).join('/');
+              try {
+                await webcontainer.fs.mkdir(dir, { recursive: true });
+              } catch (e) {} // Ignore if exists
+            }
+
+            // Write file
+            await webcontainer.fs.writeFile('/' + item.path, content);
+          } catch (fileErr) {
+            console.error(`Failed to pull ${item.path}:`, fileErr);
+          }
+        }
+      }
+
+      setSuccess(true);
+      setMessage('');
+      setTimeout(() => setSuccess(false), 5000);
+
+    } catch (err: any) {
+      setError(err.message || 'An unknown error occurred while pulling');
+    } finally {
+      setIsPulling(false);
+    }
+  };
+
   return (
     <div className="flex flex-col w-full h-full bg-[#0A0A0A] overflow-y-auto no-scrollbar">
       <div className="p-4 border-b border-white/[0.05]">
@@ -181,9 +275,11 @@ export function SourceControlPanel({ webcontainer }: SourceControlPanelProps) {
                 value={repoUrl}
                 onChange={(e) => setRepoUrl(e.target.value)}
                 placeholder="https://github.com/owner/repo"
-                className="w-full bg-[#111] border border-white/[0.1] rounded-lg px-3 py-2 pl-9 text-sm text-white focus:outline-none focus:border-white/[0.2] transition-colors"
+                disabled={isConnected}
+                className={`w-full bg-[#111] border border-white/[0.1] rounded-lg px-3 py-2 pl-9 text-sm text-white focus:outline-none focus:border-white/[0.2] transition-colors ${isConnected ? 'opacity-70 cursor-not-allowed' : ''}`}
               />
             </div>
+            {isConnected && <p className="text-[10px] text-gray-500 mt-0.5">Managed by project dashboard.</p>}
           </div>
 
           <div className="flex flex-col gap-1.5">
@@ -227,27 +323,73 @@ export function SourceControlPanel({ webcontainer }: SourceControlPanelProps) {
           {success && (
             <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg flex items-center gap-2 text-green-400 text-xs">
               <Check className="w-4 h-4 shrink-0" />
-              <p>Successfully pushed to {branch}!</p>
+              <p>Operation successful!</p>
             </div>
           )}
 
-          <button
-            onClick={handlePush}
-            disabled={isPushing || !webcontainer}
-            className="w-full mt-2 bg-white text-black hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium py-2.5 rounded-lg transition-all flex items-center justify-center gap-2 text-sm"
-          >
-            {isPushing ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Pushing...
-              </>
-            ) : (
-              <>
-                <GitBranch className="w-4 h-4" />
-                Commit & Push
-              </>
-            )}
-          </button>
+          {isPullWarningOpen && (
+            <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex flex-col gap-3 text-red-400 text-xs mt-2">
+              <div className="flex gap-2">
+                <AlertCircle className="w-5 h-5 shrink-0" />
+                <div>
+                  <p className="font-semibold text-sm mb-1">Warning: Force Pull</p>
+                  <p>Pulling will immediately fetch and overwrite all files in your local workspace with the latest code from GitHub. Any uncommitted local changes to these files will be lost.</p>
+                </div>
+              </div>
+              <div className="flex gap-2 justify-end mt-1">
+                <button
+                  onClick={() => setIsPullWarningOpen(false)}
+                  className="px-3 py-1.5 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-colors font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={executePull}
+                  className="px-3 py-1.5 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors font-medium"
+                >
+                  Confirm Force Pull
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="flex gap-2 mt-2">
+            <button
+              onClick={handlePullClick}
+              disabled={isPulling || isPushing || !webcontainer || isPullWarningOpen}
+              className="flex-1 bg-transparent border border-white/[0.1] text-white hover:bg-white/[0.05] disabled:opacity-50 disabled:cursor-not-allowed font-medium py-2.5 rounded-lg transition-all flex items-center justify-center gap-2 text-sm"
+            >
+              {isPulling ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Pulling...
+                </>
+              ) : (
+                <>
+                  <GitBranch className="w-4 h-4 transform rotate-180" />
+                  Pull
+                </>
+              )}
+            </button>
+
+            <button
+              onClick={handlePush}
+              disabled={isPushing || isPulling || !webcontainer}
+              className="flex-1 bg-white text-black hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium py-2.5 rounded-lg transition-all flex items-center justify-center gap-2 text-sm"
+            >
+              {isPushing ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Pushing...
+                </>
+              ) : (
+                <>
+                  <GitBranch className="w-4 h-4" />
+                  Commit & Push
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>
