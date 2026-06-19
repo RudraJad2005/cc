@@ -536,7 +536,26 @@ export function ProjectOverview() {
                     <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} /> Sync
                   </button>
                   <button 
-                    onClick={() => { setGithubRepo(null); setLatestCommit(null); }}
+                    onClick={async () => { 
+                      try {
+                        const newFileSystem = { ...fileSystem };
+                        
+                        // Find and delete the github config (case-insensitive key)
+                        const githubConfigKey = Object.keys(newFileSystem).find(k => k.toLowerCase() === '.cc-github.json');
+                        if (githubConfigKey) {
+                          delete newFileSystem[githubConfigKey];
+                        }
+                        
+                        // Save to Supabase
+                        await supabase.from('projects').update({ file_system: newFileSystem }).eq('name', projectId);
+                        
+                        setFileSystem(newFileSystem);
+                        setGithubRepo(null); 
+                        setLatestCommit(null);
+                      } catch (e) {
+                        console.error('Failed to disconnect github:', e);
+                      }
+                    }}
                     className="flex items-center gap-2 px-3 py-2 rounded-lg border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-colors text-sm"
                   >
                     Disconnect
