@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Code2, Users, FileCode2, Copy, Settings, Download, Trash2, ShieldCheck, Cpu, Package, Github, GitCommit, RefreshCw, Link as LinkIcon, CheckCircle2, Loader2, Key, Eye, EyeOff, Plus, Save, Lock, Globe } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { useAuth } from '../lib/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
