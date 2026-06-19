@@ -138,10 +138,25 @@ export function ProjectOverview() {
   };
 
   const handleLinkGithub = async () => {
-    if (!githubInput || !githubInput.includes('/')) return;
+    if (!githubInput) return;
     
     setIsLinkingGithub(true);
-    const repo = githubInput.trim();
+    let repo = githubInput.trim();
+    
+    // Automatically parse full GitHub URLs (e.g., https://github.com/user/repo.git)
+    if (repo.includes('github.com/')) {
+      repo = repo.split('github.com/')[1];
+      if (repo.endsWith('.git')) {
+        repo = repo.slice(0, -4);
+      }
+    }
+    
+    // Ensure it's in owner/repo format
+    if (!repo.includes('/')) {
+      setIsLinkingGithub(false);
+      return;
+    }
+    
     const token = githubTokenInput.trim();
     
     try {
