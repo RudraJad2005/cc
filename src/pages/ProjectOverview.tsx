@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { Code2, Users, FileCode2, Copy, Settings, Download, Trash2, ShieldCheck, Cpu, Package, Github, GitCommit, RefreshCw, Link as LinkIcon, CheckCircle2, Loader2, Key, Eye, EyeOff, Plus, Save, Lock, Globe } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { useAuth } from '../lib/AuthContext';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -17,6 +18,8 @@ const getEnvironmentName = (framework: string) => {
 
 export function ProjectOverview() {
   const { projectId } = useParams();
+  const { session } = useAuth();
+  
   const [copied, setCopied] = useState(false);
   const [projectOwner, setProjectOwner] = useState<string>('Loading...');
   const [activeUsers, setActiveUsers] = useState(0);
@@ -28,9 +31,7 @@ export function ProjectOverview() {
   // GitHub Integration States
   const [fileSystem, setFileSystem] = useState<any>(null);
   const [githubRepo, setGithubRepo] = useState<string | null>(null);
-  const [githubToken, setGithubToken] = useState<string | null>(null);
   const [githubInput, setGithubInput] = useState('');
-  const [githubTokenInput, setGithubTokenInput] = useState('');
   const [isLinkingGithub, setIsLinkingGithub] = useState(false);
   const [latestCommit, setLatestCommit] = useState<{ message: string; author: string; date: string } | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -38,6 +39,8 @@ export function ProjectOverview() {
   const [userRepos, setUserRepos] = useState<any[]>([]);
   const [isLoadingRepos, setIsLoadingRepos] = useState(false);
   const [showRepoDropdown, setShowRepoDropdown] = useState(false);
+  
+  const providerToken = session?.provider_token;
 
   // Environment Variables States
   const [envVars, setEnvVars] = useState<{id: string, key: string, value: string}[]>([]);
@@ -69,8 +72,7 @@ export function ProjectOverview() {
               const config = JSON.parse(data.file_system[githubConfigKey].file.contents);
               if (config.repo) {
                 setGithubRepo(config.repo);
-                if (config.token) setGithubToken(config.token);
-                fetchGithubData(config.repo, config.token);
+                fetchGithubData(config.repo);
               }
             } catch(e) {}
           }
@@ -114,7 +116,7 @@ export function ProjectOverview() {
   }, [projectId]);
 
   useEffect(() => {
-    if (!githubTokenInput || githubTokenInput.length < 10) {
+    if (!providerToken) {
       setUserRepos([]);
       return;
     }
@@ -122,29 +124,26 @@ export function ProjectOverview() {
       setIsLoadingRepos(true);
       try {
         const res = await fetch('https://api.github.com/user/repos?per_page=100&sort=updated', {
-          headers: { Authorization: `Bearer ${githubTokenInput}` }
+          headers: { Authorization: `Bearer ${providerToken}` }
         });
         if (res.ok) {
           const data = await res.json();
           setUserRepos(data);
-          setShowRepoDropdown(true);
         }
       } catch (e) {} finally {
         setIsLoadingRepos(false);
       }
     };
     
-    const timeoutId = setTimeout(fetchUserRepos, 500);
-    return () => clearTimeout(timeoutId);
-  }, [githubTokenInput]);
+    fetchUserRepos();
+  }, [providerToken]);
 
-  const fetchGithubData = async (repo: string, token?: string | null) => {
+  const fetchGithubData = async (repo: string) => {
     setIsSyncing(true);
     try {
       const headers: Record<string, string> = {};
-      const activeToken = token || githubToken;
-      if (activeToken) {
-        headers['Authorization'] = `Bearer ${activeToken}`;
+      if (providerToken) {
+        headers['Authorization'] = `Bearer ${providerToken}`;
       }
       
       const response = await fetch(`https://api.github.com/repos/${repo}/commits`, { headers });
@@ -186,15 +185,13 @@ export function ProjectOverview() {
       return;
     }
     
-    const token = githubTokenInput.trim();
-    
     try {
       // Create new config file
       const newFileSystem = {
         ...fileSystem,
         '.cc-github.json': {
           file: {
-            contents: JSON.stringify({ repo, token: token || undefined })
+            contents: JSON.stringify({ repo })
           }
         }
       };
@@ -204,15 +201,21 @@ export function ProjectOverview() {
       
       setFileSystem(newFileSystem);
       setGithubRepo(repo);
-      setGithubToken(token || null);
-      await fetchGithubData(repo, token);
+      await fetchGithubData(repo);
       setGithubInput('');
-      setGithubTokenInput('');
     } catch (e) {
       console.error('Failed to link github:', e);
     } finally {
       setIsLinkingGithub(false);
     }
+  };
+
+  const handleOAuthLink = async () => {
+    setIsLinkingGithub(true);
+    await supabase.auth.linkIdentity({ 
+      provider: 'github', 
+      options: { scopes: 'repo' } 
+    });
   };
 
   const handleSaveEnvVars = async () => {
@@ -400,58 +403,65 @@ export function ProjectOverview() {
                   <p className="text-sm text-gray-500 mt-2 max-w-sm text-center">Link a public or private GitHub repository to view live commit statuses and sync code directly into your IDE.</p>
                 </div>
                 <div className="flex flex-col gap-3 w-full max-w-md mt-4">
-                  <div className="relative w-full">
-                    <Key className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
-                    <input 
-                      type="password" 
-                      placeholder="Enter GitHub PAT to see your repos..." 
-                      value={githubTokenInput}
-                      onChange={(e) => setGithubTokenInput(e.target.value)}
-                      className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-lg pl-9 pr-4 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-blue-500/50"
-                    />
-                    {isLoadingRepos && (
-                      <Loader2 className="w-4 h-4 text-gray-500 absolute right-3 top-1/2 -translate-y-1/2 animate-spin" />
-                    )}
-                  </div>
-                  
-                  <div className="relative w-full">
-                    <LinkIcon className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
-                    <input 
-                      type="text" 
-                      placeholder="e.g. facebook/react" 
-                      value={githubInput}
-                      onFocus={() => { if (userRepos.length > 0) setShowRepoDropdown(true); }}
-                      onBlur={() => setTimeout(() => setShowRepoDropdown(false), 200)}
-                      onChange={(e) => setGithubInput(e.target.value)}
-                      className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-lg pl-9 pr-4 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-blue-500/50"
-                    />
-                    
-                    {showRepoDropdown && userRepos.length > 0 && (
-                      <div className="absolute z-20 w-full mt-2 bg-[#050505] border border-white/[0.1] rounded-xl max-h-60 overflow-y-auto shadow-2xl overflow-hidden no-scrollbar">
-                        <div className="p-2 border-b border-white/[0.05] bg-white/[0.02] text-xs font-medium text-gray-500 sticky top-0 backdrop-blur-md">
-                          Your Repositories
-                        </div>
-                        {userRepos.map((repo) => (
-                          <button
-                            key={repo.id}
-                            onClick={() => { setGithubInput(repo.full_name); setShowRepoDropdown(false); }}
-                            className="w-full flex items-center justify-between px-4 py-3 text-sm text-white hover:bg-white/[0.05] border-b border-white/[0.02] last:border-0 transition-colors text-left"
-                          >
-                            <span className="truncate">{repo.full_name}</span>
-                            {repo.private ? <Lock className="w-3.5 h-3.5 text-yellow-500 shrink-0" /> : <Globe className="w-3.5 h-3.5 text-blue-400 shrink-0" />}
-                          </button>
-                        ))}
+                  {!providerToken ? (
+                    <div className="flex flex-col gap-3">
+                      <button 
+                        onClick={handleOAuthLink}
+                        disabled={isLinkingGithub}
+                        className="w-full flex items-center justify-center gap-3 bg-[#0A0A0A] hover:bg-[#111] border border-white/[0.1] hover:border-white/[0.2] transition-colors text-white py-2.5 rounded-lg text-sm font-medium"
+                      >
+                        {isLinkingGithub ? <Loader2 className="w-4 h-4 animate-spin" /> : <Github className="w-4 h-4" />}
+                        Connect GitHub Account
+                      </button>
+                      <p className="text-xs text-gray-500 text-center">
+                        Authorizing will allow Collab Code to access and display your private repositories.
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="relative w-full">
+                        <LinkIcon className="w-4 h-4 text-gray-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input 
+                          type="text" 
+                          placeholder="e.g. facebook/react" 
+                          value={githubInput}
+                          onFocus={() => { if (userRepos.length > 0) setShowRepoDropdown(true); }}
+                          onBlur={() => setTimeout(() => setShowRepoDropdown(false), 200)}
+                          onChange={(e) => setGithubInput(e.target.value)}
+                          className="w-full bg-[#0a0a0a] border border-white/[0.1] rounded-lg pl-9 pr-10 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-blue-500/50"
+                        />
+                        {isLoadingRepos && (
+                          <Loader2 className="w-4 h-4 text-gray-500 absolute right-3 top-1/2 -translate-y-1/2 animate-spin" />
+                        )}
+                        
+                        {showRepoDropdown && userRepos.length > 0 && (
+                          <div className="absolute z-20 w-full mt-2 bg-[#050505] border border-white/[0.1] rounded-xl max-h-60 overflow-y-auto shadow-2xl overflow-hidden no-scrollbar">
+                            <div className="p-2 border-b border-white/[0.05] bg-white/[0.02] text-xs font-medium text-gray-500 sticky top-0 backdrop-blur-md">
+                              Your Repositories
+                            </div>
+                            {userRepos.map((repo) => (
+                              <button
+                                key={repo.id}
+                                onClick={() => { setGithubInput(repo.full_name); setShowRepoDropdown(false); }}
+                                className="w-full flex items-center justify-between px-4 py-3 text-sm text-white hover:bg-white/[0.05] border-b border-white/[0.02] last:border-0 transition-colors text-left"
+                              >
+                                <span className="truncate">{repo.full_name}</span>
+                                {repo.private ? <Lock className="w-3.5 h-3.5 text-yellow-500 shrink-0" /> : <Globe className="w-3.5 h-3.5 text-blue-400 shrink-0" />}
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
 
-                  <button 
-                    onClick={handleLinkGithub}
-                    disabled={isLinkingGithub || !githubInput}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2 mt-2 rounded-lg bg-white text-black font-medium text-sm hover:bg-gray-200 transition-colors disabled:opacity-50"
-                  >
-                    {isLinkingGithub ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Connect Repository'}
-                  </button>
+                      <button 
+                        onClick={handleLinkGithub}
+                        disabled={isLinkingGithub || !githubInput}
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2 mt-2 rounded-lg bg-white text-black font-medium text-sm hover:bg-gray-200 transition-colors disabled:opacity-50"
+                      >
+                        {isLinkingGithub ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Connect Repository'}
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             ) : (
