@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { InviteUserModal } from '../components/InviteUserModal';
+import { getTemplate } from '../lib/templates';
 
 const getEnvironmentName = (framework: string) => {
   const fw = framework.toLowerCase();
@@ -189,8 +190,9 @@ export function ProjectOverview() {
     
     try {
       // Create new config file
+      const baseFileSystem = fileSystem || getTemplate(framework);
       const newFileSystem = {
-        ...fileSystem,
+        ...baseFileSystem,
         '.cc-github.json': {
           file: {
             contents: JSON.stringify({ repo })

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { WebContainer } from '@webcontainer/api';
-import { GitBranch, Github, Key, Check, Loader2, AlertCircle } from 'lucide-react';
+import { GitBranch, Github, Check, Loader2, AlertCircle } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
 
 interface SourceControlPanelProps {
   webcontainer: WebContainer | null;
@@ -9,7 +10,6 @@ interface SourceControlPanelProps {
 export function SourceControlPanel({ webcontainer }: SourceControlPanelProps) {
   const [repoUrl, setRepoUrl] = useState('');
   const [branch, setBranch] = useState('main');
-  const [token, setToken] = useState('');
   const [message, setMessage] = useState('Initial commit from IDE');
   
   const [isPushing, setIsPushing] = useState(false);
@@ -17,16 +17,25 @@ export function SourceControlPanel({ webcontainer }: SourceControlPanelProps) {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    const savedToken = localStorage.getItem('github_pat');
-    if (savedToken) setToken(savedToken);
-    
     const savedRepo = localStorage.getItem('github_repo');
     if (savedRepo) setRepoUrl(savedRepo);
-  }, []);
+
+    // Try to read the repo from the project config if webcontainer is ready
+    if (webcontainer) {
+      webcontainer.fs.readFile('.cc-github.json', 'utf-8')
+        .then((content) => {
+          try {
+            const config = JSON.parse(content);
+            if (config.repo) setRepoUrl(config.repo);
+          } catch(e) {}
+        })
+        .catch(() => {});
+    }
+  }, [webcontainer]);
 
   const handlePush = async () => {
     if (!webcontainer) return;
-    if (!repoUrl || !token || !message || !branch) {
+    if (!repoUrl || !message || !branch) {
       setError('Please fill in all fields');
       return;
     }
@@ -36,7 +45,14 @@ export function SourceControlPanel({ webcontainer }: SourceControlPanelProps) {
     setSuccess(false);
 
     try {
-      localStorage.setItem('github_pat', token);
+      // Fetch OAuth provider token from active Supabase session
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.provider_token;
+      
+      if (!token) {
+        throw new Error('No GitHub access token found. Please ensure you logged in via GitHub.');
+      }
+
       localStorage.setItem('github_repo', repoUrl);
 
       const match = repoUrl.match(/github\.com\/([^/]+)\/([^/.]+)/);
@@ -184,23 +200,6 @@ export function SourceControlPanel({ webcontainer }: SourceControlPanelProps) {
                 className="w-full bg-[#111] border border-white/[0.1] rounded-lg px-3 py-2 pl-9 text-sm text-white focus:outline-none focus:border-white/[0.2] transition-colors"
               />
             </div>
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-gray-400">Personal Access Token (PAT)</label>
-            <div className="relative group">
-              <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none text-gray-500 group-focus-within:text-white">
-                <Key className="w-4 h-4" />
-              </div>
-              <input
-                type="password"
-                value={token}
-                onChange={(e) => setToken(e.target.value)}
-                placeholder="ghp_xxxxxxxxxxxx"
-                className="w-full bg-[#111] border border-white/[0.1] rounded-lg px-3 py-2 pl-9 text-sm text-white focus:outline-none focus:border-white/[0.2] transition-colors"
-              />
-            </div>
-            <p className="text-[10px] text-gray-500 mt-0.5">Token must have 'repo' scope. Saved locally.</p>
           </div>
         </div>
 
