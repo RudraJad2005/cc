@@ -5,6 +5,16 @@ import { supabase } from '../lib/supabase';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+const getEnvironmentName = (framework: string) => {
+  const fw = framework.toLowerCase();
+  if (fw.includes('python') || fw.includes('django') || fw.includes('flask') || fw.includes('pytorch') || fw.includes('tensorflow') || fw.includes('scikit') || fw.includes('pandas') || fw.includes('jupyter') || fw.includes('openai')) return 'Python 3.10';
+  if (fw.includes('go')) return 'Go 1.21';
+  if (fw.includes('flutter')) return 'Dart / Flutter';
+  if (fw.includes('swift')) return 'Swift 5';
+  if (fw.includes('kotlin')) return 'Kotlin / JVM';
+  return 'Node.js 18.x';
+};
+
 export function ProjectOverview() {
   const { projectId } = useParams();
   const [copied, setCopied] = useState(false);
@@ -12,6 +22,8 @@ export function ProjectOverview() {
   const [activeUsers, setActiveUsers] = useState(0);
   const [readmeContent, setReadmeContent] = useState<string | null>(null);
   const [dependencies, setDependencies] = useState<Record<string, string>>({});
+  const [framework, setFramework] = useState<string>('Vite + React');
+  const [createdAt, setCreatedAt] = useState<string>('Today');
   
   // GitHub Integration States
   const [fileSystem, setFileSystem] = useState<any>(null);
@@ -28,11 +40,17 @@ export function ProjectOverview() {
 
   useEffect(() => {
     const fetchProjectData = async () => {
-      const { data } = await supabase.from('projects').select('user_id, file_system').eq('name', projectId).single();
+      const { data } = await supabase.from('projects').select('user_id, file_system, framework, created_at').eq('name', projectId).single();
       if (data) {
         if (data.user_id) {
           const { data: authData } = await supabase.auth.admin?.getUserById(data.user_id) || { data: { user: null } };
           setProjectOwner(authData?.user?.email || 'RudraJad2005');
+        }
+
+        if (data.framework) setFramework(data.framework);
+        if (data.created_at) {
+          const date = new Date(data.created_at);
+          setCreatedAt(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }));
         }
 
         if (data.file_system) {
@@ -272,15 +290,15 @@ export function ProjectOverview() {
             </div>
             <div className="flex items-center justify-between p-3 border-b border-white/[0.05]">
               <span className="text-sm text-gray-500">Framework</span>
-              <span className="text-sm text-white flex items-center gap-1.5"><Cpu className="w-4 h-4 text-blue-400" /> Vite + React</span>
+              <span className="text-sm text-white flex items-center gap-1.5"><Cpu className="w-4 h-4 text-blue-400" /> {framework}</span>
             </div>
             <div className="flex items-center justify-between p-3 border-b border-white/[0.05]">
               <span className="text-sm text-gray-500">Created</span>
-              <span className="text-sm text-white">Today</span>
+              <span className="text-sm text-white">{createdAt}</span>
             </div>
             <div className="flex items-center justify-between p-3">
               <span className="text-sm text-gray-500">Environment</span>
-              <span className="text-xs font-mono bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded-md">Node.js 18.x</span>
+              <span className="text-sm font-medium text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-md">{getEnvironmentName(framework)}</span>
             </div>
           </div>
         </div>
