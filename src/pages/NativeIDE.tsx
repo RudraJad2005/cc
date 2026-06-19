@@ -261,16 +261,28 @@ export function NativeIDE() {
   };
 
   const handleTabClose = (groupId: string, path: string) => {
-    setEditorGroups(groups => groups.map(g => {
-      if (g.id === groupId) {
-        const newTabs = g.tabs.filter(t => t !== path);
-        const newActiveTab = g.activeTab === path 
-          ? (newTabs.length > 0 ? newTabs[newTabs.length - 1] : null) 
-          : g.activeTab;
-        return { ...g, tabs: newTabs, activeTab: newActiveTab };
+    setEditorGroups(groups => {
+      const newGroups = groups.map(g => {
+        if (g.id === groupId) {
+          const newTabs = g.tabs.filter(t => t !== path);
+          const newActiveTab = g.activeTab === path 
+            ? (newTabs.length > 0 ? newTabs[newTabs.length - 1] : null) 
+            : g.activeTab;
+          return { ...g, tabs: newTabs, activeTab: newActiveTab };
+        }
+        return g;
+      });
+
+      // Filter out empty groups, UNLESS it's the very last group standing
+      const filteredGroups = newGroups.filter(g => g.tabs.length > 0 || newGroups.length === 1);
+      
+      // If the active group was closed, switch active group to the first available one
+      if (!filteredGroups.find(g => g.id === activeGroupId)) {
+        setActiveGroupId(filteredGroups[0]?.id || '1');
       }
-      return g;
-    }));
+
+      return filteredGroups;
+    });
   };
 
   const handleSplitEditor = (groupId: string) => {

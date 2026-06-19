@@ -146,11 +146,6 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
 
   return (
     <div className="w-full h-full bg-[#000] flex flex-col">
-      <div className="flex bg-[#050505] border-b border-white/[0.05]">
-        <div className="px-4 py-2 border-r border-white/[0.05] border-t-2 border-t-blue-500 bg-[#000] text-xs font-medium text-gray-300 flex items-center gap-2">
-          {filePath.split('/').pop()}
-        </div>
-      </div>
       <div className="flex-1 relative">
         <Editor
           path={filePath}
