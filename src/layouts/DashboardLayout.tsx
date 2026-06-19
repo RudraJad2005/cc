@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Folder, Settings, Search, Bell, User, Server, Blocks, Plug, LogOut } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { NotificationInbox } from '../components/NotificationInbox';
 
 export function DashboardLayout() {
   const location = useLocation();
@@ -96,10 +97,7 @@ export function DashboardLayout() {
                  <span className="text-[10px] font-mono border border-white/[0.2] rounded px-1 py-0.5 bg-black">K</span>
                </div>
             </button>
-            <button className="text-[#888] hover:text-white transition-colors relative p-2 rounded-md hover:bg-white/[0.05]">
-              <Bell className="w-4 h-4" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-indigo-500 rounded-full border-2 border-[#000]" />
-            </button>
+            <NotificationInbox />
           </div>
         </header>
 

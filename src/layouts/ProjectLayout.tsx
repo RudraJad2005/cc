@@ -5,6 +5,7 @@ import {
   HardDrive, Flag, Bot, Cpu, Box, Workflow, 
   PieChart, LifeBuoy, Settings, ChevronRight, ChevronDown, Github, Search
 } from 'lucide-react';
+import { NotificationInbox } from '../components/NotificationInbox';
 
 export function ProjectLayout() {
   const { projectId } = useParams();
@@ -85,10 +86,14 @@ export function ProjectLayout() {
              <ChevronDown className="w-4 h-4 text-gray-500" />
           </div>
           
-          <div className="ml-8 flex items-center gap-6 h-full">
+          <div className="ml-8 flex items-center gap-6 h-full flex-1">
              <div className="h-full flex items-center border-b-2 border-white text-white font-medium px-1">
                 Overview
              </div>
+          </div>
+          
+          <div className="flex items-center gap-4 border-l border-white/[0.08] pl-4 ml-4">
+             <NotificationInbox />
           </div>
         </header>
 

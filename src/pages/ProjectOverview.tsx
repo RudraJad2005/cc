@@ -1,10 +1,11 @@
 import { Link, useParams } from 'react-router-dom';
-import { Code2, Users, FileCode2, Copy, Settings, Download, Trash2, ShieldCheck, Cpu, Package, Github, GitCommit, RefreshCw, Link as LinkIcon, CheckCircle2, Loader2, Key, Eye, EyeOff, Plus, Save, Lock, Globe } from 'lucide-react';
+import { Code2, Users, FileCode2, Copy, Settings, Download, Trash2, ShieldCheck, Cpu, Package, Github, GitCommit, RefreshCw, Link as LinkIcon, CheckCircle2, Loader2, Key, Eye, EyeOff, Plus, Save, Lock, Globe, UserPlus } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { InviteUserModal } from '../components/InviteUserModal';
 
 const getEnvironmentName = (framework: string) => {
   const fw = framework.toLowerCase();
@@ -39,6 +40,7 @@ export function ProjectOverview() {
   const [userRepos, setUserRepos] = useState<any[]>([]);
   const [isLoadingRepos, setIsLoadingRepos] = useState(false);
   const [showRepoDropdown, setShowRepoDropdown] = useState(false);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   
   const providerToken = session?.provider_token;
 
@@ -299,12 +301,6 @@ export function ProjectOverview() {
     };
   }, [projectId]);
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.origin + `/dashboard/projects/${projectId}/editor`);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
     <div className="flex flex-col gap-8 w-full text-[#a1a1aa] pb-20 max-w-5xl mx-auto">
       
@@ -345,11 +341,11 @@ export function ProjectOverview() {
               <span className="relative z-10">Open Native IDE</span>
             </Link>
             <button 
-              onClick={handleCopyLink}
+              onClick={() => setIsInviteModalOpen(true)}
               className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/[0.1] hover:bg-white/[0.05] transition-colors text-sm font-medium text-white"
             >
-              <Copy className="w-4 h-4" />
-              {copied ? 'Copied to Clipboard!' : 'Copy Invite Link'}
+              <UserPlus className="w-4 h-4" />
+              Invite Collaborators
             </button>
           </div>
         </div>
@@ -403,11 +399,17 @@ export function ProjectOverview() {
               <h3 className="text-white font-medium text-sm">
                 {activeUsers > 0 ? `${activeUsers} Editing Live` : 'Multiplayer is Ready'}
               </h3>
-              <p className="text-xs text-gray-500 mt-1 max-w-[200px] mx-auto">
+              <p className="text-xs text-gray-500 mt-1 max-w-[200px] mx-auto mb-3">
                 {activeUsers > 0 
                   ? "Jump into the IDE to collaborate with them in real-time."
-                  : "Share your invite link with others to code together in real-time."}
+                  : "Invite others to code together in real-time."}
               </p>
+              <button 
+                onClick={() => setIsInviteModalOpen(true)}
+                className="text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                + Send an Invite
+              </button>
             </div>
           </div>
         </div>
@@ -532,7 +534,7 @@ export function ProjectOverview() {
                     <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} /> Sync
                   </button>
                   <button 
-                    onClick={() => { setGithubRepo(null); setGithubToken(null); setLatestCommit(null); }}
+                    onClick={() => { setGithubRepo(null); setLatestCommit(null); }}
                     className="flex items-center gap-2 px-3 py-2 rounded-lg border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-colors text-sm"
                   >
                     Disconnect
@@ -694,7 +696,13 @@ export function ProjectOverview() {
 
         </div>
       </div>
-
+      
+      {isInviteModalOpen && (
+        <InviteUserModal 
+          projectId={projectId} 
+          onClose={() => setIsInviteModalOpen(false)} 
+        />
+      )}
     </div>
   );
 }
