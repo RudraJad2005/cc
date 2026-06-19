@@ -14,6 +14,18 @@ function getRelativeTime(dateString: string) {
   return `${Math.floor(hours / 24)}d`;
 }
 
+const getSafeIconUrl = (url: string | null | undefined) => {
+  if (!url) return 'https://api.iconify.design/simple-icons:github.svg?color=white';
+  if (url.includes('cdn.simpleicons.org')) {
+    const parts = url.split('/');
+    const color = parts.pop();
+    const icon = parts.pop();
+    const hexColor = color?.toLowerCase() === 'white' ? 'white' : `%23${color}`;
+    return `https://api.iconify.design/simple-icons:${icon}.svg?color=${hexColor}`;
+  }
+  return url;
+};
+
 export function Dashboard() {
   const { user } = useAuth();
   const userName = user?.email?.split('@')[0] || 'Developer';
@@ -88,7 +100,7 @@ export function Dashboard() {
                          <div className="flex items-start justify-between">
                             <div className="flex items-center gap-3">
                                <div className="w-8 h-8 rounded-full border border-white/[0.1] bg-[#0A0A0A] flex items-center justify-center shrink-0">
-                                  <img src={project.icon || 'https://api.iconify.design/simple-icons:github.svg?color=white'} alt={project.framework} className="w-3.5 h-3.5 object-contain" />
+                                  <img src={getSafeIconUrl(project.icon)} alt={project.framework} className="w-3.5 h-3.5 object-contain" />
                                </div>
                                <div>
                                   <h3 className="font-semibold text-white group-hover:text-blue-400 transition-colors">{project.name}</h3>
