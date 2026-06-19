@@ -10,6 +10,7 @@ import { ApiKeyModal } from '../components/ide/ApiKeyModal';
 import { SourceControlPanel } from '../components/ide/SourceControlPanel';
 import { ArrowLeft, Loader2, Globe, Users, Play, Save, Files, Search, GitBranch, Settings, TerminalSquare, Sparkles, Maximize, Minimize } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { getTemplate } from '../lib/templates';
 
 // Singleton promise to prevent booting multiple times during React StrictMode or HMR
 let bootPromise: Promise<WebContainer> | null = null;
@@ -151,7 +152,7 @@ export function NativeIDE() {
           
         // Check ownership
         const { data: authData } = await supabase.auth.getUser();
-        const { data } = await supabase.from('projects').select('file_system, user_id').eq('name', projectId).single();
+        const { data } = await supabase.from('projects').select('file_system, user_id, framework').eq('name', projectId).single();
         
         const ownerStatus = authData.user && data && authData.user.id === data.user_id;
         if (ownerStatus) {
@@ -164,73 +165,7 @@ export function NativeIDE() {
             await instance.mount(data.file_system);
           } else if (ownerStatus || !data) {
             console.log("Loading default template...");
-            await instance.mount({
-              'package.json': {
-                file: {
-                  contents: JSON.stringify({
-                    name: "collab-code-project",
-                    type: "module",
-                    scripts: {
-                      dev: "vite",
-                      build: "vite build"
-                    },
-                    dependencies: {
-                      "react": "^18.2.0",
-                      "react-dom": "^18.2.0"
-                    },
-                    devDependencies: {
-                      "@vitejs/plugin-react": "^4.2.1",
-                      "vite": "^5.0.0"
-                    }
-                  }, null, 2)
-                }
-              },
-              'index.html': {
-                file: {
-                  contents: `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-</html>`
-                }
-              },
-              'src': {
-                directory: {
-                  'main.jsx': {
-                    file: {
-                      contents: `import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)`
-                    }
-                  },
-                  'App.jsx': {
-                    file: {
-                      contents: `export default function App() {
-  return (
-    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h1>Hello from Collab Code Native IDE!</h1>
-      <p>Edit this file to see changes in real-time.</p>
-    </div>
-  )
-}`
-                    }
-                  }
-                }
-              }
-            });
+            await instance.mount(getTemplate(data?.framework || 'react'));
           } else {
             console.log("Guest mode. Waiting for Host to sync file system...");
           }

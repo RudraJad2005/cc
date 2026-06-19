@@ -14,13 +14,64 @@ export function DashboardNewProject() {
   const [framework, setFramework] = useState('Next.js');
   const [url, setUrl] = useState('');
   
-  const frameworks = [
-    { name: 'Next.js', icon: 'https://api.iconify.design/simple-icons:nextdotjs.svg?color=white' },
-    { name: 'React', icon: 'https://api.iconify.design/simple-icons:react.svg?color=%2361DAFB' },
-    { name: 'Astro', icon: 'https://api.iconify.design/simple-icons:astro.svg?color=white' },
-    { name: 'Express', icon: 'https://api.iconify.design/simple-icons:express.svg?color=white' },
-    { name: 'Svelte', icon: 'https://api.iconify.design/simple-icons:svelte.svg?color=%23FF3E00' },
+  const categoriesData = [
+    {
+      id: 'web',
+      name: 'Web Dev',
+      frameworks: [
+        { name: 'Next.js', icon: 'https://api.iconify.design/simple-icons:nextdotjs.svg?color=white' },
+        { name: 'React', icon: 'https://api.iconify.design/simple-icons:react.svg?color=%2361DAFB' },
+        { name: 'Astro', icon: 'https://api.iconify.design/simple-icons:astro.svg?color=white' },
+        { name: 'Svelte', icon: 'https://api.iconify.design/simple-icons:svelte.svg?color=%23FF3E00' },
+        { name: 'Vue', icon: 'https://api.iconify.design/simple-icons:vuedotjs.svg?color=%234FC08D' },
+        { name: 'Angular', icon: 'https://api.iconify.design/simple-icons:angular.svg?color=%23DD0031' },
+      ]
+    },
+    {
+      id: 'app',
+      name: 'App Dev',
+      frameworks: [
+        { name: 'React Native', icon: 'https://api.iconify.design/simple-icons:react.svg?color=%2361DAFB' },
+        { name: 'Flutter', icon: 'https://api.iconify.design/simple-icons:flutter.svg?color=%2302569B' },
+        { name: 'Swift', icon: 'https://api.iconify.design/simple-icons:swift.svg?color=%23F05138' },
+        { name: 'Kotlin', icon: 'https://api.iconify.design/simple-icons:kotlin.svg?color=%237F52FF' },
+      ]
+    },
+    {
+      id: 'backend',
+      name: 'Backend',
+      frameworks: [
+        { name: 'Node.js', icon: 'https://api.iconify.design/simple-icons:nodedotjs.svg?color=%23339933' },
+        { name: 'Express', icon: 'https://api.iconify.design/simple-icons:express.svg?color=white' },
+        { name: 'Django', icon: 'https://api.iconify.design/simple-icons:django.svg?color=%23092E20' },
+        { name: 'Flask', icon: 'https://api.iconify.design/simple-icons:flask.svg?color=white' },
+        { name: 'Go', icon: 'https://api.iconify.design/simple-icons:go.svg?color=%2300ADD8' },
+      ]
+    },
+    {
+      id: 'ml',
+      name: 'ML & AI',
+      frameworks: [
+        { name: 'TensorFlow', icon: 'https://api.iconify.design/simple-icons:tensorflow.svg?color=%23FF6F00' },
+        { name: 'PyTorch', icon: 'https://api.iconify.design/simple-icons:pytorch.svg?color=%23EE4C2C' },
+        { name: 'Scikit-learn', icon: 'https://api.iconify.design/simple-icons:scikitlearn.svg?color=%23F7931E' },
+        { name: 'OpenAI', icon: 'https://api.iconify.design/simple-icons:openai.svg?color=white' },
+      ]
+    },
+    {
+      id: 'data',
+      name: 'Data Science',
+      frameworks: [
+        { name: 'Python', icon: 'https://api.iconify.design/simple-icons:python.svg?color=%233776AB' },
+        { name: 'Jupyter', icon: 'https://api.iconify.design/simple-icons:jupyter.svg?color=%23F37626' },
+        { name: 'Pandas', icon: 'https://api.iconify.design/simple-icons:pandas.svg?color=%23150458' },
+        { name: 'R', icon: 'https://api.iconify.design/simple-icons:r.svg?color=%23276DC3' },
+      ]
+    }
   ];
+
+  const [selectedCategory, setSelectedCategory] = useState(categoriesData[0].id);
+  const activeCategory = categoriesData.find(c => c.id === selectedCategory) || categoriesData[0];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +79,7 @@ export function DashboardNewProject() {
     setLoading(true);
     setErrorMsg('');
 
-    const selectedIcon = frameworks.find(f => f.name === framework)?.icon;
+    const selectedIcon = activeCategory.frameworks.find(f => f.name === framework)?.icon || 'https://api.iconify.design/simple-icons:github.svg?color=white';
 
     const { error } = await supabase.from('projects').insert({
       user_id: user.id,
@@ -76,25 +127,53 @@ export function DashboardNewProject() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-8">
          
-         {/* Framework Selection */}
-         <div className="bg-[#050505] border border-white/[0.08] rounded-2xl p-6 sm:p-8">
-            <h2 className="text-lg font-medium text-white mb-6">Select Framework</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
-               {frameworks.map(f => (
-                  <button 
-                     key={f.name}
-                     type="button"
-                     onClick={() => setFramework(f.name)}
-                     className={`flex flex-col items-center justify-center gap-3 p-4 rounded-xl border transition-all ${
-                        framework === f.name 
-                        ? 'border-blue-500 bg-blue-500/10' 
-                        : 'border-white/[0.1] bg-[#0A0A0A] hover:bg-white/[0.05]'
-                     }`}
-                  >
-                     <img src={f.icon} alt={f.name} className="w-6 h-6 object-contain drop-shadow-md" />
-                     <span className="text-sm font-medium text-white">{f.name}</span>
-                  </button>
-               ))}
+         {/* Category & Framework Selection */}
+         <div className="bg-[#050505] border border-white/[0.08] rounded-2xl p-6 sm:p-8 flex flex-col gap-6">
+            
+            <div>
+               <h2 className="text-lg font-medium text-white mb-4">1. What are you building?</h2>
+               <div className="flex flex-wrap gap-2">
+                  {categoriesData.map(cat => (
+                     <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => {
+                           setSelectedCategory(cat.id);
+                           setFramework(cat.frameworks[0].name);
+                        }}
+                        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors border ${
+                           selectedCategory === cat.id 
+                           ? 'bg-white text-black border-white' 
+                           : 'bg-[#0A0A0A] text-gray-400 border-white/[0.1] hover:text-white hover:border-white/[0.2]'
+                        }`}
+                     >
+                        {cat.name}
+                     </button>
+                  ))}
+               </div>
+            </div>
+
+            <div className="h-px w-full bg-white/[0.05]"></div>
+
+            <div>
+               <h2 className="text-lg font-medium text-white mb-4">2. Select Framework</h2>
+               <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+                  {activeCategory.frameworks.map(f => (
+                     <button 
+                        key={f.name}
+                        type="button"
+                        onClick={() => setFramework(f.name)}
+                        className={`flex flex-col items-center justify-center gap-3 p-4 rounded-xl border transition-all ${
+                           framework === f.name 
+                           ? 'border-blue-500 bg-blue-500/10' 
+                           : 'border-white/[0.1] bg-[#0A0A0A] hover:bg-white/[0.05]'
+                        }`}
+                     >
+                        <img src={f.icon} alt={f.name} className="w-6 h-6 object-contain drop-shadow-md" />
+                        <span className="text-sm font-medium text-white">{f.name}</span>
+                     </button>
+                  ))}
+               </div>
             </div>
          </div>
 
