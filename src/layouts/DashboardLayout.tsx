@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Folder, Settings, Search, Bell, User, Server, Blocks, Plug, LogOut } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -5,8 +6,14 @@ import { useAuth } from '../contexts/AuthContext';
 export function DashboardLayout() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
+  const { user, signOut, isLoading } = useAuth();
   
+  useEffect(() => {
+    if (!isLoading && !user) {
+      navigate('/login');
+    }
+  }, [user, isLoading, navigate]);
+
   const handleSignOut = async () => {
     await signOut();
     navigate('/login');
