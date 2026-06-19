@@ -2,12 +2,12 @@ import { Search, ExternalLink, Github } from 'lucide-react';
 
 export function DashboardTemplates() {
   const templates = [
-    { name: 'Next.js Boilerplate', desc: 'The official Next.js starter with App Router, Tailwind CSS, and ESLint configured.', framework: 'Next.js', tag: 'Official', icon: 'https://cdn.simpleicons.org/nextdotjs/white' },
-    { name: 'Vite + React + TS', desc: 'A blazing fast Vite starter kit featuring React 18, TypeScript, and hot module replacement.', framework: 'React', tag: 'Popular', icon: 'https://cdn.simpleicons.org/vite/646CFF' },
-    { name: 'SvelteKit Starter', desc: 'Everything you need to build a Svelte project, powered by create-svelte.', framework: 'Svelte', tag: 'Official', icon: 'https://cdn.simpleicons.org/svelte/FF3E00' },
-    { name: 'Express API Base', desc: 'A minimal Node.js Express backend with CORS, body-parser, and basic routing.', framework: 'Express', tag: 'Backend', icon: 'https://cdn.simpleicons.org/express/white' },
-    { name: 'Astro Content Site', desc: 'Build faster websites with Astro. Includes markdown support and a responsive blog layout.', framework: 'Astro', tag: 'Popular', icon: 'https://cdn.simpleicons.org/astro/white' },
-    { name: 'Vue 3 Ecosystem', desc: 'Vue 3 setup with Vite, Pinia for state management, and Vue Router.', framework: 'Vue', tag: 'Official', icon: 'https://cdn.simpleicons.org/vuedotjs/4FC08D' },
+    { name: 'Next.js Boilerplate', desc: 'The official Next.js starter with App Router, Tailwind CSS, and ESLint configured.', framework: 'Next.js', tag: 'Official', icon: 'https://api.iconify.design/simple-icons:nextdotjs.svg?color=white' },
+    { name: 'Vite + React + TS', desc: 'A blazing fast Vite starter kit featuring React 18, TypeScript, and hot module replacement.', framework: 'React', tag: 'Popular', icon: 'https://api.iconify.design/simple-icons:vite.svg?color=%23646CFF' },
+    { name: 'SvelteKit Starter', desc: 'Everything you need to build a Svelte project, powered by create-svelte.', framework: 'Svelte', tag: 'Official', icon: 'https://api.iconify.design/simple-icons:svelte.svg?color=%23FF3E00' },
+    { name: 'Express API Base', desc: 'A minimal Node.js Express backend with CORS, body-parser, and basic routing.', framework: 'Express', tag: 'Backend', icon: 'https://api.iconify.design/simple-icons:express.svg?color=white' },
+    { name: 'Astro Content Site', desc: 'Build faster websites with Astro. Includes markdown support and a responsive blog layout.', framework: 'Astro', tag: 'Popular', icon: 'https://api.iconify.design/simple-icons:astro.svg?color=white' },
+    { name: 'Vue 3 Ecosystem', desc: 'Vue 3 setup with Vite, Pinia for state management, and Vue Router.', framework: 'Vue', tag: 'Official', icon: 'https://api.iconify.design/simple-icons:vuedotjs.svg?color=%234FC08D' },
   ];
 
   return (

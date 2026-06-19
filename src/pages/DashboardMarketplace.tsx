@@ -2,22 +2,22 @@ import { Search, Database, Lock, Box, CreditCard, Cloud } from 'lucide-react';
 
 export function DashboardMarketplace() {
   const featured = [
-    { name: 'AWS', desc: 'Serverless, reliable, secure PostgreSQL and NoSQL databases.', category: 'Storage', icon: <img src="https://cdn.simpleicons.org/amazonaws/FF9900" className="w-8 h-8 object-contain" alt="AWS" /> },
-    { name: 'Neon', desc: 'Neon is serverless Postgres built for the cloud, with autoscaling and instant branching.', category: 'Storage', icon: <img src="https://cdn.simpleicons.org/neon/00E599" className="w-8 h-8 object-contain" alt="Neon" /> },
-    { name: 'Shopify', desc: 'Shopify is the all-in-one commerce platform to start, run, and grow your business.', category: 'Commerce', icon: <img src="https://cdn.simpleicons.org/shopify/95BF47" className="w-8 h-8 object-contain" alt="Shopify" /> },
-    { name: 'Redis', desc: 'Redis is the fastest in-memory database for caching and real-time data.', category: 'Storage', icon: <img src="https://cdn.simpleicons.org/redis/DC382D" className="w-8 h-8 object-contain" alt="Redis" /> },
+    { name: 'AWS', desc: 'Serverless, reliable, secure PostgreSQL and NoSQL databases.', category: 'Storage', icon: <img src="https://api.iconify.design/simple-icons:amazonaws.svg?color=%23FF9900" className="w-8 h-8 object-contain" alt="AWS" /> },
+    { name: 'Neon', desc: 'Neon is serverless Postgres built for the cloud, with autoscaling and instant branching.', category: 'Storage', icon: <img src="https://api.iconify.design/simple-icons:neon.svg?color=%2300E599" className="w-8 h-8 object-contain" alt="Neon" /> },
+    { name: 'Shopify', desc: 'Shopify is the all-in-one commerce platform to start, run, and grow your business.', category: 'Commerce', icon: <img src="https://api.iconify.design/simple-icons:shopify.svg?color=%2395BF47" className="w-8 h-8 object-contain" alt="Shopify" /> },
+    { name: 'Redis', desc: 'Redis is the fastest in-memory database for caching and real-time data.', category: 'Storage', icon: <img src="https://api.iconify.design/simple-icons:redis.svg?color=%23DC382D" className="w-8 h-8 object-contain" alt="Redis" /> },
   ];
 
   const recentlyAdded = [
-    { name: 'Auth0', desc: 'Auth for Users, APIs & Agents', category: 'Authentication', icon: <img src="https://cdn.simpleicons.org/auth0/white" className="w-8 h-8 object-contain" alt="Auth0" /> },
-    { name: 'Shopify', desc: 'Build and deploy high-performance Shopify storefronts', category: 'Commerce', icon: <img src="https://cdn.simpleicons.org/shopify/95BF47" className="w-8 h-8 object-contain" alt="Shopify" /> },
-    { name: 'AWS', desc: 'Serverless, reliable, secure AWS Services.', category: 'Storage', icon: <img src="https://cdn.simpleicons.org/amazonaws/FF9900" className="w-8 h-8 object-contain" alt="AWS" /> },
+    { name: 'Auth0', desc: 'Auth for Users, APIs & Agents', category: 'Authentication', icon: <img src="https://api.iconify.design/simple-icons:auth0.svg?color=white" className="w-8 h-8 object-contain" alt="Auth0" /> },
+    { name: 'Shopify', desc: 'Build and deploy high-performance Shopify storefronts', category: 'Commerce', icon: <img src="https://api.iconify.design/simple-icons:shopify.svg?color=%2395BF47" className="w-8 h-8 object-contain" alt="Shopify" /> },
+    { name: 'AWS', desc: 'Serverless, reliable, secure AWS Services.', category: 'Storage', icon: <img src="https://api.iconify.design/simple-icons:amazonaws.svg?color=%23FF9900" className="w-8 h-8 object-contain" alt="AWS" /> },
   ];
 
   const native = [
-    { name: 'Neon', desc: 'Neon is serverless Postgres built for the cloud, with autoscaling and instant branching.', category: 'Storage', icon: <img src="https://cdn.simpleicons.org/neon/00E599" className="w-8 h-8 object-contain" alt="Neon" /> },
-    { name: 'AWS', desc: 'Serverless, reliable, secure AWS Services.', category: 'Storage', icon: <img src="https://cdn.simpleicons.org/amazonaws/FF9900" className="w-8 h-8 object-contain" alt="AWS" /> },
-    { name: 'Stripe', desc: 'Manage your billing directly.', category: 'Payments', icon: <img src="https://cdn.simpleicons.org/stripe/635BFF" className="w-8 h-8 object-contain" alt="Stripe" /> },
+    { name: 'Neon', desc: 'Neon is serverless Postgres built for the cloud, with autoscaling and instant branching.', category: 'Storage', icon: <img src="https://api.iconify.design/simple-icons:neon.svg?color=%2300E599" className="w-8 h-8 object-contain" alt="Neon" /> },
+    { name: 'AWS', desc: 'Serverless, reliable, secure AWS Services.', category: 'Storage', icon: <img src="https://api.iconify.design/simple-icons:amazonaws.svg?color=%23FF9900" className="w-8 h-8 object-contain" alt="AWS" /> },
+    { name: 'Stripe', desc: 'Manage your billing directly.', category: 'Payments', icon: <img src="https://api.iconify.design/simple-icons:stripe.svg?color=%23635BFF" className="w-8 h-8 object-contain" alt="Stripe" /> },
   ];
 
   const IntegrationCard = ({ item }: { item: any }) => (

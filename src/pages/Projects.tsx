@@ -80,7 +80,7 @@ export function Projects() {
                  {/* Left: Info */}
                  <div className="flex items-start gap-4">
                     <div className="w-10 h-10 rounded-full border border-white/[0.1] bg-[#0A0A0A] flex items-center justify-center shrink-0">
-                       <img src={project.icon || 'https://cdn.simpleicons.org/github/white'} alt={project.framework} className="w-4 h-4 object-contain" />
+                       <img src={project.icon || 'https://api.iconify.design/simple-icons:github.svg?color=white'} alt={project.framework} className="w-4 h-4 object-contain" />
                     </div>
                     <div className="flex flex-col gap-1.5">
                        <div className="flex items-center gap-3">

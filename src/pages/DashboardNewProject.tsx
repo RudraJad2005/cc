@@ -15,11 +15,11 @@ export function DashboardNewProject() {
   const [url, setUrl] = useState('');
   
   const frameworks = [
-    { name: 'Next.js', icon: 'https://cdn.simpleicons.org/nextdotjs/white' },
-    { name: 'React', icon: 'https://cdn.simpleicons.org/react/61DAFB' },
-    { name: 'Astro', icon: 'https://cdn.simpleicons.org/astro/white' },
-    { name: 'Express', icon: 'https://cdn.simpleicons.org/express/white' },
-    { name: 'Svelte', icon: 'https://cdn.simpleicons.org/svelte/FF3E00' },
+    { name: 'Next.js', icon: 'https://api.iconify.design/simple-icons:nextdotjs.svg?color=white' },
+    { name: 'React', icon: 'https://api.iconify.design/simple-icons:react.svg?color=%2361DAFB' },
+    { name: 'Astro', icon: 'https://api.iconify.design/simple-icons:astro.svg?color=white' },
+    { name: 'Express', icon: 'https://api.iconify.design/simple-icons:express.svg?color=white' },
+    { name: 'Svelte', icon: 'https://api.iconify.design/simple-icons:svelte.svg?color=%23FF3E00' },
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -3,11 +3,11 @@ import { Info, Hexagon, Database, Lock, Globe, Box } from 'lucide-react';
 
 export function DashboardIntegrations() {
   const latestIntegrations = [
-    { name: 'Auth0', desc: 'Auth for Users, APIs & Agents', icon: <img src="https://cdn.simpleicons.org/auth0/white" className="w-4 h-4 object-contain" alt="Auth0" /> },
-    { name: 'Shopify', desc: 'Build and deploy high-performance Shopify storefronts', icon: <img src="https://cdn.simpleicons.org/shopify/95BF47" className="w-4 h-4 object-contain" alt="Shopify" /> },
-    { name: 'AWS', desc: 'Serverless, reliable, secure AWS Services.', icon: <img src="https://cdn.simpleicons.org/amazonaws/FF9900" className="w-4 h-4 object-contain" alt="AWS" /> },
-    { name: 'Supabase', desc: 'The web data API that lets AI agents search, scrape, and interact at scale.', icon: <img src="https://cdn.simpleicons.org/supabase/3ECF8E" className="w-4 h-4 object-contain" alt="Supabase" /> },
-    { name: 'Stripe', desc: 'Autonomously read, write, and perform tasks on the web with serverless browsers', icon: <img src="https://cdn.simpleicons.org/stripe/635BFF" className="w-4 h-4 object-contain" alt="Stripe" /> },
+    { name: 'Auth0', desc: 'Auth for Users, APIs & Agents', icon: <img src="https://api.iconify.design/simple-icons:auth0.svg?color=white" className="w-4 h-4 object-contain" alt="Auth0" /> },
+    { name: 'Shopify', desc: 'Build and deploy high-performance Shopify storefronts', icon: <img src="https://api.iconify.design/simple-icons:shopify.svg?color=%2395BF47" className="w-4 h-4 object-contain" alt="Shopify" /> },
+    { name: 'AWS', desc: 'Serverless, reliable, secure AWS Services.', icon: <img src="https://api.iconify.design/simple-icons:amazonaws.svg?color=%23FF9900" className="w-4 h-4 object-contain" alt="AWS" /> },
+    { name: 'Supabase', desc: 'The web data API that lets AI agents search, scrape, and interact at scale.', icon: <img src="https://api.iconify.design/simple-icons:supabase.svg?color=%233ECF8E" className="w-4 h-4 object-contain" alt="Supabase" /> },
+    { name: 'Stripe', desc: 'Autonomously read, write, and perform tasks on the web with serverless browsers', icon: <img src="https://api.iconify.design/simple-icons:stripe.svg?color=%23635BFF" className="w-4 h-4 object-contain" alt="Stripe" /> },
   ];
 
   return (
