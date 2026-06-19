@@ -8,9 +8,11 @@ import { AIChat } from '../components/ide/AIChat';
 import { SearchPanel } from '../components/ide/SearchPanel';
 import { ApiKeyModal } from '../components/ide/ApiKeyModal';
 import { SourceControlPanel } from '../components/ide/SourceControlPanel';
+import { EditorTabs } from '../components/ide/EditorTabs';
 import { ArrowLeft, Loader2, Globe, Users, Play, Save, Files, Search, GitBranch, Settings, TerminalSquare, Sparkles, Maximize, Minimize } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { getTemplate } from '../lib/templates';
+import { useCollab } from '../hooks/useCollab';
 
 // Singleton promise to prevent booting multiple times during React StrictMode or HMR
 let bootPromise: Promise<WebContainer> | null = null;
@@ -45,8 +47,18 @@ export function NativeIDE() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-  const [selectedFile, setSelectedFile] = useState<string | null>(null);
-  const [fileContent, setFileContent] = useState<string>('');
+  type EditorGroup = {
+    id: string;
+    tabs: string[];
+    activeTab: string | null;
+  };
+  
+  const [editorGroups, setEditorGroups] = useState<EditorGroup[]>([
+    { id: '1', tabs: [], activeTab: null }
+  ]);
+  const [activeGroupId, setActiveGroupId] = useState<string>('1');
+  const { ydoc, provider } = useCollab(projectId);
+  
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
@@ -232,9 +244,49 @@ export function NativeIDE() {
     };
   }, [projectId]);
 
-  const handleFileSelect = (path: string, content: string) => {
-    setSelectedFile(path);
-    setFileContent(content);
+  const handleFileSelect = (path: string, _content: string) => {
+    setEditorGroups(groups => groups.map(group => {
+      if (group.id === activeGroupId) {
+        const tabs = group.tabs.includes(path) ? group.tabs : [...group.tabs, path];
+        return { ...group, tabs, activeTab: path };
+      }
+      return group;
+    }));
+  };
+
+  const handleTabClick = (groupId: string, path: string) => {
+    setActiveGroupId(groupId);
+    setEditorGroups(groups => groups.map(g => g.id === groupId ? { ...g, activeTab: path } : g));
+  };
+
+  const handleTabClose = (groupId: string, path: string) => {
+    setEditorGroups(groups => groups.map(g => {
+      if (g.id === groupId) {
+        const newTabs = g.tabs.filter(t => t !== path);
+        const newActiveTab = g.activeTab === path 
+          ? (newTabs.length > 0 ? newTabs[newTabs.length - 1] : null) 
+          : g.activeTab;
+        return { ...g, tabs: newTabs, activeTab: newActiveTab };
+      }
+      return g;
+    }));
+  };
+
+  const handleSplitEditor = (groupId: string) => {
+    const groupToSplit = editorGroups.find(g => g.id === groupId);
+    if (!groupToSplit || !groupToSplit.activeTab) return;
+    
+    const newGroupId = Math.random().toString(36).substring(7);
+    setEditorGroups(groups => [
+      ...groups,
+      { id: newGroupId, tabs: [groupToSplit.activeTab!], activeTab: groupToSplit.activeTab }
+    ]);
+    setActiveGroupId(newGroupId);
+  };
+
+  const getActiveGlobalTab = () => {
+    const activeGroup = editorGroups.find(g => g.id === activeGroupId);
+    return activeGroup?.activeTab || null;
   };
 
   const handleRunProject = async () => {
@@ -395,7 +447,7 @@ export function NativeIDE() {
                   projectId={projectId!}
                   webcontainer={webcontainer} 
                   onFileSelect={handleFileSelect}
-                  selectedFile={selectedFile}
+                  selectedFile={getActiveGlobalTab()}
                   onFileSystemChange={() => handleSave(true)}
                   isOwner={isOwner}
                 />
@@ -422,13 +474,33 @@ export function NativeIDE() {
           <div className="flex-1 min-h-0 flex">
             
             {/* Editor Area */}
-            <div className={`flex-1 min-w-0 relative ${previewUrl ? 'border-r border-white/[0.05]' : ''}`}>
-              <MonacoEditor 
-                projectId={projectId || 'default'}
-                filePath={selectedFile}
-                initialContent={fileContent}
-                webcontainer={webcontainer}
-              />
+            <div className={`flex-1 min-w-0 flex bg-[#050505] relative ${previewUrl ? 'border-r border-white/[0.05]' : ''}`}>
+              {editorGroups.map((group, index) => (
+                <div 
+                  key={group.id} 
+                  className={`flex-1 flex flex-col min-w-0 ${index > 0 ? 'border-l border-white/[0.05]' : ''}`}
+                  onClick={() => setActiveGroupId(group.id)}
+                >
+                  <EditorTabs
+                    tabs={group.tabs}
+                    activeTab={group.activeTab}
+                    onTabClick={(path) => handleTabClick(group.id, path)}
+                    onTabClose={(path) => handleTabClose(group.id, path)}
+                    showSplitButton={index === editorGroups.length - 1}
+                    onSplitEditor={() => handleSplitEditor(group.id)}
+                  />
+                  <div className={`flex-1 min-h-0 relative ${activeGroupId === group.id ? 'ring-1 ring-inset ring-blue-500/10' : ''}`}>
+                    <MonacoEditor 
+                      projectId={projectId || 'default'}
+                      filePath={group.activeTab}
+                      initialContent={""}
+                      webcontainer={webcontainer}
+                      ydoc={ydoc}
+                      provider={provider}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
 
             {/* Preview Area */}
