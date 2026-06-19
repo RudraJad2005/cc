@@ -88,9 +88,19 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
     // CRITICAL FIX: Prevent y-monaco from picking up old text from the editor model
     // when switching files, which caused the exponential text duplication bug.
     if (ytext.toString() === '') {
-      // First time this file is opened by anyone. Initialize it.
-      model.setValue(initialContent);
-      ytext.insert(0, initialContent);
+      // First time this file is opened by anyone. It might exist in FS (templates)
+      webcontainer.fs.readFile(filePath, 'utf-8').then(content => {
+        if (content) {
+          model.setValue(content);
+          ytext.insert(0, content);
+        } else {
+          model.setValue(initialContent);
+          if (initialContent) ytext.insert(0, initialContent);
+        }
+      }).catch(() => {
+        model.setValue(initialContent);
+        if (initialContent) ytext.insert(0, initialContent);
+      });
     } else {
       // File already exists in the shared Y.Doc. Load it.
       if (model.getValue() !== ytext.toString()) {

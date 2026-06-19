@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { WebContainer } from '@webcontainer/api';
 import { GitBranch, Github, Check, Loader2, AlertCircle } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import * as Y from 'yjs';
 
 interface SourceControlPanelProps {
   webcontainer: WebContainer | null;
+  ydoc?: Y.Doc;
+  onPullComplete?: () => void;
 }
 
-export function SourceControlPanel({ webcontainer }: SourceControlPanelProps) {
+export function SourceControlPanel({ webcontainer, ydoc, onPullComplete }: SourceControlPanelProps) {
   const [repoUrl, setRepoUrl] = useState('');
   const [branch, setBranch] = useState('main');
   const [message, setMessage] = useState('Initial commit from IDE');
@@ -213,16 +216,13 @@ export function SourceControlPanel({ webcontainer }: SourceControlPanelProps) {
       for (const item of treeData.tree) {
         if (item.type === 'blob') {
           try {
-            const blobRes = await fetch(item.url, { headers });
-            const blobData = await blobRes.json();
-            
-            let content = '';
-            if (blobData.encoding === 'base64') {
-              // Decode base64 in browser safely
-              content = decodeURIComponent(escape(window.atob(blobData.content)));
-            } else {
-              content = blobData.content;
-            }
+            const blobRes = await fetch(item.url, { 
+              headers: {
+                ...headers,
+                'Accept': 'application/vnd.github.v3.raw'
+              }
+            });
+            const content = await blobRes.text();
 
             // Ensure parent directories exist
             const parts = item.path.split('/');
@@ -233,8 +233,17 @@ export function SourceControlPanel({ webcontainer }: SourceControlPanelProps) {
               } catch (e) {} // Ignore if exists
             }
 
-            // Write file
+            // Write file to virtual file system
             await webcontainer.fs.writeFile('/' + item.path, content);
+            
+            // Sync file to the collaborative Yjs document so the editor updates instantly
+            if (ydoc) {
+              const ytext = ydoc.getText('/' + item.path);
+              if (ytext.toString() !== content) {
+                ytext.delete(0, ytext.length);
+                ytext.insert(0, content);
+              }
+            }
           } catch (fileErr) {
             console.error(`Failed to pull ${item.path}:`, fileErr);
           }
@@ -243,6 +252,7 @@ export function SourceControlPanel({ webcontainer }: SourceControlPanelProps) {
 
       setSuccess(true);
       setMessage('');
+      if (onPullComplete) onPullComplete();
       setTimeout(() => setSuccess(false), 5000);
 
     } catch (err: any) {

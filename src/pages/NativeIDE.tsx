@@ -469,7 +469,11 @@ export function NativeIDE() {
                 <SearchPanel />
               )}
               {activeSidebar === 'git' && (
-                <SourceControlPanel webcontainer={webcontainer} />
+                <SourceControlPanel 
+                  webcontainer={webcontainer} 
+                  ydoc={ydoc} 
+                  onPullComplete={() => handleSave(true)}
+                />
               )}
             </div>
             {/* Sidebar Splitter */}

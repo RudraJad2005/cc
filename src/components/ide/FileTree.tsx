@@ -191,6 +191,9 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
       case 'js':
       case 'jsx':
         return <FileCode2 className="w-4 h-4 text-yellow-400" />;
+      case 'py':
+      case 'pyw':
+        return <FileCode2 className="w-4 h-4 text-blue-500" />;
       case 'json':
         return <Braces className="w-4 h-4 text-yellow-200" />;
       case 'css':
