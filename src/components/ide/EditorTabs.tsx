@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { X, LayoutPanelLeft } from 'lucide-react';
 
 interface EditorTabsProps {
@@ -7,13 +8,26 @@ interface EditorTabsProps {
   onTabClose: (path: string) => void;
   onSplitEditor?: () => void;
   showSplitButton?: boolean;
+  onFileDrop?: (path: string) => void;
 }
 
-export function EditorTabs({ tabs, activeTab, onTabClick, onTabClose, onSplitEditor, showSplitButton }: EditorTabsProps) {
-  if (tabs.length === 0) return null;
+export function EditorTabs({ tabs, activeTab, onTabClick, onTabClose, onSplitEditor, showSplitButton, onFileDrop }: EditorTabsProps) {
+  const [isDragOver, setIsDragOver] = useState(false);
+
+  if (tabs.length === 0 && !isDragOver) return null;
 
   return (
-    <div className="flex bg-[#050505] border-b border-white/[0.05] overflow-x-auto no-scrollbar relative items-center">
+    <div 
+      className={`flex bg-[#050505] border-b overflow-x-auto no-scrollbar relative items-center min-h-[36px] transition-colors ${isDragOver ? 'border-blue-500 bg-blue-500/10' : 'border-white/[0.05]'}`}
+      onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
+      onDragLeave={() => setIsDragOver(false)}
+      onDrop={(e) => {
+        e.preventDefault();
+        setIsDragOver(false);
+        const path = e.dataTransfer.getData('text/plain');
+        if (path && onFileDrop) onFileDrop(path);
+      }}
+    >
       {tabs.map(tab => {
         const isActive = activeTab === tab;
         const filename = tab.split('/').pop() || tab;

@@ -221,6 +221,13 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
     return (
       <div key={node.path} className="flex flex-col">
         <div 
+          draggable={!node.isDirectory}
+          onDragStart={(e) => {
+            if (!node.isDirectory) {
+              e.dataTransfer.setData('text/plain', node.path);
+              e.dataTransfer.effectAllowed = 'copyMove';
+            }
+          }}
           className={`group flex items-center justify-between py-1 px-2 cursor-pointer hover:bg-white/[0.05] transition-colors ${isSelected ? 'bg-blue-500/10 text-blue-400' : 'text-gray-300'}`}
           style={{ paddingLeft: `${(depth * 12) + 8}px` }}
           onClick={() => node.isDirectory ? handleToggleFolder(node) : handleFileClick(node)}

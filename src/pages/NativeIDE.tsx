@@ -57,6 +57,7 @@ export function NativeIDE() {
     { id: '1', tabs: [], activeTab: null }
   ]);
   const [activeGroupId, setActiveGroupId] = useState<string>('1');
+  const [dragOverSplitGroupId, setDragOverSplitGroupId] = useState<string | null>(null);
   const { ydoc, provider } = useCollab(projectId);
   
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -488,6 +489,16 @@ export function NativeIDE() {
                     onTabClose={(path) => handleTabClose(group.id, path)}
                     showSplitButton={index === editorGroups.length - 1}
                     onSplitEditor={() => handleSplitEditor(group.id)}
+                    onFileDrop={(path) => {
+                      setActiveGroupId(group.id);
+                      setEditorGroups(groups => groups.map(g => {
+                        if (g.id === group.id) {
+                          const tabs = g.tabs.includes(path) ? g.tabs : [...g.tabs, path];
+                          return { ...g, tabs, activeTab: path };
+                        }
+                        return g;
+                      }));
+                    }}
                   />
                   <div className={`flex-1 min-h-0 relative ${activeGroupId === group.id ? 'ring-1 ring-inset ring-blue-500/10' : ''}`}>
                     <MonacoEditor 
@@ -498,6 +509,48 @@ export function NativeIDE() {
                       ydoc={ydoc}
                       provider={provider}
                     />
+                    
+                    {/* Drag Drop Zone */}
+                    <div 
+                      className={`absolute top-0 right-0 h-full z-10 ${group.activeTab ? 'w-1/2' : 'w-full'}`}
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        if (dragOverSplitGroupId !== group.id) setDragOverSplitGroupId(group.id);
+                      }}
+                      onDragLeave={(e) => {
+                        if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                          setDragOverSplitGroupId(null);
+                        }
+                      }}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        setDragOverSplitGroupId(null);
+                        const path = e.dataTransfer.getData('text/plain');
+                        if (path) {
+                          if (!group.activeTab) {
+                            // If empty pane, just open it here
+                            setActiveGroupId(group.id);
+                            setEditorGroups(groups => groups.map(g => g.id === group.id ? { ...g, tabs: [path], activeTab: path } : g));
+                          } else {
+                            // Split
+                            const newGroupId = Math.random().toString(36).substring(7);
+                            setEditorGroups(groups => [
+                              ...groups,
+                              { id: newGroupId, tabs: [path], activeTab: path }
+                            ]);
+                            setActiveGroupId(newGroupId);
+                          }
+                        }
+                      }}
+                    >
+                      {dragOverSplitGroupId === group.id && (
+                        <div className={`absolute inset-0 bg-blue-500/20 backdrop-blur-[1px] flex items-center justify-center ${group.activeTab ? 'border-l-2 border-blue-500' : 'border-2 border-blue-500 border-dashed m-4 rounded-xl'}`}>
+                          <div className="bg-blue-500 text-white text-xs px-3 py-1.5 rounded-full font-medium shadow-lg pointer-events-none">
+                            {group.activeTab ? 'Split Editor' : 'Open File Here'}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
