@@ -163,7 +163,7 @@ export function NativeIDE() {
           if (data?.file_system) {
             console.log("Loading file system from Supabase...");
             await instance.mount(data.file_system);
-          } else if (ownerStatus || !data) {
+          } else if (ownerStatus) {
             console.log("Loading default template...");
             await instance.mount(getTemplate(data?.framework || 'react'));
           } else {
