@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Github, Gitlab } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 export function SignUp() {
@@ -64,17 +65,19 @@ export function SignUp() {
             </div>
          )}
 
-         <div className="flex flex-col gap-3 mb-6">
+          <div className="flex flex-col gap-3 mb-6">
             <button onClick={() => handleOAuthLogin('github')} className="w-full flex items-center justify-center gap-3 bg-[#0A0A0A] hover:bg-[#111] border border-white/[0.1] hover:border-white/[0.2] transition-colors text-white py-2.5 rounded-lg text-sm font-medium">
-               <img src="https://cdn.simpleicons.org/github/white" className="w-4 h-4" alt="GitHub" />
+               <Github className="w-4 h-4" />
                Sign up with GitHub
             </button>
             <button onClick={() => handleOAuthLogin('gitlab')} className="w-full flex items-center justify-center gap-3 bg-[#0A0A0A] hover:bg-[#111] border border-white/[0.1] hover:border-white/[0.2] transition-colors text-white py-2.5 rounded-lg text-sm font-medium">
-               <img src="https://cdn.simpleicons.org/gitlab/FC6D26" className="w-4 h-4" alt="GitLab" />
+               <Gitlab className="w-4 h-4 text-[#FC6D26]" />
                Sign up with GitLab
             </button>
             <button onClick={() => handleOAuthLogin('bitbucket')} className="w-full flex items-center justify-center gap-3 bg-[#0A0A0A] hover:bg-[#111] border border-white/[0.1] hover:border-white/[0.2] transition-colors text-white py-2.5 rounded-lg text-sm font-medium">
-               <img src="https://cdn.simpleicons.org/bitbucket/0052CC" className="w-4 h-4" alt="Bitbucket" />
+               <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-[#0052CC]">
+                  <path d="M.766 2.376A.925.925 0 000 3.253v17.494a.925.925 0 00.902.925h22.196a.925.925 0 00.902-.925V3.253a.925.925 0 00-.766-.877L.766 2.376zm3.344 14.394h15.78l-2.09-10.02H6.2l-2.09 10.02z"/>
+               </svg>
                Sign up with Bitbucket
             </button>
          </div>
