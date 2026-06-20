@@ -250,7 +250,7 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
           if (token.isCancellationRequested) return { items: [] };
 
           const genAI = new GoogleGenerativeAI(apiKey);
-          const aiModel = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+          const aiModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
           const textBeforePointer = textModel.getValueInRange({
             startLineNumber: 1,
             startColumn: 1,
