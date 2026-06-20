@@ -89,19 +89,29 @@ export class DockerContainer {
      return {
        output: {
          pipeTo: async (writableStream: any) => {
-           // Not a true pipe, but we can hook into onData
-           const writer = writableStream.getWriter();
-           onDataCallback = (data: string) => writer.write(data);
+           // Wait slightly for the writer to be ready
+           setTimeout(() => {
+             try {
+               const writer = writableStream.getWriter();
+               onDataCallback = (data: string) => writer.write(data);
+             } catch (e) {
+               // If it's already locked or has issues, we can fall back to direct xterm writing in the future
+             }
+           }, 100);
          }
        },
-       write: (data: string) => {
-         this.socket.emit('terminalInput', { terminalId, data });
+       input: {
+         getWriter: () => ({
+           write: (data: string) => {
+             this.socket.emit('terminalInput', { terminalId, data });
+           }
+         })
        },
        resize: ({ cols, rows }: { cols: number, rows: number }) => {
          this.socket.emit('resizeTerminal', { terminalId, cols, rows });
        },
        kill: () => {
-         // emit kill command
+         // Implement kill if needed
        },
        exit: new Promise((resolve) => {
          onExitCallback = resolve;
