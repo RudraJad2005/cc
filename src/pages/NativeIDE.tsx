@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { WebContainer } from '@webcontainer/api';
+import { DockerContainer } from '../lib/DockerContainer';
 import { useParams, Link } from 'react-router-dom';
 import { FileTree } from '../components/ide/FileTree';
 import { MonacoEditor } from '../components/ide/MonacoEditor';
@@ -158,19 +159,6 @@ export function NativeIDE() {
       if (!projectId) return;
 
       try {
-        if (!bootPromise) {
-          console.log("Booting WebContainer OS...");
-          bootPromise = WebContainer.boot();
-        }
-        
-        const instance = await bootPromise;
-        
-        // Listen for the dev server
-        instance.on('server-ready', (port, url) => {
-          console.log('Server ready on', url);
-          setPreviewUrl(url);
-        });
-          
         // Check ownership
         const { data: authData } = await supabase.auth.getUser();
         const { data } = await supabase.from('projects').select('file_system, user_id, framework').eq('name', projectId).single();
@@ -179,6 +167,26 @@ export function NativeIDE() {
         if (ownerStatus) {
           setIsOwner(true);
         }
+
+        let instance;
+        if (data?.framework === 'python') {
+          console.log("Booting Azure Docker OS...");
+          instance = new DockerContainer(projectId);
+        } else {
+          if (!bootPromise) {
+            console.log("Booting WebContainer OS...");
+            bootPromise = WebContainer.boot();
+          }
+          instance = await bootPromise;
+          
+          // Listen for the dev server (WebContainer only)
+          instance.on('server-ready', (port: number, url: string) => {
+            console.log('Server ready on', url);
+            setPreviewUrl(url);
+          });
+        }
+        
+
           
         try {
           if (data?.file_system) {
@@ -680,7 +688,7 @@ export function NativeIDE() {
                 className="h-1 cursor-row-resize hover:bg-[var(--ide-border-hover)] bg-[var(--ide-border)] transition-colors -mt-1 z-20"
                 onMouseDown={() => setIsResizingTerminal(true)}
               />
-              <TerminalTabs webcontainer={webcontainer} onClose={() => setIsTerminalOpen(false)} />
+              <TerminalTabs webcontainer={webcontainer} onClose={() => setIsTerminalOpen(false)} theme={ideTheme} />
             </div>
           )}
         </div>

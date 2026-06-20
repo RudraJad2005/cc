@@ -7,7 +7,7 @@ export class DockerContainer {
 
   constructor(projectId: string) {
     this.projectId = projectId;
-    this.socket = io('http://localhost:4000');
+    this.socket = io('wss://52.172.229.65.nip.io');
     
     this.fs = {
       readdir: async (path: string, options: any) => {
