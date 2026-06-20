@@ -235,15 +235,17 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
       }
     }
 
-    // Register AI Copilot Ghost Text
-    const apiKey = localStorage.getItem('aiApiKey');
-    if (apiKey && !monaco.languages.getLanguages().some((l: any) => l.id === 'ai_copilot_registered')) {
+    // Register AI Copilot Ghost Text (unconditionally, fetch API key dynamically)
+    if (!monaco.languages.getLanguages().some((l: any) => l.id === 'ai_copilot_registered')) {
       monaco.languages.register({ id: 'ai_copilot_registered' });
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const aiModel = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
       const aiProvider = {
         provideInlineCompletions: async (textModel: any, position: any, context: any, token: any) => {
+          const apiKey = localStorage.getItem('aiApiKey');
+          if (!apiKey) return { items: [] };
+
+          const genAI = new GoogleGenerativeAI(apiKey);
+          const aiModel = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
           const textBeforePointer = textModel.getValueInRange({
             startLineNumber: 1,
             startColumn: 1,
@@ -510,6 +512,7 @@ Respond ONLY with the exact code that should be inserted at the cursor to comple
             cursorBlinking: 'smooth',
             cursorSmoothCaretAnimation: 'on',
             formatOnPaste: true,
+            inlineSuggest: { enabled: true },
             scrollbar: {
               verticalScrollbarSize: 8,
               horizontalScrollbarSize: 8
