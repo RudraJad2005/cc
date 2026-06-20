@@ -4,6 +4,7 @@ import * as Y from 'yjs';
 import * as awarenessProtocol from 'y-protocols/awareness';
 import { MonacoBinding } from 'y-monaco';
 import { WebContainer } from '@webcontainer/api';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const getLanguage = (path: string) => {
   if (path.endsWith('.ts') || path.endsWith('.tsx')) return 'typescript';
@@ -229,6 +230,138 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
       }
     }
 
+    // Register AI Copilot Ghost Text
+    const apiKey = localStorage.getItem('aiApiKey');
+    if (apiKey && !monaco.languages.getLanguages().some((l: any) => l.id === 'ai_copilot_registered')) {
+      monaco.languages.register({ id: 'ai_copilot_registered' });
+      const genAI = new GoogleGenerativeAI(apiKey);
+      const aiModel = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+      const aiProvider = {
+        provideInlineCompletions: async (textModel: any, position: any, context: any, token: any) => {
+          const textBeforePointer = textModel.getValueInRange({
+            startLineNumber: 1,
+            startColumn: 1,
+            endLineNumber: position.lineNumber,
+            endColumn: position.column
+          });
+          const textAfterPointer = textModel.getValueInRange({
+            startLineNumber: position.lineNumber,
+            startColumn: position.column,
+            endLineNumber: textModel.getLineCount(),
+            endColumn: textModel.getLineMaxColumn(textModel.getLineCount())
+          });
+
+          if (textBeforePointer.trim() === '') return { items: [] };
+
+          try {
+            const prompt = `You are a code completion AI like GitHub Copilot. 
+Code before cursor:
+\`\`\`
+${textBeforePointer.slice(-1000)}
+\`\`\`
+Code after cursor:
+\`\`\`
+${textAfterPointer.slice(0, 500)}
+\`\`\`
+Respond ONLY with the exact code that should be inserted at the cursor to complete the thought. Do not include markdown formatting or explanations. Do not repeat code that is already there. If no completion is needed, respond with an empty string.`;
+
+            const result = await aiModel.generateContent(prompt);
+            let completion = result.response.text();
+            
+            // Clean up any markdown blocks if the AI accidentally adds them
+            completion = completion.replace(/^```[a-z]*\n?/i, '').replace(/```$/i, '').trimEnd();
+
+            if (!completion) return { items: [] };
+
+            return {
+              items: [{
+                insertText: completion,
+                range: new monaco.Range(position.lineNumber, position.column, position.lineNumber, position.column)
+              }]
+            };
+          } catch (e) {
+            console.error("Copilot error:", e);
+            return { items: [] };
+          }
+        },
+        freeInlineCompletions: () => {}
+      };
+
+      // Register for all supported languages
+      ['javascript', 'typescript', 'python', 'html', 'css', 'json'].forEach(lang => {
+        monaco.languages.registerInlineCompletionsProvider(lang, aiProvider);
+      });
+    }
+
+    // Register simple Python completions
+    if (!monaco.languages.getLanguages().some((l: any) => l.id === 'python_custom_registered')) {
+      monaco.languages.register({ id: 'python_custom_registered' }); // just a marker
+      monaco.languages.registerCompletionItemProvider('python', {
+        provideCompletionItems: (model: any, position: any) => {
+          const word = model.getWordUntilPosition(position);
+          const range = {
+            startLineNumber: position.lineNumber,
+            endLineNumber: position.lineNumber,
+            startColumn: word.startColumn,
+            endColumn: word.endColumn
+          };
+          return {
+            suggestions: [
+              {
+                label: 'print',
+                kind: monaco.languages.CompletionItemKind.Function,
+                insertText: 'print(${1:text})',
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: 'Print to standard output',
+                range
+              },
+              {
+                label: 'def',
+                kind: monaco.languages.CompletionItemKind.Keyword,
+                insertText: 'def ${1:name}(${2:args}):\n\t${3:pass}',
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: 'Define a function',
+                range
+              },
+              {
+                label: 'class',
+                kind: monaco.languages.CompletionItemKind.Keyword,
+                insertText: 'class ${1:Name}:\n\tdef __init__(self):\n\t\t${2:pass}',
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: 'Define a class',
+                range
+              },
+              {
+                label: 'if',
+                kind: monaco.languages.CompletionItemKind.Keyword,
+                insertText: 'if ${1:condition}:\n\t${2:pass}',
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: 'If statement',
+                range
+              },
+              {
+                label: 'for',
+                kind: monaco.languages.CompletionItemKind.Keyword,
+                insertText: 'for ${1:item} in ${2:iterable}:\n\t${3:pass}',
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: 'For loop',
+                range
+              },
+              {
+                label: 'import',
+                kind: monaco.languages.CompletionItemKind.Keyword,
+                insertText: 'import ${1:module}',
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                documentation: 'Import a module',
+                range
+              }
+            ]
+          };
+        }
+      });
+    }
+
     setIsEditorReady(true);
   };
 
@@ -321,8 +454,8 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
 
   if (!filePath) {
     return (
-      <div className="w-full h-full flex flex-col items-center justify-center text-gray-500 bg-[#000]">
-        <div className="w-16 h-16 border-2 border-white/[0.05] rounded-2xl flex items-center justify-center mb-4 bg-[#050505]">
+      <div className="w-full h-full flex flex-col items-center justify-center text-[var(--ide-text-muted)] bg-[var(--ide-base)]">
+        <div className="w-16 h-16 border-2 border-[var(--ide-border)] rounded-2xl flex items-center justify-center mb-4 bg-[var(--ide-panel-darker)]">
           <svg className="w-8 h-8 opacity-20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
         </div>
         Select a file from the explorer to start coding
@@ -331,7 +464,7 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
   }
 
   return (
-    <div className="w-full h-full bg-[#000] flex flex-col">
+    <div className="w-full h-full bg-[var(--ide-base)] flex flex-col">
       <div className="flex-1 relative">
         <Editor
           path={filePath}
