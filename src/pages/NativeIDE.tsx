@@ -469,7 +469,7 @@ export function NativeIDE() {
             )}
           </div>
 
-          <button className="p-2 text-[var(--ide-text-muted)] hover:text-[var(--ide-text)] transition-colors mb-2" title="Settings">
+          <button onClick={() => setShowApiKeyModal(true)} className="p-2 text-[var(--ide-text-muted)] hover:text-[var(--ide-text)] transition-colors mb-2" title="Settings">
             <Settings className="w-6 h-6 stroke-[1.5]" />
           </button>
         </div>
