@@ -121,8 +121,24 @@ export class DockerContainer {
 
   async getCompletions(sourceCode: string, line: number, column: number): Promise<any[]> {
     return new Promise((resolve) => {
+      let resolved = false;
+      
+      const timeout = setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+          resolve([]);
+        }
+      }, 500); // 500ms timeout to prevent hanging if backend isn't patched
+
       this.socket.emit('getCompletions', { projectId: this.projectId, sourceCode, line, column });
-      this.socket.once('completionsResult', (data) => resolve(data.completions || []));
+      
+      this.socket.once('completionsResult', (data) => {
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(timeout);
+          resolve(data.completions || []);
+        }
+      });
     });
   }
 }

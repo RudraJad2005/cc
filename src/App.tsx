@@ -25,6 +25,7 @@ import { Packages } from './pages/Packages';
 import { DashboardLayout } from './layouts/DashboardLayout';
 import { Dashboard } from './pages/Dashboard';
 import { Projects } from './pages/Projects';
+import { DashboardSandboxes } from './pages/DashboardSandboxes';
 import { Settings } from './pages/Settings';
 import { DashboardDeployments } from './pages/DashboardDeployments';
 import { DashboardTemplates } from './pages/DashboardTemplates';
@@ -33,6 +34,7 @@ import { DashboardNewProject } from './pages/DashboardNewProject';
 
 import { ProjectLayout } from './layouts/ProjectLayout';
 import { ProjectOverview } from './pages/ProjectOverview';
+import { ProjectSettings } from './pages/ProjectSettings';
 import { NativeIDE } from './pages/NativeIDE';
 
 import { MarketplaceLayout } from './layouts/MarketplaceLayout';
@@ -88,6 +90,7 @@ export default function App() {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
+          <Route path="sandboxes" element={<DashboardSandboxes />} />
           <Route path="deployments" element={<DashboardDeployments />} />
           <Route path="templates" element={<DashboardTemplates />} />
           <Route path="integrations" element={<DashboardIntegrations />} />
@@ -97,6 +100,7 @@ export default function App() {
 
         <Route path="/dashboard/projects/:projectId" element={<ProjectLayout />}>
           <Route index element={<ProjectOverview />} />
+          <Route path="settings" element={<ProjectSettings />} />
         </Route>
 
         <Route path="/dashboard/projects/:projectId/editor" element={<NativeIDE />} />

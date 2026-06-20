@@ -8,12 +8,12 @@ export function SearchPanel() {
   const [replaceQuery, setReplaceQuery] = useState('');
 
   return (
-    <div className="flex flex-col w-full h-full bg-[#0A0A0A] border-r border-white/[0.05] overflow-y-auto">
+    <div className="flex flex-col w-full h-full bg-[var(--ide-panel)] border-r border-[var(--ide-border)] overflow-y-auto">
       
       {/* Search Header Accordion */}
       <button 
         onClick={() => setIsSearchExpanded(!isSearchExpanded)}
-        className="flex items-center w-full px-2 py-2 text-xs font-semibold text-gray-400 hover:text-white transition-colors uppercase tracking-wider bg-[#050505] sticky top-0 z-10"
+        className="flex items-center w-full px-2 py-2 text-xs font-semibold text-[var(--ide-text-muted)] hover:text-[var(--ide-text)] transition-colors uppercase tracking-wider bg-[var(--ide-panel-darker)] sticky top-0 z-10"
       >
         {isSearchExpanded ? <ChevronDown className="w-4 h-4 mr-1" /> : <ChevronRight className="w-4 h-4 mr-1" />}
         Search
@@ -33,7 +33,7 @@ export function SearchPanel() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search"
-                className="w-full bg-[#111] border border-white/[0.1] rounded px-3 py-1.5 pl-9 text-[13px] text-white focus:outline-none focus:border-blue-500/50 transition-colors"
+                className="w-full bg-[var(--ide-panel-lighter)] border border-[var(--ide-border)] rounded px-3 py-1.5 pl-9 text-[13px] text-[var(--ide-text)] focus:outline-none focus:border-blue-500/50 transition-colors"
               />
             </div>
           </div>
@@ -50,7 +50,7 @@ export function SearchPanel() {
                   value={replaceQuery}
                   onChange={(e) => setReplaceQuery(e.target.value)}
                   placeholder="Replace"
-                  className="w-full bg-[#111] border border-white/[0.1] rounded px-3 py-1.5 pl-9 text-[13px] text-white focus:outline-none focus:border-blue-500/50 transition-colors"
+                  className="w-full bg-[var(--ide-panel-lighter)] border border-[var(--ide-border)] rounded px-3 py-1.5 pl-9 text-[13px] text-[var(--ide-text)] focus:outline-none focus:border-blue-500/50 transition-colors"
                 />
               </div>
               <button className="p-1.5 text-gray-500 hover:text-gray-300 hover:bg-white/[0.05] rounded" title="Replace All">
@@ -76,7 +76,7 @@ export function SearchPanel() {
                 <input
                   type="text"
                   placeholder="e.g. *.ts, src/components/"
-                  className="w-full bg-[#111] border border-white/[0.1] rounded px-3 py-1.5 text-[13px] text-white focus:outline-none focus:border-blue-500/50 transition-colors"
+                  className="w-full bg-[var(--ide-panel-lighter)] border border-[var(--ide-border)] rounded px-3 py-1.5 text-[13px] text-[var(--ide-text)] focus:outline-none focus:border-blue-500/50 transition-colors"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -84,7 +84,7 @@ export function SearchPanel() {
                 <input
                   type="text"
                   placeholder="e.g. *.svg, node_modules/"
-                  className="w-full bg-[#111] border border-white/[0.1] rounded px-3 py-1.5 text-[13px] text-white focus:outline-none focus:border-blue-500/50 transition-colors"
+                  className="w-full bg-[var(--ide-panel-lighter)] border border-[var(--ide-border)] rounded px-3 py-1.5 text-[13px] text-[var(--ide-text)] focus:outline-none focus:border-blue-500/50 transition-colors"
                 />
               </div>
             </div>

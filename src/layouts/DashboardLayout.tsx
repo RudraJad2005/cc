@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Folder, Settings, Search, Bell, User, Server, Blocks, Plug, LogOut } from 'lucide-react';
+import { LayoutDashboard, Folder, Settings, Search, Bell, User, Server, Blocks, Plug, LogOut, Code2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { NotificationInbox } from '../components/NotificationInbox';
 
@@ -23,6 +23,7 @@ export function DashboardLayout() {
   const navItems = [
     { name: 'Overview', path: '/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
     { name: 'Projects', path: '/dashboard/projects', icon: <Folder className="w-4 h-4" /> },
+    { name: 'Sandboxes', path: '/dashboard/sandboxes', icon: <Code2 className="w-4 h-4" /> },
     { name: 'Templates', path: '/dashboard/templates', icon: <Blocks className="w-4 h-4" /> },
     { name: 'Integrations', path: '/dashboard/integrations', icon: <Plug className="w-4 h-4" /> },
     { name: 'Settings', path: '/dashboard/settings', icon: <Settings className="w-4 h-4" /> },

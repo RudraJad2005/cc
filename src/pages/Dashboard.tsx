@@ -31,6 +31,7 @@ export function Dashboard() {
   const userName = user?.email?.split('@')[0] || 'Developer';
 
   const [projects, setProjects] = useState<any[]>([]);
+  const [sandboxes, setSandboxes] = useState<any[]>([]);
   const [activity, setActivity] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -43,7 +44,10 @@ export function Dashboard() {
         supabase.from('activity').select('*').order('created_at', { ascending: false }).limit(5)
       ]);
 
-      if (projectsRes.data) setProjects(projectsRes.data);
+      if (projectsRes.data) {
+        setProjects(projectsRes.data.filter(p => p.branch !== 'sandbox'));
+        setSandboxes(projectsRes.data.filter(p => p.branch === 'sandbox'));
+      }
       if (activityRes.data) setActivity(activityRes.data);
       setLoading(false);
     }
@@ -127,8 +131,50 @@ export function Dashboard() {
                        <span className="text-sm font-medium">Import Project</span>
                     </Link>
                  </div>
-              )}
-           </div>
+               )}
+
+               {/* Sandboxes Section */}
+               <div className="flex items-center justify-between mt-6">
+                  <h2 className="text-sm font-medium text-gray-400">Your Sandboxes</h2>
+                  <Link to="/dashboard/new" className="text-sm text-gray-500 hover:text-white transition-colors flex items-center gap-1">
+                     View All <ArrowRight className="w-3 h-3" />
+                  </Link>
+               </div>
+
+               {sandboxes.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-10 px-6 border border-white/[0.08] border-dashed rounded-xl bg-[#020202]">
+                     <h3 className="text-base font-medium text-white mb-1">No sandboxes</h3>
+                     <p className="text-xs text-gray-400 text-center mb-4">Create a lightweight coding environment for prototyping.</p>
+                     <Link to="/dashboard/new" className="bg-[#111] border border-white/[0.1] text-white px-4 py-2 rounded-lg text-xs font-medium hover:bg-white/[0.05] transition-colors">
+                        New Sandbox
+                     </Link>
+                  </div>
+               ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                     {sandboxes.map((sandbox) => (
+                       <Link key={sandbox.id} to={`/dashboard/projects/${sandbox.name}`} className="group p-5 rounded-xl border border-white/[0.1] bg-[#050505] hover:border-white/[0.2] hover:bg-[#0a0a0a] transition-all flex flex-col gap-4">
+                          <div className="flex items-start justify-between">
+                             <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full border border-white/[0.1] bg-[#0A0A0A] flex items-center justify-center shrink-0">
+                                   <img src={getSafeIconUrl(sandbox.icon)} alt={sandbox.framework} className="w-3.5 h-3.5 object-contain" />
+                                </div>
+                                <div>
+                                   <h3 className="font-semibold text-white group-hover:text-blue-400 transition-colors">{sandbox.name}</h3>
+                                   <p className="text-xs text-gray-500 font-mono">{sandbox.framework}</p>
+                                </div>
+                             </div>
+                          </div>
+                          
+                          <div className="flex items-center gap-4 text-xs text-gray-400 mt-2">
+                             <div className="flex items-center gap-1.5">
+                                <Clock className="w-3.5 h-3.5" /> {getRelativeTime(sandbox.created_at)}
+                             </div>
+                          </div>
+                       </Link>
+                     ))}
+                  </div>
+               )}
+            </div>
 
            {/* Right Column: Activity */}
            <div className="flex flex-col gap-6">

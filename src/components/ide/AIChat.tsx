@@ -11,9 +11,9 @@ interface AIChatProps {
 
 export function AIChat({ onClose }: AIChatProps) {
   return (
-    <div className="flex flex-col h-full bg-[#0a0a0a] border-l border-white/[0.05]">
+    <div className="flex flex-col h-full bg-[var(--ide-panel)] border-l border-[var(--ide-border)]">
       {/* Header */}
-      <div className="h-12 border-b border-white/[0.05] flex items-center justify-between px-4 shrink-0 bg-[#000]">
+      <div className="h-12 border-b border-[var(--ide-border)] flex items-center justify-between px-4 shrink-0 bg-[var(--ide-panel-darker)]">
         <div className="flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-purple-400" />
           <span className="text-sm font-medium text-white">AI Assistant</span>

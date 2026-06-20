@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { WebContainer } from '@webcontainer/api';
-import { Folder, FolderOpen, File as FileIcon, ChevronRight, ChevronDown, FileCode2, FileJson, Image as ImageIcon, FilePlus, FolderPlus, Trash2, FileText, Code, Braces, Terminal, Settings, Layout, FileType2, Database } from 'lucide-react';
+import { getFileIcon, getFolderIcon } from '../../utils/fileIcons';
+import { Folder, FolderOpen, File as FileIcon, ChevronRight, ChevronDown, FileCode2, FileJson, Image as ImageIcon, FilePlus, FolderPlus, Trash2, FileText, Code, Braces, Terminal, Settings, Layout, FileType2, Database, Pencil, RefreshCw } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 interface FileTreeProps {
@@ -28,6 +29,8 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
   const [isCreating, setIsCreating] = useState<'file' | 'folder' | null>(null);
   const [createName, setCreateName] = useState('');
   const [createParentPath, setCreateParentPath] = useState('/');
+  const [renamingPath, setRenamingPath] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState('');
 
   const buildTree = async (dirPath: string, currentExpanded: Set<string>): Promise<TreeNode[]> => {
     if (!webcontainer) return [];
@@ -97,6 +100,21 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
     const handleFsSynced = () => refreshRoot();
     window.addEventListener('fs_synced', handleFsSynced);
     
+    const handleExpandFolder = (e: any) => {
+      setExpandedFolders(prev => {
+        const next = new Set(prev);
+        let curr = '';
+        if (e.detail?.path) {
+          e.detail.path.split('/').filter(Boolean).forEach((p: string) => {
+            curr += `/${p}`;
+            next.add(curr);
+          });
+        }
+        return next;
+      });
+    };
+    window.addEventListener('expand_folder', handleExpandFolder);
+    
     const ch = supabase.channel(`collab-code-${projectId}-fs`);
     
     ch.on('broadcast', { event: 'fs_update' }, async ({ payload }) => {
@@ -104,6 +122,10 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
         if (payload.action === 'mkdir') await webcontainer.fs.mkdir(payload.path);
         else if (payload.action === 'writeFile') await webcontainer.fs.writeFile(payload.path, payload.content || '');
         else if (payload.action === 'rm') await webcontainer.fs.rm(payload.path, { recursive: true });
+        else if (payload.action === 'rename') {
+          const code = `require('fs').renameSync('${payload.oldPath}', '${payload.newPath}')`;
+          await webcontainer.spawn('node', ['-e', code]);
+        }
         
         refreshRoot();
         
@@ -122,6 +144,7 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
     return () => { 
       ch.unsubscribe(); 
       window.removeEventListener('fs_synced', handleFsSynced);
+      window.removeEventListener('expand_folder', handleExpandFolder);
     };
   }, [webcontainer, projectId]);
 
@@ -169,6 +192,50 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
     }
   };
 
+  const handleRenameSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!webcontainer || !renamingPath || !renameValue.trim()) {
+      setRenamingPath(null);
+      return;
+    }
+    
+    // Calculate new path properly
+    const lastSlashIndex = renamingPath.lastIndexOf('/');
+    const basePath = lastSlashIndex >= 0 ? renamingPath.substring(0, lastSlashIndex) : '';
+    const newPath = `${basePath}/${renameValue.trim()}`;
+
+    try {
+      if (renamingPath !== newPath) {
+        // Use an inline Node.js script to run standard fs.renameSync inside the container. 
+        // This avoids any WebContainer API inconsistencies for renaming.
+        const code = `require('fs').renameSync('${renamingPath}', '${newPath}')`;
+        const process = await webcontainer.spawn('node', ['-e', code]);
+        const exitCode = await process.exit;
+        
+        if (exitCode === 0) {
+          // Broadcast rename
+          if (channel) {
+            channel.send({ type: 'broadcast', event: 'fs_update', payload: { action: 'rename', oldPath: renamingPath, newPath: newPath } });
+          }
+          
+          refreshRoot();
+          if (onFileSystemChange) onFileSystemChange();
+          
+          if (selectedFile === renamingPath) {
+            onFileSelect('', '');
+          }
+        } else {
+          console.error("Rename failed with exit code", exitCode);
+        }
+      }
+    } catch (err) {
+      console.error("Rename failed", err);
+    }
+    
+    setRenamingPath(null);
+    setRenameValue('');
+  };
+
   const handleCreateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!webcontainer || !createName) return;
@@ -192,44 +259,6 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
     }
   };
 
-  const getFileIcon = (name: string) => {
-    const ext = name.split('.').pop()?.toLowerCase();
-    if (name === 'package.json') return <Braces className="w-4 h-4 text-red-400" />;
-    if (name.startsWith('.env')) return <Settings className="w-4 h-4 text-[var(--ide-text-muted)]" />;
-    
-    switch (ext) {
-      case 'ts':
-      case 'tsx':
-        return <FileType2 className="w-4 h-4 text-blue-400" />;
-      case 'js':
-      case 'jsx':
-        return <FileCode2 className="w-4 h-4 text-yellow-400" />;
-      case 'py':
-      case 'pyw':
-        return <FileCode2 className="w-4 h-4 text-blue-500" />;
-      case 'json':
-        return <Braces className="w-4 h-4 text-yellow-200" />;
-      case 'css':
-      case 'scss':
-      case 'less':
-        return <Layout className="w-4 h-4 text-pink-400" />;
-      case 'html':
-        return <Code className="w-4 h-4 text-orange-400" />;
-      case 'md':
-      case 'txt':
-        return <FileText className="w-4 h-4 text-[var(--ide-text-muted)]" />;
-      case 'png':
-      case 'jpg':
-      case 'jpeg':
-      case 'svg':
-      case 'gif':
-      case 'ico':
-        return <ImageIcon className="w-4 h-4 text-green-400" />;
-      default:
-        return <FileIcon className="w-4 h-4 text-[var(--ide-text-muted)]" />;
-    }
-  };
-
   const renderNode = (node: TreeNode, depth: number = 0) => {
     const isExpanded = expandedFolders.has(node.path);
     const isSelected = selectedFile === node.path;
@@ -248,11 +277,28 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
           style={{ paddingLeft: `${(depth * 12) + 8}px` }}
           onClick={() => node.isDirectory ? handleToggleFolder(node) : handleFileClick(node)}
         >
+          {renamingPath === node.path ? (
+            <div className="flex items-center gap-1.5 w-full mr-2" onClick={e => e.stopPropagation()}>
+              <span className="w-3.5 shrink-0"></span>
+              {node.isDirectory ? getFolderIcon(node.name, false, "w-4 h-4 shrink-0") : getFileIcon(node.name)}
+              <form onSubmit={handleRenameSubmit} className="flex-1 min-w-0">
+                <input 
+                  autoFocus
+                  type="text" 
+                  value={renameValue}
+                  onChange={e => setRenameValue(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Escape') setRenamingPath(null) }}
+                  onBlur={() => setRenamingPath(null)}
+                  className="w-full bg-[var(--ide-panel-lighter)] border border-blue-500/50 rounded px-1.5 py-0.5 text-[13px] text-[var(--ide-text)] focus:outline-none"
+                />
+              </form>
+            </div>
+          ) : (
           <div className="flex items-center gap-1.5 min-w-0">
             {node.isDirectory ? (
               <>
                 {isExpanded ? <ChevronDown className="w-3.5 h-3.5 text-[var(--ide-text-muted)] shrink-0" /> : <ChevronRight className="w-3.5 h-3.5 text-[var(--ide-text-muted)] shrink-0" />}
-                {isExpanded ? <FolderOpen className="w-4 h-4 text-blue-400 shrink-0" /> : <Folder className="w-4 h-4 text-blue-400 shrink-0" />}
+                {getFolderIcon(node.name, isExpanded, "w-4 h-4 shrink-0")}
               </>
             ) : (
               <>
@@ -262,6 +308,7 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
             )}
             <span className="text-[13px] truncate">{node.name}</span>
           </div>
+          )}
           
           <div className="opacity-0 group-hover:opacity-100 flex items-center pr-2 gap-0.5">
             {node.isDirectory && (
@@ -292,6 +339,17 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
                 </button>
               </>
             )}
+            <button 
+              onClick={(e) => {
+                e.stopPropagation();
+                setRenamingPath(node.path);
+                setRenameValue(node.name);
+              }}
+              className="p-1 hover:bg-[var(--ide-hover)] hover:text-[var(--ide-text)] rounded transition-colors text-[var(--ide-text-muted)]"
+              title="Rename"
+            >
+              <Pencil className="w-3.5 h-3.5" />
+            </button>
             <button 
               onClick={(e) => handleDelete(e, node)}
               className="p-1 hover:bg-red-500/20 hover:text-red-400 rounded transition-colors text-[var(--ide-text-muted)]"
@@ -333,12 +391,12 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
   const [isExplorerExpanded, setIsExplorerExpanded] = useState(true);
 
   return (
-    <div className="flex flex-col w-full h-full overflow-y-auto overflow-x-hidden bg-[var(--ide-panel)] border-r border-[var(--ide-border)]">
+    <div className="flex flex-col w-full h-full overflow-y-auto overflow-x-hidden bg-transparent border-r border-transparent">
       
       {/* Explorer Header Accordion */}
       <button 
         onClick={() => setIsExplorerExpanded(!isExplorerExpanded)}
-        className="flex items-center justify-between w-full px-2 py-2 text-xs font-semibold text-[var(--ide-text-muted)] hover:text-[var(--ide-text)] transition-colors uppercase tracking-wider bg-[var(--ide-panel-darker)] sticky top-0 z-10 group"
+        className="flex items-center justify-between w-full px-2 py-2 text-xs font-semibold text-[var(--ide-text-muted)] hover:text-[var(--ide-text)] transition-colors uppercase tracking-wider bg-transparent sticky top-0 z-10 group"
       >
         <div className="flex items-center">
           {isExplorerExpanded ? <ChevronDown className="w-4 h-4 mr-1" /> : <ChevronRight className="w-4 h-4 mr-1" />}
@@ -351,6 +409,13 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
             title="New File"
           >
             <FilePlus className="w-3.5 h-3.5" />
+          </div>
+          <div 
+            onClick={(e) => { e.stopPropagation(); refreshRoot(); }}
+            className="p-1 hover:bg-[var(--ide-hover)] rounded text-[var(--ide-text-muted)] hover:text-[var(--ide-text)] transition-colors"
+            title="Refresh Explorer"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
           </div>
           <div 
             onClick={(e) => { e.stopPropagation(); setIsCreating('folder'); setCreateParentPath('/'); if(!isExplorerExpanded) setIsExplorerExpanded(true); }}

@@ -13,6 +13,7 @@ export function DashboardNewProject() {
   const [name, setName] = useState('');
   const [framework, setFramework] = useState('Next.js');
   const [url, setUrl] = useState('');
+  const [isSandbox, setIsSandbox] = useState(false);
   
   const categoriesData = [
     {
@@ -88,7 +89,7 @@ export function DashboardNewProject() {
       url: url || `${name}.collabcode.app`,
       icon: selectedIcon,
       status: 'Ready',
-      branch: 'main'
+      branch: isSandbox ? 'sandbox' : 'main'
     });
 
     if (!error) {
@@ -127,6 +128,21 @@ export function DashboardNewProject() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-8">
          
+         {/* Sandbox Toggle */}
+         <div className="bg-[#050505] border border-white/[0.08] rounded-2xl p-6 sm:p-8 flex items-center justify-between">
+            <div>
+               <h2 className="text-lg font-medium text-white mb-1">Sandbox Mode</h2>
+               <p className="text-sm text-gray-400">Create a lightweight environment for rapid prototyping and learning.</p>
+            </div>
+            <button
+               type="button"
+               onClick={() => setIsSandbox(!isSandbox)}
+               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${isSandbox ? 'bg-blue-500' : 'bg-gray-700'}`}
+            >
+               <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${isSandbox ? 'translate-x-6' : 'translate-x-1'}`} />
+            </button>
+         </div>
+
          {/* Category & Framework Selection */}
          <div className="bg-[#050505] border border-white/[0.08] rounded-2xl p-6 sm:p-8 flex flex-col gap-6">
             

@@ -363,11 +363,11 @@ export function SourceControlPanel({ webcontainer, ydoc, onPullComplete }: Sourc
             </div>
           )}
 
-          <div className="flex gap-2 mt-2">
+          <div className="flex flex-col gap-2 mt-2">
             <button
               onClick={handlePullClick}
               disabled={isPulling || isPushing || !webcontainer || isPullWarningOpen}
-              className="flex-1 bg-transparent border border-[var(--ide-border-hover)] text-[var(--ide-text)] hover:bg-[var(--ide-hover)] disabled:opacity-50 disabled:cursor-not-allowed font-medium py-2.5 rounded-lg transition-all flex items-center justify-center gap-2 text-sm"
+              className="w-full bg-surface-variant hover:bg-surface-container-high border border-outline-variant/30 text-on-surface disabled:opacity-50 disabled:cursor-not-allowed font-medium py-2 rounded-lg transition-all flex items-center justify-center gap-2 text-sm"
             >
               {isPulling ? (
                 <>
@@ -385,7 +385,7 @@ export function SourceControlPanel({ webcontainer, ydoc, onPullComplete }: Sourc
             <button
               onClick={handlePush}
               disabled={isPushing || isPulling || !webcontainer}
-              className="flex-1 bg-white text-black hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium py-2.5 rounded-lg transition-all flex items-center justify-center gap-2 text-sm"
+              className="w-full bg-primary hover:bg-primary/90 text-on-primary disabled:opacity-50 disabled:cursor-not-allowed font-medium py-2 rounded-lg transition-all flex items-center justify-center gap-2 text-sm"
             >
               {isPushing ? (
                 <>

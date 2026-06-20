@@ -5,6 +5,11 @@
 @theme {
   --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-ui-body: "Geist";
+  --font-code-main: "JetBrains Mono";
+  --font-code-sm: "JetBrains Mono";
+  --font-ui-header: "Geist";
+  --font-ui-label-sm: "Geist";
 
   --color-bg: #080808;
   --color-bg-deep: #050505;
@@ -18,6 +23,33 @@
   --color-ide-text-muted: var(--ide-text-muted);
   --color-ide-hover: var(--ide-hover);
   --color-ide-active: var(--ide-active);
+
+  --color-tertiary-fixed-dim: #ffb595;
+  --color-surface-container-lowest: #0e0e0e;
+  --color-primary-container: #4b8eff;
+  --color-on-primary-container: #00285c;
+  --color-primary-fixed: #d8e2ff;
+  --color-surface-container-low: #1c1b1b;
+  --color-surface-container-high: #2a2a2a;
+  --color-surface-container: #201f1f;
+  --color-surface-variant: #353534;
+  --color-outline: #8b90a0;
+  --color-outline-variant: #414755;
+  --color-primary: #adc6ff;
+  --color-secondary-container: #00a572;
+  --color-secondary: #4edea3;
+  --color-tertiary-container: #ef6719;
+  --color-background: #131313;
+  --color-on-background: #e5e2e1;
+  --color-on-surface: #e5e2e1;
+  --color-on-surface-variant: #c1c6d7;
+  --color-on-primary: #002e69;
+
+  --spacing-container-padding: 12px;
+  --spacing-panel-gap: 1px;
+  --spacing-touch-target-min: 28px;
+  --spacing-element-gap: 8px;
+  --spacing-sidebar-width: 260px;
 }
 
 @layer base {
@@ -71,6 +103,45 @@
     --ide-text-muted: #94a3b8;
     --ide-hover: rgba(255, 255, 255, 0.05);
     --ide-active: rgba(56, 189, 248, 0.15);
+  }
+
+  .theme-monokai {
+    --ide-base: #272822;
+    --ide-panel: #1e1f1c;
+    --ide-panel-darker: #171814;
+    --ide-panel-lighter: #3e3d32;
+    --ide-border: #49483e;
+    --ide-border-hover: #75715e;
+    --ide-text: #f8f8f2;
+    --ide-text-muted: #75715e;
+    --ide-hover: rgba(255, 255, 255, 0.05);
+    --ide-active: rgba(166, 226, 46, 0.15);
+  }
+
+  .theme-github-dark {
+    --ide-base: #0d1117;
+    --ide-panel: #161b22;
+    --ide-panel-darker: #010409;
+    --ide-panel-lighter: #21262d;
+    --ide-border: #30363d;
+    --ide-border-hover: #8b949e;
+    --ide-text: #c9d1d9;
+    --ide-text-muted: #8b949e;
+    --ide-hover: rgba(255, 255, 255, 0.05);
+    --ide-active: rgba(88, 166, 255, 0.15);
+  }
+
+  .theme-solarized-light {
+    --ide-base: #fdf6e3;
+    --ide-panel: #eee8d5;
+    --ide-panel-darker: #e5e0c8;
+    --ide-panel-lighter: #fdf6e3;
+    --ide-border: #93a1a1;
+    --ide-border-hover: #586e75;
+    --ide-text: #657b83;
+    --ide-text-muted: #93a1a1;
+    --ide-hover: rgba(0, 0, 0, 0.05);
+    --ide-active: rgba(38, 139, 210, 0.15);
   }
 }
 
@@ -222,5 +293,16 @@
     border-radius: 4px;
     left: -4px;
     top: -5px;
+  }
+
+  /* Obsidian Glass Elements */
+  .glass-panel {
+    background: rgba(28, 27, 27, 0.6); /* surface-container-low */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  
+  .level-0 {
+    background-color: #0e0e0e; /* surface-container-lowest */
   }
 }

@@ -18,6 +18,7 @@ const getLanguage = (path: string) => {
 
 const getFontFamily = (theme: string) => {
   switch (theme) {
+    case 'theme-obsidian': return "'JetBrains Mono', monospace";
     case 'theme-dark': return "'Roboto Mono', Menlo, Monaco, monospace";
     case 'theme-light': return "'Fira Code', Menlo, Monaco, monospace";
     case 'theme-dracula': return "'Cascadia Code', 'Fira Code', Menlo, Monaco, monospace";
@@ -25,7 +26,7 @@ const getFontFamily = (theme: string) => {
     case 'theme-monokai': return "'Source Code Pro', Menlo, Monaco, monospace";
     case 'theme-github-dark': return "'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace";
     case 'theme-solarized-light': return "'Inconsolata', Menlo, Monaco, monospace";
-    default: return 'Menlo, Monaco, "Courier New", monospace';
+    default: return "'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace";
   }
 };
 
@@ -58,6 +59,29 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
     monacoRef.current = monaco;
     
     // Add custom theme matching our dashboard
+    monaco.editor.defineTheme('theme-obsidian', {
+      base: 'vs-dark',
+      inherit: true,
+      rules: [
+        { background: '1c1b1b' },
+        { token: 'keyword', foreground: 'adc6ff' },
+        { token: 'string', foreground: '4edea3' },
+        { token: 'number', foreground: 'ffb595' },
+        { token: 'comment', foreground: '8b90a0', fontStyle: 'italic' },
+        { token: 'function', foreground: 'd8e2ff' },
+        { token: 'type', foreground: 'ef6719' },
+        { token: 'identifier', foreground: 'e5e2e1' }
+      ],
+      colors: {
+        'editor.background': '#1c1b1b', // matches surface-container-low
+        'editor.lineHighlightBackground': '#2a2a2a80',
+        'editorLineNumber.foreground': '#8b90a0',
+        'editorLineNumber.activeForeground': '#e5e2e1',
+        'editorSuggestWidget.background': '#201f1f',
+        'editorSuggestWidget.border': '#414755',
+      }
+    });
+
     monaco.editor.defineTheme('theme-dark', {
       base: 'vs-dark',
       inherit: true,
@@ -241,16 +265,19 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
 
       const aiProvider = {
         provideInlineCompletions: async (textModel: any, position: any, context: any, token: any) => {
+          const isEnabled = localStorage.getItem('aiCopilotEnabled');
+          if (isEnabled === 'false') return { items: [] };
+
           const apiKey = localStorage.getItem('aiApiKey');
           if (!apiKey) return { items: [] };
 
-          // DEBOUNCE: Wait 750ms before calling the AI. 
+          // DEBOUNCE: Wait 250ms before calling the AI. 
           // If the user types another character, Monaco cancels the token!
-          await new Promise(resolve => setTimeout(resolve, 750));
+          await new Promise(resolve => setTimeout(resolve, 250));
           if (token.isCancellationRequested) return { items: [] };
 
           const genAI = new GoogleGenerativeAI(apiKey);
-          const aiModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+          const aiModel = genAI.getGenerativeModel({ model: "gemini-flash-lite-latest" });
           const textBeforePointer = textModel.getValueInRange({
             startLineNumber: 1,
             startColumn: 1,
@@ -288,13 +315,29 @@ Respond ONLY with the exact code that should be inserted at the cursor to comple
 
             return {
               items: [{
-                insertText: completion,
-                range: new monaco.Range(position.lineNumber, position.column, position.lineNumber, position.column)
+                insertText: completion
               }]
             };
-          } catch (e) {
+          } catch (e: any) {
             console.error("Copilot error:", e);
-            return { items: [] };
+            
+            // Try to fetch available models to debug the 404 error
+            let availableModels = "";
+            try {
+               const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+               const data = await res.json();
+               if (data.models) {
+                 availableModels = "\n# Available models for your key: " + data.models.map((m: any) => m.name.replace('models/', '')).join(", ");
+               } else if (data.error) {
+                 availableModels = "\n# API Key Error: " + data.error.message;
+               }
+            } catch (err) {}
+
+            return { 
+              items: [{ 
+                insertText: `# [Copilot Error]: ${e.message}${availableModels}` 
+              }] 
+            };
           }
         },
         freeInlineCompletions: () => {}
@@ -395,6 +438,12 @@ Respond ONLY with the exact code that should be inserted at the cursor to comple
             ]
           };
         }
+      });
+    }
+
+    if (document.fonts) {
+      document.fonts.ready.then(() => {
+        monaco.editor.remeasureFonts();
       });
     }
 

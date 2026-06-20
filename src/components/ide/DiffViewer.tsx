@@ -16,7 +16,7 @@ export function DiffViewer({ filePath, oldContent, newContent }: DiffViewerProps
   const deletions = differences.filter(d => d.removed).reduce((acc, d) => acc + (d.count || 0), 0);
 
   return (
-    <div className="mt-3 border border-white/[0.1] rounded-lg overflow-hidden bg-[#0A0A0A] flex flex-col">
+    <div className="mt-3 border border-[var(--ide-border)] rounded-lg overflow-hidden bg-[var(--ide-panel-darker)] flex flex-col">
       <button 
         onClick={() => setIsExpanded(!isExpanded)}
         className="flex items-center justify-between p-2.5 bg-white/[0.02] hover:bg-white/[0.05] transition-colors border-b border-white/[0.1] text-xs font-medium text-gray-300"

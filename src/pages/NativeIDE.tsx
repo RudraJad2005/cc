@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { WebContainer } from '@webcontainer/api';
 import { DockerContainer } from '../lib/DockerContainer';
 import { useParams, Link } from 'react-router-dom';
@@ -7,10 +7,10 @@ import { MonacoEditor } from '../components/ide/MonacoEditor';
 import { TerminalTabs } from '../components/ide/TerminalTabs';
 import { AIChat } from '../components/ide/AIChat';
 import { SearchPanel } from '../components/ide/SearchPanel';
-import { ApiKeyModal } from '../components/ide/ApiKeyModal';
+import { SettingsModal } from '../components/ide/SettingsModal';
 import { SourceControlPanel } from '../components/ide/SourceControlPanel';
 import { EditorTabs } from '../components/ide/EditorTabs';
-import { ArrowLeft, Loader2, Globe, Users, Play, Save, Files, Search, GitBranch, Settings, TerminalSquare, Sparkles, Maximize2, Minimize2, Palette, Share2, X } from 'lucide-react';
+import { ArrowLeft, Loader2, Globe, Users, Play, Save, Files, Search, GitBranch, Settings, TerminalSquare, Sparkles, Maximize2, Minimize2, Palette, Share2, X, ChevronRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { getTemplate } from '../lib/templates';
 import { useCollab } from '../hooks/useCollab';
@@ -70,7 +70,9 @@ export function NativeIDE() {
   const [activeSidebar, setActiveSidebar] = useState<SidebarTab>('explorer');
   const [isTerminalOpen, setIsTerminalOpen] = useState(true);
   const [isAiChatOpen, setIsAiChatOpen] = useState(false);
-  const [showApiKeyModal, setShowApiKeyModal] = useState(false);
+  const [showFileMenu, setShowFileMenu] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   // Resize State
   const [sidebarWidth, setSidebarWidth] = useState(256);
@@ -142,7 +144,7 @@ export function NativeIDE() {
     }
     const savedKey = localStorage.getItem('aiApiKey');
     if (!savedKey) {
-      setShowApiKeyModal(true);
+      setShowSettingsModal(true);
     } else {
       setIsAiChatOpen(true);
     }
@@ -150,7 +152,7 @@ export function NativeIDE() {
 
   const handleSaveApiKey = (key: string) => {
     localStorage.setItem('aiApiKey', key);
-    setShowApiKeyModal(false);
+    setShowSettingsModal(false);
     setIsAiChatOpen(true);
   };
 
@@ -323,22 +325,71 @@ export function NativeIDE() {
     if (!webcontainer) return;
     setIsStarting(true);
     try {
-      // Install dependencies first and WAIT for it to finish
-      const installProcess = await webcontainer.spawn('npm', ['install']);
-      const exitCode = await installProcess.exit;
+      const activeTab = getActiveGlobalTab();
+      let cmd = 'npm install && npm run dev';
       
-      if (exitCode === 0) {
-        // Only run dev server after successful installation
-        await webcontainer.spawn('npm', ['run', 'dev']);
-      } else {
-        console.error('Installation failed with exit code', exitCode);
+      if (activeTab) {
+        if (activeTab.endsWith('.py')) {
+          cmd = `python3 .${activeTab}`;
+        } else if (activeTab.endsWith('.js')) {
+          cmd = `node .${activeTab}`;
+        }
       }
+      
+      window.dispatchEvent(new CustomEvent('terminal_run', { detail: { command: cmd } }));
     } catch (e) {
       console.error(e);
     } finally {
       setIsStarting(false);
     }
   };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || !webcontainer) return;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const reader = new FileReader();
+      
+      reader.onload = async (e) => {
+        const arrayBuffer = e.target?.result as ArrayBuffer;
+        if (arrayBuffer) {
+          const uint8Array = new Uint8Array(arrayBuffer);
+          const path = `/${file.name}`;
+          try {
+            await webcontainer.fs.writeFile(path, uint8Array);
+            // Local sync trigger
+            window.dispatchEvent(new Event('fs_synced'));
+          } catch (err) {
+            console.error(`Failed to upload ${file.name}`, err);
+          }
+        }
+      };
+      
+      reader.readAsArrayBuffer(file);
+    }
+    
+    // Refresh the file tree
+    window.dispatchEvent(new Event('fs_synced'));
+    
+    // Reset input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  // Close file menu if clicked outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('#file-menu-container')) {
+        setShowFileMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleSave = async (isBackground = false) => {
     if (!webcontainer || !projectId) return;
@@ -373,6 +424,36 @@ export function NativeIDE() {
     };
   }, [ydoc, webcontainer, projectId]);
 
+  const getBreadcrumbs = (path: string | null) => {
+    if (!path) return null;
+    const parts = path.split('/').filter(Boolean);
+    return (
+      <div className="flex items-center px-4 h-8 bg-surface-container-low text-[13px] text-on-surface-variant font-ui-label-sm border-b border-outline-variant shrink-0 cursor-default select-none overflow-x-auto no-scrollbar gap-1.5">
+        <span 
+          className="hover:text-on-surface transition-colors cursor-pointer flex items-center"
+          onClick={() => setActiveSidebar('explorer')}
+        >
+          {projectId || 'Project'}
+        </span>
+        {parts.map((part, index) => (
+          <React.Fragment key={index}>
+            <ChevronRight className="w-3.5 h-3.5 opacity-50 shrink-0" />
+            <span 
+              className={`transition-colors cursor-pointer flex items-center ${index === parts.length - 1 ? 'text-on-surface' : 'hover:text-on-surface'}`}
+              onClick={() => {
+                const clickedPath = '/' + parts.slice(0, index + 1).join('/');
+                window.dispatchEvent(new CustomEvent('expand_folder', { detail: { path: clickedPath } }));
+                setActiveSidebar('explorer');
+              }}
+            >
+              {part}
+            </span>
+          </React.Fragment>
+        ))}
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <div className={`flex items-center justify-center min-h-screen bg-[var(--ide-base,#000)] ${ideTheme}`}>
@@ -399,67 +480,148 @@ export function NativeIDE() {
   }
 
   return (
-    <div className={`flex h-screen w-full overflow-hidden text-[var(--ide-text,#fff)] bg-[var(--ide-base,#000)] ${ideTheme}`}>
+        <div className={`bg-background text-on-background font-ui-body text-[13px] h-screen w-screen overflow-hidden flex flex-col antialiased selection:bg-primary-container selection:text-on-primary-container ${ideTheme}`}>
+      
+      {/* TopNavBar */}
+      <header className="bg-surface-container w-full h-[32px] border-b border-outline-variant flex items-center justify-between px-3 z-40 shrink-0 relative">
+        <div className="flex items-center gap-4">
+          <div className="font-ui-header text-[14px] font-bold text-primary flex items-center gap-2">
+            <span className="material-symbols-outlined" style={{fontSize: '16px'}}>terminal</span>
+            ProEditor
+          </div>
+          <nav className="hidden md:flex items-center gap-1">
+            <Link to={`/dashboard/projects/${projectId}`} className="text-[13px] text-on-surface-variant hover:bg-surface-container-high px-2 py-0.5 rounded transition-colors">Dashboard</Link>
+            <div id="file-menu-container" className="relative">
+              <button 
+                onClick={() => setShowFileMenu(!showFileMenu)}
+                className="text-[13px] text-on-surface-variant hover:bg-surface-container-high px-2 py-0.5 rounded transition-colors"
+              >
+                File
+              </button>
+              {showFileMenu && (
+                <div className="absolute top-full left-0 mt-1 w-48 bg-surface-container-high border border-outline-variant rounded-lg shadow-xl overflow-hidden z-50 py-1">
+                  <button 
+                    onClick={() => {
+                      setShowFileMenu(false);
+                      fileInputRef.current?.click();
+                    }}
+                    className="w-full text-left px-3 py-1.5 text-[13px] text-on-surface hover:bg-surface-variant transition-colors"
+                  >
+                    Upload Local File
+                  </button>
+                </div>
+              )}
+            </div>
+            
+            <input 
+              type="file" 
+              multiple 
+              className="hidden" 
+              ref={fileInputRef}
+              onChange={handleFileUpload}
+            />
+            <a href="#" className="text-[13px] text-on-surface-variant hover:bg-surface-container-high px-2 py-0.5 rounded transition-colors">Edit</a>
+          </nav>
+        </div>
+
+        {/* Command Center */}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block w-96 z-50">
+          <div className="relative group">
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 text-on-surface-variant w-3.5 h-3.5" />
+            <input 
+              type="text" 
+              placeholder={`Search ${projectId || 'Project'}`}
+              className="w-full bg-surface-variant/50 border border-outline-variant/30 text-on-surface text-[13px] rounded-md py-0.5 pl-8 pr-12 focus:outline-none focus:border-primary focus:bg-surface-variant transition-colors placeholder:text-on-surface-variant/50 h-6"
+            />
+          </div>
+        </div>
+
+        {/* Trailing Actions */}
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => handleSave()}
+            disabled={isSaving}
+            className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md transition-colors text-white text-[11px] font-medium ${isSaving ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white/[0.05]'}`}
+          >
+            {isSaving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
+            {isSaving ? 'Saving...' : 'Save'}
+          </button>
+          
+          {!previewUrl && (
+            <button 
+              onClick={handleRunProject}
+              disabled={isStarting}
+              className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-primary text-on-primary transition-colors text-[11px] font-medium ${isStarting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary/90'}`}
+            >
+              {isStarting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Play className="w-3 h-3 fill-current" />}
+              {isStarting ? 'Installing...' : 'Run'}
+            </button>
+          )}
+
+          <button onClick={() => setShowSettingsModal(true)} className="p-0.5 text-on-surface-variant hover:bg-surface-container-high rounded transition-colors flex items-center justify-center">
+            <Settings className="w-4 h-4" />
+          </button>
+        </div>
+      </header>
+
+      {/* Main Workspace Area */}
+      <div className="flex flex-1 overflow-hidden relative">
       
       {/* Activity Bar */}
-      <div className="w-12 shrink-0 flex flex-col items-center py-4 bg-[var(--ide-panel-darker,#050505)] border-r border-[var(--ide-border,rgba(255,255,255,0.05))] z-20">
-          <button 
-            onClick={() => toggleSidebar('explorer')}
-            className={`p-2 rounded-xl transition-colors ${activeSidebar === 'explorer' ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}
-            title="Explorer"
-          >
-            <Files className="w-6 h-6 stroke-[1.5]" />
-          </button>
-          <button 
-            onClick={() => toggleSidebar('search')}
-            className={`p-2 rounded-xl transition-colors ${activeSidebar === 'search' ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}
-            title="Search"
-          >
-            <Search className="w-6 h-6 stroke-[1.5]" />
-          </button>
-          <button 
-            onClick={() => toggleSidebar('git')}
-            className={`p-2 rounded-xl transition-colors ${activeSidebar === 'git' ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}
-            title="Source Control"
-          >
-            <GitBranch className="w-6 h-6 stroke-[1.5]" />
-          </button>
-          <button 
-            onClick={handleAiChatClick}
-            className={`p-2 rounded-xl transition-colors ${isAiChatOpen ? 'text-purple-400 bg-purple-500/10' : 'text-gray-500 hover:text-gray-300'}`}
-            title="AI Assistant"
-          >
-            <Sparkles className="w-6 h-6 stroke-[1.5]" />
-          </button>
-          <div className="flex-1"></div>
+        <aside className="w-12 h-full bg-surface-container-low border-r border-outline-variant flex flex-col items-center py-2 shrink-0 z-30">
+          <nav className="flex flex-col gap-2 w-full items-center">
+            <button 
+              onClick={() => toggleSidebar('explorer')}
+              className={`w-10 h-10 flex items-center justify-center transition-all duration-200 group relative ${activeSidebar === 'explorer' ? 'text-primary border-l-2 border-primary bg-surface-container-high rounded-r-sm' : 'text-on-surface-variant hover:text-on-surface'}`}
+              title="Explorer"
+            >
+              <Files className="w-5 h-5 stroke-[1.5]" />
+            </button>
+            <button 
+              onClick={() => toggleSidebar('search')}
+              className={`w-10 h-10 flex items-center justify-center transition-all duration-200 group relative ${activeSidebar === 'search' ? 'text-primary border-l-2 border-primary bg-surface-container-high rounded-r-sm' : 'text-on-surface-variant hover:text-on-surface'}`}
+              title="Search"
+            >
+              <Search className="w-5 h-5 stroke-[1.5]" />
+            </button>
+            <button 
+              onClick={() => toggleSidebar('git')}
+              className={`w-10 h-10 flex items-center justify-center transition-all duration-200 group relative ${activeSidebar === 'git' ? 'text-primary border-l-2 border-primary bg-surface-container-high rounded-r-sm' : 'text-on-surface-variant hover:text-on-surface'}`}
+              title="Source Control"
+            >
+              <GitBranch className="w-5 h-5 stroke-[1.5]" />
+            </button>
+            <button 
+              onClick={handleAiChatClick}
+              className={`w-10 h-10 flex items-center justify-center transition-all duration-200 group relative ${isAiChatOpen ? 'text-tertiary-container border-l-2 border-tertiary-container bg-surface-container-high rounded-r-sm' : 'text-on-surface-variant hover:text-on-surface'}`}
+              title="AI Assistant"
+            >
+              <Sparkles className="w-5 h-5 stroke-[1.5]" />
+            </button>
+          </nav>
           
-          <div className="relative">
+          <div className="mt-auto flex flex-col gap-2 w-full items-center pb-2 relative">
             <button 
               onClick={() => setShowThemeMenu(!showThemeMenu)}
-              className="p-2 text-[var(--ide-text-muted)] hover:text-[var(--ide-text)] transition-colors mb-2" 
+              className="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-all duration-200" 
               title="Themes"
             >
-              <Palette className="w-6 h-6 stroke-[1.5]" />
+              <Palette className="w-5 h-5 stroke-[1.5]" />
             </button>
             {showThemeMenu && (
-              <div className="absolute bottom-0 left-full ml-2 w-48 bg-[var(--ide-panel-lighter)] border border-[var(--ide-border)] rounded-lg shadow-xl overflow-hidden z-50">
-                <div className="px-3 py-2 border-b border-[var(--ide-border)]">
-                  <span className="text-xs font-semibold text-[var(--ide-text-muted)] uppercase tracking-wider">Color Theme</span>
+              <div className="absolute bottom-0 left-full ml-2 w-48 bg-surface-container-high border border-outline-variant rounded-lg shadow-xl overflow-hidden z-50">
+                <div className="px-3 py-2 border-b border-outline-variant">
+                  <span className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Color Theme</span>
                 </div>
                 <div className="p-1 flex flex-col">
                   {[
-                    { id: 'theme-dark', name: 'Dark (Default)' },
-                    { id: 'theme-light', name: 'Light' },
-                    { id: 'theme-dracula', name: 'Dracula' },
-                    { id: 'theme-oceanic', name: 'Oceanic' },
-                    { id: 'theme-monokai', name: 'Monokai' },
-                    { id: 'theme-github-dark', name: 'GitHub Dark' },
-                    { id: 'theme-solarized-light', name: 'Solarized Light' }
+                    { id: 'theme-obsidian', name: 'Obsidian Glass (Default)' },
+                    { id: 'theme-dark', name: 'Dark' }
                   ].map(theme => (
                     <button
                       key={theme.id}
                       onClick={() => { setIdeTheme(theme.id); setShowThemeMenu(false); }}
-                      className={`text-left px-3 py-2 text-sm rounded-md transition-colors ${ideTheme === theme.id ? 'bg-[var(--ide-active)] text-blue-400' : 'text-[var(--ide-text)] hover:bg-[var(--ide-hover)]'}`}
+                      className={`text-left px-3 py-2 text-sm rounded-md transition-colors ${ideTheme === theme.id ? 'bg-primary-container/20 text-primary' : 'text-on-surface hover:bg-surface-variant'}`}
                     >
                       {theme.name}
                     </button>
@@ -468,16 +630,12 @@ export function NativeIDE() {
               </div>
             )}
           </div>
-
-          <button onClick={() => setShowApiKeyModal(true)} className="p-2 text-[var(--ide-text-muted)] hover:text-[var(--ide-text)] transition-colors mb-2" title="Settings">
-            <Settings className="w-6 h-6 stroke-[1.5]" />
-          </button>
-        </div>
+        </aside>
 
         {/* Sidebar */}
         {activeSidebar && (
           <>
-            <div className="shrink-0 flex flex-col bg-[var(--ide-panel)] z-10" style={{ width: sidebarWidth }}>
+            <div className="shrink-0 flex flex-col bg-surface-container-low border-r border-outline-variant z-20 glass-panel" style={{ width: sidebarWidth }}>
               {activeSidebar === 'explorer' && (
                 <FileTree 
                   projectId={projectId!}
@@ -501,70 +659,24 @@ export function NativeIDE() {
             </div>
             {/* Sidebar Splitter */}
             <div 
-              className="w-1 cursor-col-resize hover:bg-[var(--ide-border-hover)] bg-[var(--ide-border)] transition-colors z-20 shrink-0"
+              className="w-1 cursor-col-resize hover:bg-outline-variant bg-transparent transition-colors z-20 shrink-0"
               onMouseDown={() => setIsResizingSidebar(true)}
             />
           </>
         )}
 
         {/* Center: Editor, Preview & Terminal */}
-        <div className="flex-1 flex flex-col min-w-0 bg-[var(--ide-base)]">
+        <main className="flex-1 flex flex-col level-0 relative overflow-hidden">
           
-          {/* Header */}
-          <div className="h-14 flex items-center justify-between px-4 border-b border-[var(--ide-border)] bg-[var(--ide-panel-darker)] shrink-0">
-            <div className="flex items-center gap-4">
-              <Link 
-                to={`/dashboard/projects/${projectId}`}
-                className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white/[0.1] transition-colors border border-white/[0.05]"
-              >
-                <ArrowLeft className="w-4 h-4" />
-              </Link>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded bg-gradient-to-tr from-blue-500 to-purple-500"></div>
-                <span className="font-medium text-sm">{projectId}</span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <button 
-                onClick={() => setIsTerminalOpen(!isTerminalOpen)}
-                className={`p-1.5 rounded-md transition-colors ${isTerminalOpen ? 'bg-white/[0.1] text-white' : 'text-gray-400 hover:text-white hover:bg-white/[0.05]'}`}
-                title="Toggle Terminal"
-              >
-                <TerminalSquare className="w-4 h-4" />
-              </button>
-              
-              <button 
-                onClick={handleSave}
-                disabled={isSaving}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-md transition-colors text-white text-xs font-medium border border-white/[0.1] hover:bg-white/[0.05] ${isSaving ? 'opacity-50 cursor-not-allowed' : ''}`}
-              >
-                {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-                {isSaving ? 'Saving...' : 'Save Files'}
-              </button>
-              
-              {!previewUrl && (
-                <button 
-                  onClick={handleRunProject}
-                  disabled={isStarting}
-                  className={`flex items-center gap-2 px-3 py-1.5 rounded-md bg-blue-500 transition-colors text-white text-xs font-medium shadow-[0_0_15px_rgba(59,130,246,0.2)] ${isStarting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'}`}
-                >
-                  {isStarting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5 fill-current" />}
-                  {isStarting ? 'Installing...' : 'Run Project'}
-                </button>
-              )}
-            </div>
-          </div>
-
           {/* Top: Editor & Preview Split */}
           <div className="flex-1 min-h-0 flex">
             
             {/* Editor Area */}
-            <div className={`flex-1 min-w-0 flex bg-[var(--ide-panel-darker)] relative ${previewUrl ? 'border-r border-[var(--ide-border)]' : ''}`}>
+            <div className={`flex-1 min-w-0 flex bg-transparent relative ${previewUrl ? 'border-r border-outline-variant' : ''}`}>
               {editorGroups.map((group, index) => (
                 <div 
                   key={group.id} 
-                  className={`flex-1 flex flex-col min-w-0 ${index > 0 ? 'border-l border-[var(--ide-border)]' : ''}`}
+                  className={`flex-1 flex flex-col min-w-0 ${index > 0 ? 'border-l border-outline-variant' : ''}`}
                   onClick={() => setActiveGroupId(group.id)}
                 >
                   <EditorTabs
@@ -585,6 +697,7 @@ export function NativeIDE() {
                       }));
                     }}
                   />
+                  {getBreadcrumbs(group.activeTab)}
                   <div className={`flex-1 min-h-0 relative ${activeGroupId === group.id ? 'ring-1 ring-inset ring-blue-500/10' : ''}`}>
                     <MonacoEditor 
                       projectId={projectId || 'default'}
@@ -644,8 +757,8 @@ export function NativeIDE() {
 
             {/* Preview Area */}
             {previewUrl && (
-              <div className={`${isPreviewFullscreen ? 'fixed inset-0 z-50' : 'w-1/2 min-w-[300px] h-full'} bg-[var(--ide-base)] flex flex-col relative`}>
-                <div className="h-10 flex items-center justify-between px-3 border-b border-[var(--ide-border)] bg-[var(--ide-panel-darker)]">
+              <div className={`${isPreviewFullscreen ? 'fixed inset-0 z-50' : 'w-1/2 min-w-[300px] h-full'} bg-surface-container-lowest flex flex-col relative`}>
+                <div className="h-9 flex items-center justify-between px-3 border-b border-outline-variant bg-surface-container-low glass-panel shrink-0">
                   <div className="flex items-center gap-2 text-[var(--ide-text-muted)] text-xs font-medium">
                     <Globe className="w-4 h-4" />
                     Preview
@@ -684,7 +797,7 @@ export function NativeIDE() {
 
           {/* Terminal / Panel Area */}
           {isTerminalOpen && (
-            <div className="flex flex-col shrink-0 border-t border-[var(--ide-border)] bg-[var(--ide-panel)] z-10" style={{ height: terminalHeight }}>
+            <div className="flex flex-col shrink-0 border-t border-outline-variant bg-surface-container-low z-20 glass-panel" style={{ height: terminalHeight }}>
               <div 
                 className="h-1 cursor-row-resize hover:bg-[var(--ide-border-hover)] bg-[var(--ide-border)] transition-colors -mt-1 z-20"
                 onMouseDown={() => setIsResizingTerminal(true)}
@@ -692,16 +805,16 @@ export function NativeIDE() {
               <TerminalTabs webcontainer={webcontainer} onClose={() => setIsTerminalOpen(false)} theme={ideTheme} />
             </div>
           )}
-        </div>
+        </main>
 
         {/* AI Chat Right Sidebar */}
         {isAiChatOpen && (
           <>
             <div 
-              className="w-1 cursor-col-resize hover:bg-[var(--ide-border-hover)] bg-[var(--ide-border)] transition-colors z-20 shrink-0"
+              className="w-1 cursor-col-resize hover:bg-outline-variant bg-transparent transition-colors z-20 shrink-0"
               onMouseDown={() => setIsResizingAiChat(true)}
             />
-            <div className="shrink-0 flex flex-col bg-[var(--ide-panel)] z-10" style={{ width: aiChatWidth }}>
+            <div className="shrink-0 flex flex-col bg-surface-container-low border-r border-outline-variant z-20 glass-panel" style={{ width: aiChatWidth }}>
               <AIChat 
                 onClose={() => setIsAiChatOpen(false)} 
                 webcontainer={webcontainer}
@@ -712,14 +825,43 @@ export function NativeIDE() {
           </>
         )}
 
-      {/* Modals */}
-      {showApiKeyModal && (
-        <ApiKeyModal 
-          onSave={handleSaveApiKey} 
-          onClose={() => setShowApiKeyModal(false)} 
+      </div>
+      
+      {/* Footer Status Bar */}
+      <footer className="bg-primary text-on-primary font-ui-label-sm text-[11px] w-full h-[24px] flex justify-between items-center px-2 z-50 shrink-0 cursor-default">
+        <div className="flex items-center gap-3 h-full">
+          <a href="#" className="font-bold hover:bg-on-primary-fixed-variant px-1.5 py-0.5 rounded transition-colors h-full flex items-center">v1.0.0</a>
+          <div className="flex items-center gap-1 hover:bg-on-primary-fixed-variant px-1.5 h-full transition-colors cursor-pointer opacity-90">
+            <span className="material-symbols-outlined" style={{fontSize: '14px'}}>error</span>
+            <span>0</span>
+            <span className="material-symbols-outlined ml-1" style={{fontSize: '14px'}}>warning</span>
+            <span>0</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 h-full">
+          <span className="opacity-80 hover:bg-on-primary-fixed-variant px-1.5 py-0.5 rounded transition-colors h-full flex items-center">LF</span>
+          <span className="opacity-80 hover:bg-on-primary-fixed-variant px-1.5 py-0.5 rounded transition-colors h-full flex items-center">UTF-8</span>
+          <span className="opacity-80 hover:bg-on-primary-fixed-variant px-1.5 py-0.5 rounded transition-colors h-full flex items-center">TypeScript</span>
+          <div className="opacity-80 hover:bg-on-primary-fixed-variant px-1.5 h-full transition-colors cursor-pointer flex items-center gap-1">
+            <span className="material-symbols-outlined" style={{fontSize: '14px'}}>done_all</span>
+            Prettier
+          </div>
+          <button 
+            onClick={() => setIsTerminalOpen(!isTerminalOpen)}
+            className="hover:bg-on-primary-fixed-variant px-1.5 h-full transition-colors cursor-pointer flex items-center"
+            title="Toggle Terminal"
+          >
+            <span className="material-symbols-outlined" style={{fontSize: '16px'}}>terminal</span>
+          </button>
+        </div>
+      </footer>
+
+      {/* Settings Modal */}
+      {showSettingsModal && (
+        <SettingsModal 
+          onClose={() => setShowSettingsModal(false)} 
         />
       )}
-
     </div>
   );
 }
