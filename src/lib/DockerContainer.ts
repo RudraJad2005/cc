@@ -11,11 +11,17 @@ export class DockerContainer {
     
     this.fs = {
       readdir: async (path: string, options: any) => {
-        return new Promise((resolve) => {
-           // For now, return a mock or actual if implemented
-           // In a full implementation, the backend would use fs.readdirSync
-           // But since FileTree expects a full tree, we will implement this.
-           resolve([]);
+        return new Promise((resolve, reject) => {
+          this.socket.emit('readDir', { projectId: this.projectId, dirPath: path });
+          this.socket.once('dirRead', (data) => {
+             // Map standard objects to match WebContainer's Dirent interface
+             const entries = data.entries.map((e: any) => ({
+                name: e.name,
+                isDirectory: () => e.isDirectory
+             }));
+             resolve(entries);
+          });
+          this.socket.once('fsError', (err) => reject(new Error(err.error)));
         });
       },
       readFile: async (filePath: string, encoding: string = 'utf-8') => {
