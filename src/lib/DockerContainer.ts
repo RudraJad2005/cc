@@ -118,4 +118,11 @@ export class DockerContainer {
        })
      };
   }
+
+  async getCompletions(sourceCode: string, line: number, column: number): Promise<any[]> {
+    return new Promise((resolve) => {
+      this.socket.emit('getCompletions', { projectId: this.projectId, sourceCode, line, column });
+      this.socket.once('completionsResult', (data) => resolve(data.completions || []));
+    });
+  }
 }

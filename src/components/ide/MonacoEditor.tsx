@@ -43,6 +43,11 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
   const editorRef = useRef<any>(null);
   const monacoRef = useRef<any>(null);
   const bindingRef = useRef<any>(null);
+  const webcontainerRef = useRef<any>(webcontainer);
+
+  useEffect(() => {
+    webcontainerRef.current = webcontainer;
+  }, [webcontainer]);
 
   const [isEditorReady, setIsEditorReady] = useState(false);
 
@@ -294,18 +299,42 @@ Respond ONLY with the exact code that should be inserted at the cursor to comple
       });
     }
 
-    // Register simple Python completions
+    // Register simple Python completions and Jedi System Intellisense
     if (!monaco.languages.getLanguages().some((l: any) => l.id === 'python_custom_registered')) {
       monaco.languages.register({ id: 'python_custom_registered' }); // just a marker
       monaco.languages.registerCompletionItemProvider('python', {
-        provideCompletionItems: (model: any, position: any) => {
-          const word = model.getWordUntilPosition(position);
+        triggerCharacters: ['.'],
+        provideCompletionItems: async (textModel: any, position: any) => {
+          const word = textModel.getWordUntilPosition(position);
           const range = {
             startLineNumber: position.lineNumber,
             endLineNumber: position.lineNumber,
             startColumn: word.startColumn,
             endColumn: word.endColumn
           };
+
+          const wc = webcontainerRef.current;
+          if (wc && 'getCompletions' in wc) {
+            try {
+               const sourceCode = textModel.getValue();
+               const completions = await wc.getCompletions(sourceCode, position.lineNumber, position.column);
+               if (completions && completions.length > 0) {
+                 return {
+                   suggestions: completions.map((c: any) => ({
+                     label: c.label,
+                     detail: c.detail,
+                     kind: monaco.languages.CompletionItemKind.Method,
+                     insertText: c.label,
+                     range: range
+                   }))
+                 };
+               }
+            } catch (e) {
+               console.error("Jedi completion error", e);
+            }
+          }
+
+          // Fallback basic snippets
           return {
             suggestions: [
               {
