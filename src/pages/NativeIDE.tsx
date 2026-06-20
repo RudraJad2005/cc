@@ -343,6 +343,27 @@ export function NativeIDE() {
     if (!isBackground) setIsSaving(false);
   };
 
+  // Auto Save on Editor Changes
+  useEffect(() => {
+    if (!ydoc || !webcontainer || !projectId) return;
+
+    let timeoutId: NodeJS.Timeout;
+
+    const triggerSave = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        handleSave(true);
+      }, 3000); // 3-second debounce for typing
+    };
+
+    ydoc.on('update', triggerSave);
+
+    return () => {
+      clearTimeout(timeoutId);
+      ydoc.off('update', triggerSave);
+    };
+  }, [ydoc, webcontainer, projectId]);
+
   if (loading) {
     return (
       <div className={`flex items-center justify-center min-h-screen bg-[var(--ide-base,#000)] ${ideTheme}`}>
@@ -421,7 +442,10 @@ export function NativeIDE() {
                     { id: 'theme-dark', name: 'Dark (Default)' },
                     { id: 'theme-light', name: 'Light' },
                     { id: 'theme-dracula', name: 'Dracula' },
-                    { id: 'theme-oceanic', name: 'Oceanic' }
+                    { id: 'theme-oceanic', name: 'Oceanic' },
+                    { id: 'theme-monokai', name: 'Monokai' },
+                    { id: 'theme-github-dark', name: 'GitHub Dark' },
+                    { id: 'theme-solarized-light', name: 'Solarized Light' }
                   ].map(theme => (
                     <button
                       key={theme.id}

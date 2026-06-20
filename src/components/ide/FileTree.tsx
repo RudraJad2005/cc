@@ -19,8 +19,9 @@ interface TreeNode {
   children?: TreeNode[];
 }
 
-export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, onFileSystemChange, isOwner }: FileTreeProps) {
+export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, onFileSystemChange, isOwner = true }: FileTreeProps) {
   const [tree, setTree] = useState<TreeNode[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set(['/']));
   const [channel, setChannel] = useState<any>(null);
   
@@ -72,13 +73,25 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
   };
 
   const refreshRoot = (currentExpanded = expandedFolders) => {
-    buildTree('/', currentExpanded).then(setTree);
+    // Without a booted container there is nothing to read — clear the spinner
+    // instead of leaving "Loading filesystem..." up forever.
+    if (!webcontainer) {
+      setIsLoading(false);
+      return;
+    }
+    buildTree('/', currentExpanded)
+      .then(setTree)
+      .catch((e) => console.error('Failed to build file tree', e))
+      // .finally guarantees the loading state resolves whether the read
+      // succeeds, fails, or the tree comes back empty.
+      .finally(() => setIsLoading(false));
   };
 
   useEffect(() => {
     if (!webcontainer || !projectId) return;
-    
+
     // Initial load
+    setIsLoading(true);
     refreshRoot();
     
     const handleFsSynced = () => refreshRoot();
@@ -371,8 +384,10 @@ export function FileTree({ projectId, webcontainer, onFileSelect, selectedFile, 
         </div>
       )}
 
-      {tree.length === 0 ? (
+      {isLoading ? (
         <div className="px-4 py-2 text-xs text-[var(--ide-text-muted)]">Loading filesystem...</div>
+      ) : tree.length === 0 ? (
+        <div className="px-4 py-2 text-xs text-[var(--ide-text-muted)]">This folder is empty. Create a file to get started.</div>
       ) : (
         tree.map(node => renderNode(node, 0))
       )}

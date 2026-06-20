@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Server, FileText, BarChart3, Activity, 
   ShieldAlert, ShieldCheck, Globe, Database, Plug, 
   HardDrive, Flag, Bot, Cpu, Box, Workflow, 
-  PieChart, LifeBuoy, Settings, ChevronRight, ChevronDown, Github, Search
+  PieChart, LifeBuoy, Settings, ChevronRight, ChevronDown, Github, Search, Code2
 } from 'lucide-react';
 import { NotificationInbox } from '../components/NotificationInbox';
 
@@ -13,6 +13,7 @@ export function ProjectLayout() {
 
   const navItems = [
     { name: 'Overview', path: `/dashboard/projects/${projectId}`, exact: true, icon: <LayoutDashboard className="w-4 h-4" /> },
+    { name: 'Native IDE', path: `/dashboard/projects/${projectId}/editor`, icon: <Code2 className="w-4 h-4" /> },
     { type: 'divider' },
     { name: 'Settings', path: `/dashboard/projects/${projectId}/settings`, icon: <Settings className="w-4 h-4" /> },
   ];

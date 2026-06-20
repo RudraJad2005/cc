@@ -41,7 +41,7 @@ export function Footer() {
               <Link to="/about" className="hover:text-gray-300 transition-colors">About</Link>
               <Link to="/blog" className="hover:text-gray-300 transition-colors">Blog</Link>
               <Link to="/careers" className="hover:text-gray-300 transition-colors">Careers</Link>
-              <a href="#" className="hover:text-gray-300 transition-colors">Customers</a>
+              <Link to="/customers" className="hover:text-gray-300 transition-colors">Customers</Link>
               <a href="#" className="hover:text-gray-300 transition-colors">Brand</a>
             </div>
           </div>
@@ -62,7 +62,7 @@ export function Footer() {
               <Link to="/dashboard/settings" className="hover:text-gray-300 transition-colors">Account Settings</Link>
               <a href="#" className="hover:text-gray-300 transition-colors">API Details</a>
               <a href="#" className="hover:text-gray-300 transition-colors">GitHub</a>
-              <a href="#" className="hover:text-gray-300 transition-colors">Packages</a>
+              <Link to="/packages" className="hover:text-gray-300 transition-colors">Packages</Link>
             </div>
           </div>
         </div>

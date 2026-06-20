@@ -19,6 +19,8 @@ import { Community } from './pages/Community';
 import { Blog } from './pages/Blog';
 import { Careers } from './pages/Careers';
 import { Changelog } from './pages/Changelog';
+import { Customers } from './pages/Customers';
+import { Packages } from './pages/Packages';
 
 import { DashboardLayout } from './layouts/DashboardLayout';
 import { Dashboard } from './pages/Dashboard';
@@ -76,6 +78,8 @@ export default function App() {
           <Route path="/integrations" element={<Integrations />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/community" element={<Community />} />
+          <Route path="/customers" element={<Customers />} />
+          <Route path="/packages" element={<Packages />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/careers" element={<Careers />} />
           <Route path="/changelog" element={<Changelog />} />

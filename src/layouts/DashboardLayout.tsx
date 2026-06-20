@@ -23,7 +23,6 @@ export function DashboardLayout() {
   const navItems = [
     { name: 'Overview', path: '/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
     { name: 'Projects', path: '/dashboard/projects', icon: <Folder className="w-4 h-4" /> },
-    { name: 'Deployments', path: '/dashboard/deployments', icon: <Server className="w-4 h-4" /> },
     { name: 'Templates', path: '/dashboard/templates', icon: <Blocks className="w-4 h-4" /> },
     { name: 'Integrations', path: '/dashboard/integrations', icon: <Plug className="w-4 h-4" /> },
     { name: 'Settings', path: '/dashboard/settings', icon: <Settings className="w-4 h-4" /> },

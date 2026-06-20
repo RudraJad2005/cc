@@ -15,6 +15,19 @@ const getLanguage = (path: string) => {
   return 'plaintext';
 };
 
+const getFontFamily = (theme: string) => {
+  switch (theme) {
+    case 'theme-dark': return "'Roboto Mono', Menlo, Monaco, monospace";
+    case 'theme-light': return "'Fira Code', Menlo, Monaco, monospace";
+    case 'theme-dracula': return "'Cascadia Code', 'Fira Code', Menlo, Monaco, monospace";
+    case 'theme-oceanic': return "'JetBrains Mono', Menlo, Monaco, monospace";
+    case 'theme-monokai': return "'Source Code Pro', Menlo, Monaco, monospace";
+    case 'theme-github-dark': return "'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace";
+    case 'theme-solarized-light': return "'Inconsolata', Menlo, Monaco, monospace";
+    default: return 'Menlo, Monaco, "Courier New", monospace';
+  }
+};
+
 interface MonacoEditorProps {
   projectId: string;
   filePath: string | null;
@@ -42,7 +55,16 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
     monaco.editor.defineTheme('theme-dark', {
       base: 'vs-dark',
       inherit: true,
-      rules: [{ background: '000000' }],
+      rules: [
+        { background: '000000' },
+        { token: 'keyword', foreground: 'c678dd' },
+        { token: 'string', foreground: '98c379' },
+        { token: 'number', foreground: 'd19a66' },
+        { token: 'comment', foreground: '5c6370', fontStyle: 'italic' },
+        { token: 'function', foreground: '61afef' },
+        { token: 'type', foreground: 'e5c07b' },
+        { token: 'identifier', foreground: 'abb2bf' }
+      ],
       colors: {
         'editor.background': '#000000',
         'editor.lineHighlightBackground': '#ffffff05',
@@ -63,7 +85,16 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
     monaco.editor.defineTheme('theme-light', {
       base: 'vs',
       inherit: true,
-      rules: [{ background: 'f3f4f6' }],
+      rules: [
+        { background: 'f3f4f6' },
+        { token: 'keyword', foreground: 'a626a4' },
+        { token: 'string', foreground: '50a14f' },
+        { token: 'number', foreground: '986801' },
+        { token: 'comment', foreground: 'a0a1a7', fontStyle: 'italic' },
+        { token: 'function', foreground: '4078f2' },
+        { token: 'type', foreground: 'c18401' },
+        { token: 'identifier', foreground: '383a42' }
+      ],
       colors: {
         'editor.background': '#f3f4f6',
         'editor.lineHighlightBackground': '#00000005',
@@ -76,7 +107,16 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
     monaco.editor.defineTheme('theme-dracula', {
       base: 'vs-dark',
       inherit: true,
-      rules: [{ background: '282a36' }],
+      rules: [
+        { background: '282a36' },
+        { token: 'keyword', foreground: 'ff79c6' },
+        { token: 'string', foreground: 'f1fa8c' },
+        { token: 'number', foreground: 'bd93f9' },
+        { token: 'comment', foreground: '6272a4', fontStyle: 'italic' },
+        { token: 'function', foreground: '50fa7b' },
+        { token: 'type', foreground: '8be9fd' },
+        { token: 'identifier', foreground: 'f8f8f2' }
+      ],
       colors: {
         'editor.background': '#282a36',
         'editor.lineHighlightBackground': '#44475a80',
@@ -90,7 +130,16 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
     monaco.editor.defineTheme('theme-oceanic', {
       base: 'vs-dark',
       inherit: true,
-      rules: [{ background: '0f172a' }],
+      rules: [
+        { background: '0f172a' },
+        { token: 'keyword', foreground: 'c594c5' },
+        { token: 'string', foreground: '99c794' },
+        { token: 'number', foreground: 'f99157' },
+        { token: 'comment', foreground: '65737e', fontStyle: 'italic' },
+        { token: 'function', foreground: '6699cc' },
+        { token: 'type', foreground: 'fac863' },
+        { token: 'identifier', foreground: 'd8dee9' }
+      ],
       colors: {
         'editor.background': '#0f172a',
         'editor.lineHighlightBackground': '#ffffff0a',
@@ -98,6 +147,75 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
         'editorLineNumber.activeForeground': '#f8fafc',
         'editorSuggestWidget.background': '#1e293b',
         'editorSuggestWidget.border': '#334155',
+      }
+    });
+
+    monaco.editor.defineTheme('theme-monokai', {
+      base: 'vs-dark',
+      inherit: true,
+      rules: [
+        { background: '272822' },
+        { token: 'keyword', foreground: 'F92672' },
+        { token: 'string', foreground: 'E6DB74' },
+        { token: 'number', foreground: 'AE81FF' },
+        { token: 'comment', foreground: '75715E', fontStyle: 'italic' },
+        { token: 'function', foreground: 'A6E22E' },
+        { token: 'type', foreground: '66D9EF' },
+        { token: 'identifier', foreground: 'F8F8F2' }
+      ],
+      colors: {
+        'editor.background': '#272822',
+        'editor.lineHighlightBackground': '#3e3d32',
+        'editorLineNumber.foreground': '#90908a',
+        'editorLineNumber.activeForeground': '#f8f8f2',
+        'editorSuggestWidget.background': '#272822',
+        'editorSuggestWidget.border': '#75715e',
+      }
+    });
+
+    monaco.editor.defineTheme('theme-github-dark', {
+      base: 'vs-dark',
+      inherit: true,
+      rules: [
+        { background: '0d1117' },
+        { token: 'keyword', foreground: 'ff7b72' },
+        { token: 'string', foreground: 'a5d6ff' },
+        { token: 'number', foreground: '79c0ff' },
+        { token: 'comment', foreground: '8b949e', fontStyle: 'italic' },
+        { token: 'function', foreground: 'd2a8ff' },
+        { token: 'type', foreground: 'ff7b72' },
+        { token: 'identifier', foreground: 'c9d1d9' }
+      ],
+      colors: {
+        'editor.background': '#0d1117',
+        'editor.lineHighlightBackground': '#161b22',
+        'editorLineNumber.foreground': '#484f58',
+        'editorLineNumber.activeForeground': '#c9d1d9',
+        'editorSuggestWidget.background': '#161b22',
+        'editorSuggestWidget.border': '#30363d',
+      }
+    });
+
+    monaco.editor.defineTheme('theme-solarized-light', {
+      base: 'vs',
+      inherit: true,
+      rules: [
+        { background: 'fdf6e3' },
+        { token: 'keyword', foreground: '859900' },
+        { token: 'string', foreground: '2aa198' },
+        { token: 'number', foreground: 'd33682' },
+        { token: 'comment', foreground: '93a1a1', fontStyle: 'italic' },
+        { token: 'function', foreground: '268bd2' },
+        { token: 'type', foreground: 'b58900' },
+        { token: 'identifier', foreground: '657b83' }
+      ],
+      colors: {
+        'editor.background': '#fdf6e3',
+        'editor.lineHighlightBackground': '#eee8d5',
+        'editorLineNumber.foreground': '#93a1a1',
+        'editorLineNumber.activeForeground': '#586e75',
+        'editorSuggestWidget.background': '#fdf6e3',
+        'editorSuggestWidget.border': '#eee8d5',
       }
     });
 
@@ -125,21 +243,23 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
     const ytext = ydoc.getText(filePath);
     const model = editorRef.current.getModel();
     
-    // CRITICAL FIX: Prevent y-monaco from picking up old text from the editor model
-    // when switching files, which caused the exponential text duplication bug.
     if (ytext.toString() === '') {
+      // Clear the model synchronously so y-monaco doesn't copy old file's text into ytext
+      model.setValue('');
+
       // First time this file is opened by anyone. It might exist in FS (templates)
       webcontainer.fs.readFile(filePath, 'utf-8').then(content => {
-        if (content) {
-          model.setValue(content);
-          ytext.insert(0, content);
-        } else {
-          model.setValue(initialContent);
-          if (initialContent) ytext.insert(0, initialContent);
+        if (ytext.toString() === '') {
+          if (content) {
+            ytext.insert(0, content);
+          } else if (initialContent) {
+            ytext.insert(0, initialContent);
+          }
         }
       }).catch(() => {
-        model.setValue(initialContent);
-        if (initialContent) ytext.insert(0, initialContent);
+        if (ytext.toString() === '') {
+          if (initialContent) ytext.insert(0, initialContent);
+        }
       });
     } else {
       // File already exists in the shared Y.Doc. Load it.
@@ -173,11 +293,20 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
     }
   }, [filePath, webcontainer, isEditorReady, ydoc, provider]);
 
-  // Update theme when it changes
+  // Update theme and font when it changes
   useEffect(() => {
     if (monacoRef.current) {
       monacoRef.current.editor.setTheme(theme);
     }
+    if (editorRef.current) {
+      editorRef.current.updateOptions({ fontFamily: getFontFamily(theme) });
+    }
+    // Fix cursor misalignment by forcing Monaco to remeasure char widths once web fonts load
+    document.fonts.ready.then(() => {
+      if (monacoRef.current) {
+        monacoRef.current.editor.remeasureFonts();
+      }
+    });
   }, [theme]);
 
   // Force language update whenever filePath changes
@@ -208,11 +337,11 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
           path={filePath}
           height="100%"
           language={getLanguage(filePath)}
-          theme="collab-dark"
+          theme={theme}
           options={{
             minimap: { enabled: false },
             fontSize: 13,
-            fontFamily: 'Menlo, Monaco, "Courier New", monospace',
+            fontFamily: getFontFamily(theme),
             padding: { top: 16 },
             scrollBeyondLastLine: false,
             smoothScrolling: true,
