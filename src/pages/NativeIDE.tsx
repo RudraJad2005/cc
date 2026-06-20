@@ -841,7 +841,25 @@ export function NativeIDE() {
         <div className="flex items-center gap-2 h-full">
           <span className="opacity-80 hover:bg-on-primary-fixed-variant px-1.5 py-0.5 rounded transition-colors h-full flex items-center">LF</span>
           <span className="opacity-80 hover:bg-on-primary-fixed-variant px-1.5 py-0.5 rounded transition-colors h-full flex items-center">UTF-8</span>
-          <span className="opacity-80 hover:bg-on-primary-fixed-variant px-1.5 py-0.5 rounded transition-colors h-full flex items-center">TypeScript</span>
+          <span className="opacity-80 hover:bg-on-primary-fixed-variant px-1.5 py-0.5 rounded transition-colors h-full flex items-center">
+            {(() => {
+              const path = editorGroups[0]?.activeTab;
+              if (!path) return 'Plain Text';
+              const ext = path.split('.').pop()?.toLowerCase();
+              switch(ext) {
+                case 'ts': case 'tsx': return 'TypeScript';
+                case 'js': case 'jsx': return 'JavaScript';
+                case 'py': case 'pyw': return 'Python';
+                case 'json': return 'JSON';
+                case 'html': case 'htm': return 'HTML';
+                case 'css': return 'CSS';
+                case 'md': case 'mdx': return 'Markdown';
+                case 'txt': case 'log': return 'Plain Text';
+                case 'sh': case 'bash': return 'Shell Script';
+                default: return 'Plain Text';
+              }
+            })()}
+          </span>
           <div className="opacity-80 hover:bg-on-primary-fixed-variant px-1.5 h-full transition-colors cursor-pointer flex items-center gap-1">
             <span className="material-symbols-outlined" style={{fontSize: '14px'}}>done_all</span>
             Prettier
