@@ -169,7 +169,8 @@ export function NativeIDE() {
         }
 
         let instance;
-        if (data?.framework === 'python') {
+        const dockerFrameworks = ['python', 'pandas', 'tensorflow', 'pytorch', 'scikit-learn', 'jupyter'];
+        if (data?.framework && dockerFrameworks.includes(data.framework.toLowerCase())) {
           console.log("Booting Azure Docker OS...");
           instance = new DockerContainer(projectId);
         } else {
