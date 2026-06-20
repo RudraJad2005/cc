@@ -244,6 +244,11 @@ export function MonacoEditor({ projectId, filePath, initialContent, webcontainer
           const apiKey = localStorage.getItem('aiApiKey');
           if (!apiKey) return { items: [] };
 
+          // DEBOUNCE: Wait 750ms before calling the AI. 
+          // If the user types another character, Monaco cancels the token!
+          await new Promise(resolve => setTimeout(resolve, 750));
+          if (token.isCancellationRequested) return { items: [] };
+
           const genAI = new GoogleGenerativeAI(apiKey);
           const aiModel = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
           const textBeforePointer = textModel.getValueInRange({
