@@ -1,5 +1,14 @@
+import React from 'react';
 import { motion } from 'motion/react';
-import { ArrowRight, GitBranch, Webhook, Database, Cloud, Search, Terminal, Boxes, Bell, BarChart3, Lock, Workflow } from 'lucide-react';
+import { ArrowRight, GitBranch, Webhook, Database, Cloud, Search, Terminal, Boxes, Bell, BarChart3, Lock, Workflow, Plus } from 'lucide-react';
+import { PageHero } from '../components/PageHero';
+
+// Reusable Crosshair component
+const Crosshair = ({ className }: { className?: string }) => (
+  <div className={`absolute w-3 h-3 text-white/[0.2] flex items-center justify-center pointer-events-none z-10 ${className}`}>
+    <Plus className="w-3 h-3" />
+  </div>
+);
 
 // Custom SVG Icons for Brands
 function GithubIcon({ className }: { className?: string }) {
@@ -58,449 +67,245 @@ function LinearIcon({ className }: { className?: string }) {
 }
 
 export function Integrations() {
-  const fadeUp = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
-  };
-
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 }
-    }
-  };
-
   return (
-    <main className="w-full flex-1 flex flex-col bg-[#000]">
-       {/* Hero Section */}
-       <section className="flex flex-col border-b border-white/[0.08] relative text-center items-center justify-center py-32 md:py-48 px-6 overflow-hidden bg-[#000]">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-purple-500/10 blur-[120px] rounded-full pointer-events-none mix-blend-screen opacity-50" />
-          
-          <motion.div 
-             initial={{ opacity: 0, y: 20 }}
-             animate={{ opacity: 1, y: 0 }}
-             transition={{ duration: 0.6 }}
-             className="relative z-10 flex gap-4 mb-8 text-white/50"
-          >
-             <GithubIcon className="w-8 h-8" />
-             <SlackIcon className="w-8 h-8" />
-             <VercelIcon className="w-8 h-8" />
-             <FigmaIcon className="w-8 h-8" />
-          </motion.div>
-
-          <motion.h1 
-             initial={{ opacity: 0, y: 20 }}
-             animate={{ opacity: 1, y: 0 }}
-             transition={{ duration: 0.8, delay: 0.1 }}
-             className="text-4xl md:text-5xl lg:text-[6.5rem] tracking-tighter font-semibold text-white mb-8 leading-[1.05] relative z-10 max-w-4xl"
-          >
-             Connect your <br/>
-             <span className="text-[#888]">entire toolchain.</span>
-          </motion.h1>
-          <motion.p 
-             initial={{ opacity: 0, y: 20 }}
-             animate={{ opacity: 1, y: 0 }}
-             transition={{ duration: 0.8, delay: 0.2 }}
-             className="text-lg md:text-xl text-[#888] max-w-2xl leading-relaxed tracking-normal relative z-10"
-          >
-             Collab Code integrates deeply with the tools you already use. From version control to deployment and issue tracking, keep your workflow uninterrupted.
-          </motion.p>
-       </section>
-
-       {/* Featured Grid */}
-       <motion.section 
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-3 border-b border-white/[0.08]"
-       >
-          <IntegrationCard 
-             icon={<GithubIcon className="w-9 h-9 text-white mb-6" />}
-             title="GitHub"
-             desc="Sync repositories, manage pull requests, and resolve merge conflicts without leaving the editor."
-             borderRight
-             variants={fadeUp}
+    <main className="w-full flex-1 flex flex-col bg-black text-white selection:bg-white selection:text-black">
+      
+      <div className="relative z-10 flex flex-col w-full">
+         {/* Hero */}
+         <PageHero
+            layout="centered"
+            bgPattern="none"
+            glowColor="none"
+            titleClassName="text-5xl md:text-[6rem] lg:text-[8rem] font-black tracking-tighter text-white"
+            title="Connect your toolchain."
+            description="Collab Code integrates deeply with the tools you already use. From version control to deployment and issue tracking, keep your workflow uninterrupted."
+            primaryCta={{
+              text: "Browse Directory",
+              href: "#",
+              icon: <span className="w-3 h-3 bg-black rounded-sm" />
+            }}
+            secondaryCta={{
+              text: "Build an App",
+              href: "#"
+            }}
           />
-          <IntegrationCard 
-             icon={<GitlabIcon className="w-9 h-9 text-[#E24329] mb-6" />}
-             title="GitLab"
-             desc="Native support for GitLab repositories, CI/CD pipelines, and merge request workflows."
-             borderRight
-             variants={fadeUp}
-          />
-          <IntegrationCard 
-             icon={<VercelIcon className="w-9 h-9 text-white mb-6" />}
-             title="Vercel"
-             desc="Automatically deploy preview environments for every branch directly from your workspace."
-             variants={fadeUp}
-          />
-          <IntegrationCard 
-             icon={<SlackIcon className="w-8 h-8 text-white mb-6" />}
-             title="Slack"
-             desc="Get notifications for build statuses, review requests, and workspace invites in your channels."
-             borderRight
-             borderTop
-             variants={fadeUp}
-          />
-          <IntegrationCard 
-             icon={<FigmaIcon className="w-7 h-9 text-white mb-6" />}
-             title="Figma"
-             desc="Embed live Figma designs directly next to your code to ensure pixel-perfect implementation."
-             borderRight
-             borderTop
-             variants={fadeUp}
-          />
-          <IntegrationCard 
-             icon={<LinearIcon className="w-9 h-9 text-[#5E6AD2] mb-6" />}
-             title="Linear & Jira"
-             desc="Link code changes and branches to issues. Automatically update issue status on merge."
-             borderTop
-             variants={fadeUp}
-          />
-       </motion.section>
 
-       {/* Frameworks Section */}
-       <motion.section 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true, margin: "-100px" }}
-          className="flex flex-col border-b border-white/[0.08] relative py-20 md:py-32 px-6 md:px-12 lg:px-20 xl:px-[100px] bg-[#080808]"
-       >
-          <div className="max-w-[1400px] mx-auto w-full flex flex-col">
-             <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-12 gap-8">
-                <div>
-                   <h2 className="text-3xl md:text-4xl tracking-tight font-medium text-white mb-4">
-                     Native framework support
-                   </h2>
-                   <p className="text-[#71717a] text-lg max-w-xl">
-                     Collab Code detects your framework automatically. Zero configuration required for the most popular frontend and backend stacks.
-                   </p>
-                </div>
-                <a href="#" className="flex items-center gap-2 text-white font-medium hover:text-gray-300 transition-colors w-fit whitespace-nowrap">
-                   View all frameworks <ArrowRight className="w-4 h-4" />
-                </a>
-             </div>
+          {/* Vercel Strict Grid Architecture Container */}
+          <section className="bg-black border-y border-white/[0.1] relative">
+             <div className="max-w-[1200px] mx-auto border-x border-white/[0.1] relative">
 
-             <motion.div 
-               variants={staggerContainer}
-               initial="hidden"
-               whileInView="show"
-               viewport={{ once: true, margin: "-50px" }}
-               className="grid grid-cols-2 lg:grid-cols-5 gap-4"
-             >
-               <FrameworkTag name="Next.js" type="React Framework" variants={fadeUp} />
-               <FrameworkTag name="React" type="Frontend Library" variants={fadeUp} />
-               <FrameworkTag name="Vue.js" type="Frontend Framework" variants={fadeUp} />
-               <FrameworkTag name="SvelteKit" type="Full-stack" variants={fadeUp} />
-               <FrameworkTag name="Angular" type="Frontend Framework" variants={fadeUp} />
-               
-               <FrameworkTag name="Node.js" type="JavaScript Runtime" variants={fadeUp} />
-               <FrameworkTag name="Python" type="Backend & ML" variants={fadeUp} />
-               <FrameworkTag name="Go" type="Backend" variants={fadeUp} />
-               <FrameworkTag name="Rust" type="Systems & Backend" variants={fadeUp} />
-               <FrameworkTag name="Ruby on Rails" type="Full-stack" variants={fadeUp} />
-             </motion.div>
-          </div>
-       </motion.section>
-
-       {/* Infrastructure & Data Section */}
-       <motion.section 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-2 border-b border-white/[0.08]"
-       >
-          <div className="p-8 md:p-12 lg:p-20 xl:p-[100px] border-b md:border-b-0 md:border-r border-white/[0.08] bg-[#050505]">
-             <div className="w-12 h-12 rounded-xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-center mb-6 text-white">
-               <Database className="w-5 h-5 mx-auto text-blue-400" />
-             </div>
-             <h3 className="text-2xl font-medium text-white mb-4 tracking-tight">Database branching</h3>
-             <p className="text-[#a1a1aa] leading-relaxed text-base mb-8">
-                Connect your workspace directly to top tier serverless providers. We automatically provision isolated database branches for every code branch you create.
-             </p>
-             <div className="flex flex-wrap gap-3">
-                <span className="px-3 py-1.5 rounded-md border border-white/[0.08] text-[13px] text-gray-300 bg-[#111]">Supabase</span>
-                <span className="px-3 py-1.5 rounded-md border border-white/[0.08] text-[13px] text-gray-300 bg-[#111]">Neon</span>
-                <span className="px-3 py-1.5 rounded-md border border-white/[0.08] text-[13px] text-gray-300 bg-[#111]">PlanetScale</span>
-                <span className="px-3 py-1.5 rounded-md border border-white/[0.08] text-[13px] text-gray-300 bg-[#111]">MongoDB</span>
-                <span className="px-3 py-1.5 rounded-md border border-white/[0.08] text-[13px] text-gray-300 bg-[#111]">Upstash</span>
-             </div>
-          </div>
-          <div className="p-8 md:p-12 lg:p-20 xl:p-[100px] bg-[#050505]">
-             <div className="w-12 h-12 rounded-xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-center mb-6 text-white">
-               <Cloud className="w-5 h-5 mx-auto text-amber-400" />
-             </div>
-             <h3 className="text-2xl font-medium text-white mb-4 tracking-tight">Cloud Providers</h3>
-             <p className="text-[#a1a1aa] leading-relaxed text-base mb-8">
-                Deploy infrastructure changes securely. Integrate AWS, GCP, or Azure credentials natively into your workspace secrets engine without exposing them over the wire.
-             </p>
-             <div className="flex flex-wrap gap-3">
-                <span className="px-3 py-1.5 rounded-md border border-white/[0.08] text-[13px] text-gray-300 bg-[#111]">AWS</span>
-                <span className="px-3 py-1.5 rounded-md border border-white/[0.08] text-[13px] text-gray-300 bg-[#111]">Google Cloud</span>
-                <span className="px-3 py-1.5 rounded-md border border-white/[0.08] text-[13px] text-gray-300 bg-[#111]">Azure</span>
-                <span className="px-3 py-1.5 rounded-md border border-white/[0.08] text-[13px] text-gray-300 bg-[#111]">Cloudflare</span>
-                <span className="px-3 py-1.5 rounded-md border border-white/[0.08] text-[13px] text-gray-300 bg-[#111]">Fly.io</span>
-             </div>
-          </div>
-       </motion.section>
-
-       {/* Deep Dive Section 1 */}
-       <section className="flex flex-col lg:flex-row border-b border-white/[0.08] relative">
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true, margin: "-100px" }}
-            className="w-full lg:w-[45%] p-8 md:p-12 lg:p-20 xl:p-[100px] flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-white/[0.08] relative bg-[#080808]"
-          >
-            <div className="w-12 h-12 rounded-xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-center mb-6 text-white">
-               <GitBranch className="w-5 h-5 mx-auto text-purple-400" />
-            </div>
-            <h2 className="text-3xl md:text-4xl tracking-tight font-medium text-white mb-6 leading-[1.1]">
-              Deep version control <br/>
-              <span className="text-[#a1a1aa]">built right in.</span>
-            </h2>
-            <p className="text-lg text-[#71717a] max-w-xl leading-relaxed tracking-wide mb-8">
-              Don't compromise on your Git workflow. Our GitHub and GitLab integrations bring rich interface for rebasing, squashing, and reviewing PRs directly alongside your collaborative session.
-            </p>
-            <a href="#" className="flex items-center gap-2 text-white font-medium hover:text-gray-300 transition-colors w-fit">
-                Learn more about Git integrations <ArrowRight className="w-4 h-4" />
-            </a>
-          </motion.div>
-          <div className="w-full lg:w-[55%] p-8 md:p-12 lg:p-20 xl:p-[100px] flex items-center justify-center relative overflow-hidden bg-[#050505]">
-             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.02),_transparent_60%)] pointer-events-none" />
-             
-             {/* Mock PR Interface */}
-             <motion.div 
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true, margin: "-100px" }}
-                className="w-full max-w-[440px] rounded-xl border border-white/[0.1] bg-[#161616]/80 backdrop-blur-md shadow-2xl overflow-hidden relative z-10 flex flex-col font-mono text-left"
-             >
-                <div className="flex items-center justify-between p-4 border-b border-white/[0.08] bg-white/[0.01]">
-                   <div className="flex items-center gap-2 text-[13px] font-medium text-gray-300">
-                      <GitBranch className="w-4 h-4 text-purple-400" />
-                      fix/auth-flow
-                   </div>
-                   <div className="text-[11px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded border border-green-500/30">Open</div>
-                </div>
-                <div className="p-5 flex flex-col gap-4">
-                   <div className="text-[14px] text-white font-sans font-medium tracking-tight">Fix authentication redirect loop on production</div>
-                   <div className="flex -space-x-1">
-                      <div className="w-[20px] h-[20px] rounded-full ring-2 ring-[#161616] overflow-hidden bg-white/[0.1]">
-                         <img src={`https://i.pravatar.cc/100?img=12`} className="w-full h-full object-cover" alt="user" />
+                {/* 1. VISUAL INTEGRATIONS GRID */}
+                <div className="flex flex-col border-b border-white/[0.1] relative">
+                   <Crosshair className="-top-1.5 -left-1.5" />
+                   <Crosshair className="-top-1.5 -right-1.5" />
+                   
+                   {/* Top Header Row */}
+                   <div className="text-center py-24 px-6 relative">
+                      <div className="inline-flex items-center justify-center gap-2 text-gray-400 mb-6 text-xs font-mono uppercase tracking-widest">
+                         <Workflow className="w-3 h-3" /> Extensibility
                       </div>
-                      <div className="w-[20px] h-[20px] rounded-full ring-2 ring-[#161616] flex items-center justify-center bg-[#292929] text-[10px] text-gray-400 border border-white/[0.1]">
-                         +2
+                      <h2 className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tighter text-white mb-6">Seamless ecosystem.</h2>
+                      <p className="text-gray-400 text-lg leading-relaxed max-w-2xl mx-auto">
+                         Connect your codebase to your preferred services via webhooks, native OAuth integrations, and automated pipelines.
+                      </p>
+                   </div>
+
+                   {/* 3-Column Visual Grid */}
+                   <div className="grid grid-cols-1 md:grid-cols-3 relative border-t border-white/[0.1]">
+                      <Crosshair className="-top-1.5 -left-1.5" />
+                      <Crosshair className="-top-1.5 left-[33.33%] -translate-x-1.5" />
+                      <Crosshair className="-top-1.5 left-[66.66%] -translate-x-1.5" />
+                      <Crosshair className="-top-1.5 -right-1.5" />
+
+                      {/* Col 1: Webhook */}
+                      <div className="col-span-1 border-r border-white/[0.1] p-10 lg:p-16 flex items-center justify-center h-[300px]">
+                         <div className="w-full max-w-[280px] flex flex-col gap-3 font-mono text-[10px]">
+                            <div className="p-3 border border-white/[0.1] bg-[#050505] rounded flex items-center gap-2">
+                               <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                               <span className="text-gray-400">POST /api/webhooks/github 200 OK</span>
+                            </div>
+                            <div className="p-3 border border-white/[0.1] bg-[#050505] rounded flex items-center gap-2">
+                               <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                               <span className="text-gray-400">POST /api/webhooks/slack 200 OK</span>
+                            </div>
+                            <div className="p-3 border border-white/[0.1] bg-[#050505] rounded flex items-center gap-2 opacity-50">
+                               <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                               <span className="text-gray-400">POST /api/webhooks/linear 200 OK</span>
+                            </div>
+                         </div>
+                      </div>
+
+                      {/* Col 2: OAuth / PRs */}
+                      <div className="col-span-1 border-r border-white/[0.1] p-10 lg:p-16 flex items-center justify-center h-[300px]">
+                         <div className="w-full max-w-[280px] rounded-lg border border-white/[0.1] bg-[#050505] p-4 text-[12px]">
+                            <div className="flex items-center gap-2 mb-4 text-white">
+                               <GithubIcon className="w-4 h-4" /> fix/auth-flow
+                            </div>
+                            <div className="flex flex-col gap-2">
+                               <div className="flex items-center gap-2 text-gray-400">
+                                  <div className="w-2 h-2 rounded-full bg-emerald-400" /> Vercel build successful
+                               </div>
+                               <div className="flex items-center gap-2 text-gray-400">
+                                  <div className="w-2 h-2 rounded-full bg-emerald-400" /> 1 approved review
+                               </div>
+                            </div>
+                            <button className="mt-4 w-full py-1.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded">
+                               Squash and Merge
+                            </button>
+                         </div>
+                      </div>
+
+                      {/* Col 3: Cloud Node */}
+                      <div className="col-span-1 p-10 lg:p-16 flex items-center justify-center h-[300px] relative overflow-hidden">
+                         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.03),_transparent_70%)] pointer-events-none" />
+                         <div className="relative w-full aspect-square flex items-center justify-center">
+                            <div className="w-16 h-16 rounded-full border border-white/[0.1] bg-[#050505] flex items-center justify-center z-20">
+                               <Database className="w-5 h-5 text-white" />
+                            </div>
+                            <svg className="absolute inset-0 w-full h-full z-10 pointer-events-none" viewBox="0 0 200 200">
+                               <path d="M 100 100 L 160 50" stroke="#fff" strokeOpacity="0.1" strokeWidth="1" strokeDasharray="4 4" />
+                               <path d="M 100 100 L 170 120" stroke="#fff" strokeOpacity="0.1" strokeWidth="1" strokeDasharray="4 4" />
+                               <path d="M 100 100 L 130 180" stroke="#fff" strokeOpacity="0.1" strokeWidth="1" strokeDasharray="4 4" />
+                            </svg>
+                         </div>
                       </div>
                    </div>
-                   <div className="flex flex-col gap-2 mt-2">
-                       <div className="flex items-center gap-2 text-[12px] text-[#71717a]">
-                           <div className="w-2 h-2 rounded-full bg-green-500"></div> All checks have passed
-                       </div>
-                       <div className="flex items-center gap-2 text-[12px] text-[#71717a]">
-                           <div className="w-2 h-2 rounded-full bg-blue-500"></div> 1 approved review
-                       </div>
+
+                   {/* 3-Column Text Grid */}
+                   <div className="grid grid-cols-1 md:grid-cols-3 relative border-t border-white/[0.1]">
+                      <Crosshair className="-top-1.5 -left-1.5" />
+                      <Crosshair className="-top-1.5 left-[33.33%] -translate-x-1.5" />
+                      <Crosshair className="-top-1.5 left-[66.66%] -translate-x-1.5" />
+                      <Crosshair className="-top-1.5 -right-1.5" />
+
+                      <div className="col-span-1 border-r border-white/[0.1] p-10 lg:p-12">
+                         <h3 className="text-xl font-medium text-white mb-4">Event Streams</h3>
+                         <p className="text-gray-400 text-sm leading-relaxed">Listen to repository events via native webhooks to trigger downstream CI/CD pipelines.</p>
+                      </div>
+                      <div className="col-span-1 border-r border-white/[0.1] p-10 lg:p-12">
+                         <h3 className="text-xl font-medium text-white mb-4">Native Git</h3>
+                         <p className="text-gray-400 text-sm leading-relaxed">Don't compromise your workflow. Rebasing, squashing, and PR reviews happen directly in the editor.</p>
+                      </div>
+                      <div className="col-span-1 p-10 lg:p-12">
+                         <h3 className="text-xl font-medium text-white mb-4">Cloud Resources</h3>
+                         <p className="text-gray-400 text-sm leading-relaxed">Provision isolated database branches natively connected to your development workspace.</p>
+                      </div>
                    </div>
-                   <button className="mt-2 w-full py-2 bg-green-600 border border-green-500 hover:bg-green-500 text-white font-sans text-sm font-medium rounded-lg transition-colors shadow-[0_4px_14px_0_rgba(22,163,74,0.39)]">
-                      Squash and merge
+                </div>
+
+                {/* 2. APP DIRECTORY GRID */}
+                <div className="flex flex-col relative border-b border-white/[0.1]">
+                   <Crosshair className="-top-1.5 -left-1.5" />
+                   <Crosshair className="-top-1.5 -right-1.5" />
+
+                   <div className="grid grid-cols-1 md:grid-cols-3">
+                      <div className="col-span-3 p-16 md:py-24 text-center">
+                         <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white">Integration Directory</h2>
+                      </div>
+                   </div>
+
+                   {/* Grid Row 1 */}
+                   <div className="grid grid-cols-1 md:grid-cols-3 relative border-t border-white/[0.1]">
+                      <Crosshair className="-top-1.5 -left-1.5" />
+                      <Crosshair className="-top-1.5 left-[33.33%] -translate-x-1.5" />
+                      <Crosshair className="-top-1.5 left-[66.66%] -translate-x-1.5" />
+                      <Crosshair className="-top-1.5 -right-1.5" />
+
+                      {[
+                         { icon: <GithubIcon className="w-8 h-8 text-white"/>, title: 'GitHub', desc: 'Sync repositories, manage pull requests, and resolve merge conflicts.' },
+                         { icon: <GitlabIcon className="w-8 h-8 text-white"/>, title: 'GitLab', desc: 'Native support for GitLab repositories, CI/CD pipelines, and MR workflows.' },
+                         { icon: <VercelIcon className="w-8 h-8 text-white"/>, title: 'Vercel', desc: 'Automatically deploy preview environments for every branch.' },
+                      ].map((item, i) => (
+                         <div key={i} className={`col-span-1 p-10 lg:p-12 hover:bg-white/[0.02] transition-colors ${i < 2 ? 'border-r border-white/[0.1]' : ''}`}>
+                            <div className="mb-6">{item.icon}</div>
+                            <h3 className="text-xl font-medium text-white mb-2">{item.title}</h3>
+                            <p className="text-gray-500 text-[15px] leading-relaxed">{item.desc}</p>
+                         </div>
+                      ))}
+                   </div>
+
+                   {/* Grid Row 2 */}
+                   <div className="grid grid-cols-1 md:grid-cols-3 relative border-t border-white/[0.1]">
+                      <Crosshair className="-top-1.5 -left-1.5" />
+                      <Crosshair className="-top-1.5 left-[33.33%] -translate-x-1.5" />
+                      <Crosshair className="-top-1.5 left-[66.66%] -translate-x-1.5" />
+                      <Crosshair className="-top-1.5 -right-1.5" />
+
+                      {[
+                         { icon: <SlackIcon className="w-8 h-8 text-white"/>, title: 'Slack', desc: 'Get notifications for build statuses, review requests, and workspace invites.' },
+                         { icon: <FigmaIcon className="w-7 h-8 text-white"/>, title: 'Figma', desc: 'Embed live Figma designs directly next to your code to ensure pixel-perfect implementation.' },
+                         { icon: <LinearIcon className="w-8 h-8 text-white"/>, title: 'Linear & Jira', desc: 'Link code changes to issues. Automatically update issue status on merge.' },
+                      ].map((item, i) => (
+                         <div key={i} className={`col-span-1 p-10 lg:p-12 hover:bg-white/[0.02] transition-colors ${i < 2 ? 'border-r border-white/[0.1]' : ''}`}>
+                            <div className="mb-6">{item.icon}</div>
+                            <h3 className="text-xl font-medium text-white mb-2">{item.title}</h3>
+                            <p className="text-gray-500 text-[15px] leading-relaxed">{item.desc}</p>
+                         </div>
+                      ))}
+                   </div>
+                </div>
+
+                {/* 3. FRAMEWORKS GRID */}
+                <div className="flex flex-col relative border-b border-white/[0.1]">
+                   <Crosshair className="-top-1.5 -left-1.5" />
+                   <Crosshair className="-top-1.5 -right-1.5" />
+
+                   <div className="grid grid-cols-1 md:grid-cols-3">
+                      <div className="col-span-2 border-r border-white/[0.1] p-16 md:py-32 md:px-24 flex items-center">
+                         <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white">Native framework support.</h2>
+                      </div>
+                      <div className="col-span-1 p-16 flex items-center justify-center gap-6">
+                         <div className="flex items-center gap-2 text-gray-400 font-mono text-sm border border-white/[0.1] px-4 py-2 rounded-full"><Boxes className="w-4 h-4"/> Zero Config</div>
+                      </div>
+                   </div>
+
+                   {/* Frameworks Row */}
+                   <div className="grid grid-cols-1 md:grid-cols-3 relative border-t border-white/[0.1]">
+                      <Crosshair className="-top-1.5 -left-1.5" />
+                      <Crosshair className="-top-1.5 left-[33.33%] -translate-x-1.5" />
+                      <Crosshair className="-top-1.5 left-[66.66%] -translate-x-1.5" />
+                      <Crosshair className="-top-1.5 -right-1.5" />
+
+                      {[
+                         { title: 'Frontend', list: ['React', 'Next.js', 'Vue.js', 'SvelteKit', 'Angular'] },
+                         { title: 'Backend', list: ['Node.js', 'Python', 'Go', 'Rust', 'Ruby on Rails'] },
+                         { title: 'Databases', list: ['Supabase', 'Neon', 'PlanetScale', 'MongoDB', 'Upstash'] },
+                      ].map((item, i) => (
+                         <div key={i} className={`col-span-1 p-10 lg:p-12 hover:bg-white/[0.02] transition-colors ${i < 2 ? 'border-r border-white/[0.1]' : ''}`}>
+                            <div className="text-xs font-mono tracking-widest text-gray-500 uppercase mb-8">{item.title}</div>
+                            <div className="flex flex-col gap-4">
+                               {item.list.map((fw, j) => (
+                                  <div key={j} className="text-[15px] text-white flex items-center gap-2">
+                                     <span className="w-1.5 h-1.5 bg-white/[0.2] rounded-full"></span> {fw}
+                                  </div>
+                               ))}
+                            </div>
+                         </div>
+                      ))}
+                   </div>
+                </div>
+
+             </div>
+          </section>
+
+          {/* Continue your AI journey CTA */}
+          <section className="py-32 md:py-40 bg-black relative">
+             <div className="max-w-4xl mx-auto px-6 text-center">
+                <h3 className="text-4xl md:text-5xl font-medium tracking-tighter text-white mb-10">
+                   Start integrating today.
+                </h3>
+                
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                   <button className="bg-white text-black px-8 py-3 rounded-full text-[15px] font-semibold hover:bg-gray-200 transition-colors w-full sm:w-auto text-center whitespace-nowrap">
+                      Browse Directory
+                   </button>
+                   <button className="px-8 py-3 text-white text-[15px] font-medium border border-white/[0.2] hover:bg-white/[0.05] rounded-full transition-colors w-full sm:w-auto text-center whitespace-nowrap">
+                      Read Documentation
                    </button>
                 </div>
-             </motion.div>
-          </div>
-       </section>
-
-       {/* Integration Directory by Category */}
-       <section className="border-b border-white/[0.08] bg-[#080808] relative overflow-hidden">
-          <div className="absolute inset-0 bg-grid mask-fade opacity-30 pointer-events-none" />
-          <div className="relative z-10 p-8 md:p-12 lg:p-20 xl:p-[100px]">
-             <div className="text-center max-w-2xl mx-auto mb-16">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/[0.08] bg-white/[0.02] text-purple-300/80 text-[11px] font-mono mb-6 tracking-widest uppercase">
-                   <Boxes className="w-3.5 h-3.5" /> Directory
-                </div>
-                <h2 className="text-3xl md:text-5xl tracking-tighter font-semibold text-gradient mb-5">100+ integrations, organized.</h2>
-                <p className="text-[#888] text-lg">Browse everything that plugs into Collab Code, grouped by what it does.</p>
              </div>
-
-             <motion.div
-                variants={staggerContainer}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true, margin: '-60px' }}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-[1200px] mx-auto"
-             >
-                {[
-                   { icon: GitBranch, label: 'Source Control', color: 'text-orange-400', items: ['GitHub', 'GitLab', 'Bitbucket', 'Gitea'] },
-                   { icon: Cloud, label: 'Deployment', color: 'text-white', items: ['Vercel', 'Netlify', 'Fly.io', 'Render'] },
-                   { icon: Database, label: 'Databases', color: 'text-blue-400', items: ['Supabase', 'Neon', 'PlanetScale', 'MongoDB'] },
-                   { icon: Bell, label: 'Communication', color: 'text-pink-400', items: ['Slack', 'Discord', 'Microsoft Teams', 'Email'] },
-                   { icon: Workflow, label: 'Project Mgmt', color: 'text-indigo-400', items: ['Linear', 'Jira', 'Asana', 'Trello'] },
-                   { icon: BarChart3, label: 'Observability', color: 'text-emerald-400', items: ['Sentry', 'Datadog', 'Grafana', 'Axiom'] },
-                ].map((cat, i) => {
-                   const Icon = cat.icon;
-                   return (
-                      <motion.div
-                         variants={fadeUp}
-                         key={i}
-                         className="group flex flex-col p-7 rounded-2xl border border-white/[0.08] bg-[#050505] hover:bg-[#0b0b0b] hover:border-white/[0.14] transition-all duration-300"
-                      >
-                         <div className="flex items-center justify-between mb-6">
-                            <div className={`w-11 h-11 rounded-xl border border-white/[0.08] bg-white/[0.02] flex items-center justify-center ${cat.color}`}>
-                               <Icon className="w-5 h-5" />
-                            </div>
-                            <span className="text-[11px] font-mono tracking-widest uppercase text-[#666]">{cat.label}</span>
-                         </div>
-                         <div className="flex flex-col divide-y divide-white/[0.05]">
-                            {cat.items.map((it) => (
-                               <div key={it} className="flex items-center justify-between py-2.5 text-[14px] text-gray-300 group-hover:text-white transition-colors">
-                                  {it}
-                                  <ArrowRight className="w-3.5 h-3.5 text-[#555] opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all" />
-                               </div>
-                            ))}
-                         </div>
-                      </motion.div>
-                   );
-                })}
-             </motion.div>
-
-             <div className="flex justify-center mt-12">
-                <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/[0.1] bg-white/[0.03] text-white text-[14px] font-medium hover:bg-white/[0.07] transition-colors">
-                   <Search className="w-4 h-4 text-gray-400" /> Browse the full directory
-                </button>
-             </div>
-          </div>
-       </section>
-
-       {/* CLI / API Section */}
-       <section className="flex flex-col lg:flex-row border-b border-white/[0.08] relative">
-          <motion.div
-             initial={{ opacity: 0, x: -20 }}
-             whileInView={{ opacity: 1, x: 0 }}
-             transition={{ duration: 0.6 }}
-             viewport={{ once: true, margin: '-100px' }}
-             className="w-full lg:w-[45%] p-8 md:p-12 lg:p-20 xl:p-[100px] flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-white/[0.08] bg-[#080808]"
-          >
-             <div className="w-12 h-12 rounded-xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-center mb-6 text-white">
-                <Terminal className="w-5 h-5 text-emerald-400" />
-             </div>
-             <h2 className="text-3xl md:text-4xl tracking-tighter font-semibold mb-6 leading-[1.1]">
-                <span className="text-gradient">Automate anything</span><br />
-                <span className="text-[#666]">with the CLI & API.</span>
-             </h2>
-             <p className="text-lg text-[#888] max-w-xl leading-relaxed mb-8">
-                Script workspace creation, wire up CI, and trigger workflows programmatically. A typed SDK, a fast CLI, and a complete GraphQL API.
-             </p>
-             <div className="flex flex-wrap gap-3">
-                <a href="#" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black text-[14px] font-medium hover:bg-gray-100 transition-colors">Read API docs <ArrowRight className="w-4 h-4 opacity-60" /></a>
-                <a href="#" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/[0.1] bg-white/[0.03] text-white text-[14px] font-medium hover:bg-white/[0.08] transition-colors">npm SDK</a>
-             </div>
-          </motion.div>
-
-          <div className="w-full lg:w-[55%] p-8 md:p-12 lg:p-16 flex items-center justify-center relative overflow-hidden bg-[#050505]">
-             <div className="absolute inset-0 bg-grid-sm mask-fade opacity-40 pointer-events-none" />
-             <motion.div
-                initial={{ opacity: 0, scale: 0.96, y: 12 }}
-                whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ duration: 0.7, ease: 'easeOut' }}
-                viewport={{ once: true, margin: '-100px' }}
-                className="w-full max-w-[520px] rounded-xl border border-white/[0.1] bg-[#0a0a0a]/90 backdrop-blur-xl glow-ring overflow-hidden relative z-10 font-mono"
-             >
-                <div className="flex items-center justify-between px-4 h-10 border-b border-white/[0.06]">
-                   <div className="flex gap-2">
-                      <div className="w-3 h-3 rounded-full bg-white/[0.1]" />
-                      <div className="w-3 h-3 rounded-full bg-white/[0.1]" />
-                      <div className="w-3 h-3 rounded-full bg-white/[0.1]" />
-                   </div>
-                   <div className="flex items-center gap-2 text-[11px] text-[#666]">
-                      <Lock className="w-3 h-3" /> deploy.ts
-                   </div>
-                </div>
-                <div className="p-5 text-[13px] leading-[1.7]">
-                   <p className="text-gray-500"><span className="text-pink-400">import</span> {'{'} Collab {'}'} <span className="text-pink-400">from</span> <span className="text-emerald-400">'@collab/sdk'</span>;</p>
-                   <p className="h-3" />
-                   <p className="text-gray-500"><span className="text-pink-400">const</span> ws = <span className="text-pink-400">await</span> Collab.<span className="text-blue-400">workspaces</span>.<span className="text-blue-400">create</span>({'{'}</p>
-                   <p className="text-gray-400 pl-4">repo: <span className="text-emerald-400">'acme/web'</span>,</p>
-                   <p className="text-gray-400 pl-4">branch: <span className="text-emerald-400">'feat/checkout'</span>,</p>
-                   <p className="text-gray-400 pl-4">tier: <span className="text-emerald-400">'pro'</span>,</p>
-                   <p className="text-gray-500">{'}'});</p>
-                   <p className="h-3" />
-                   <p className="text-gray-500">ws.<span className="text-blue-400">on</span>(<span className="text-emerald-400">'ready'</span>, () <span className="text-pink-400">=&gt;</span> ws.<span className="text-blue-400">run</span>(<span className="text-emerald-400">'npm test'</span>));</p>
-                   <p className="h-3" />
-                   <p className="text-[#555]"><span className="text-emerald-400">✓</span> workspace ready · 142ms</p>
-                </div>
-             </motion.div>
-          </div>
-       </section>
-
-       {/* Webhooks Section */}
-       <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true, margin: "-100px" }}
-          className="flex flex-col border-b border-white/[0.08] relative items-center justify-center py-32 px-6 text-center bg-[#050505]"
-       >
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[200px] bg-white/5 blur-[100px] rounded-full pointer-events-none mix-blend-screen" />
-          
-          <div className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-center mb-8 relative z-10">
-             <Webhook className="w-8 h-8 text-white/60" />
-          </div>
-          <h2 className="text-3xl md:text-5xl tracking-tight font-medium text-white mb-6 relative z-10">
-            Build your own workflows
-          </h2>
-          <p className="text-[#71717a] text-lg max-w-2xl mx-auto mb-10 relative z-10">
-            Need something custom? Use our robust GraphQL API and Webhooks to integrate Collab Code deeply into your proprietary internal developer platforms.
-          </p>
-          <div className="flex gap-4 relative z-10">
-             <button className="h-12 bg-white text-black px-8 rounded-full font-medium hover:bg-gray-200 text-[14px] transition-colors duration-300">
-                Read API Docs
-             </button>
-             <button className="h-12 border border-white/[0.08] bg-white/[0.03] text-white px-8 rounded-full font-medium hover:bg-white/[0.08] text-[14px] transition-colors duration-300">
-                Webhooks Guide
-             </button>
-          </div>
-       </motion.section>
+          </section>
+      </div>
     </main>
   );
-}
-
-function IntegrationCard({ icon, title, desc, borderRight, borderTop, variants }: { icon: React.ReactNode, title: string, desc: string, borderRight?: boolean, borderTop?: boolean, variants?: any }) {
-   if (variants) {
-      return (
-         <motion.div variants={variants} className={`p-8 md:p-12 lg:p-16 xl:p-[80px] ${borderRight ? 'md:border-r border-white/[0.08]' : ''} ${borderTop ? 'md:border-t-0 border-t border-white/[0.08]' : ''} border-b md:border-b-0 border-white/[0.08] bg-[#050505] hover:bg-[#080808] transition-colors`}>
-            {icon}
-            <h3 className="text-xl md:text-2xl font-medium text-[#f4f4f5] mb-4 tracking-tight">{title}</h3>
-            <p className="text-[#a1a1aa] leading-relaxed text-sm md:text-base">{desc}</p>
-         </motion.div>
-      )
-   }
-   return (
-      <div className={`p-8 md:p-12 lg:p-16 xl:p-[80px] ${borderRight ? 'md:border-r border-white/[0.08]' : ''} ${borderTop ? 'md:border-t-0 border-t border-white/[0.08]' : ''} border-b md:border-b-0 border-white/[0.08] bg-[#050505] hover:bg-[#080808] transition-colors`}>
-         {icon}
-         <h3 className="text-xl md:text-2xl font-medium text-[#f4f4f5] mb-4 tracking-tight">{title}</h3>
-         <p className="text-[#a1a1aa] leading-relaxed text-sm md:text-base">{desc}</p>
-      </div>
-   )
-}
-
-function FrameworkTag({ name, type, variants }: { name: string, type: string, variants?: any }) {
-   if (variants) {
-      return (
-         <motion.div variants={variants} className="flex flex-col p-5 rounded-xl border border-white/[0.08] bg-[#161616]/50 hover:bg-[#161616] transition-colors group cursor-pointer">
-            <div className="text-white font-medium text-[15px] mb-1 tracking-tight group-hover:text-blue-400 transition-colors">{name}</div>
-            <div className="text-[#71717a] text-[13px]">{type}</div>
-         </motion.div>
-      )
-   }
-   return (
-      <div className="flex flex-col p-5 rounded-xl border border-white/[0.08] bg-[#161616]/50 hover:bg-[#161616] transition-colors group cursor-pointer">
-         <div className="text-white font-medium text-[15px] mb-1 tracking-tight group-hover:text-blue-400 transition-colors">{name}</div>
-         <div className="text-[#71717a] text-[13px]">{type}</div>
-      </div>
-   )
 }

@@ -15,6 +15,7 @@ import {
   Star,
   Users
 } from 'lucide-react';
+import { PageHero } from '../components/PageHero';
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -92,75 +93,31 @@ export function Community() {
   return (
     <main className="w-full flex-1 flex flex-col">
       {/* ───────────────── Hero ───────────────── */}
-      <section className="pt-32 pb-24 md:pt-44 md:pb-32 px-6 flex flex-col items-center text-center relative overflow-hidden bg-[#080808] border-b border-white/[0.08]">
-        <div className="absolute inset-0 bg-grid mask-fade opacity-60 pointer-events-none" />
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-full max-w-[1100px] h-[640px] pointer-events-none opacity-50">
-          <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/25 via-purple-500/5 to-transparent blur-[110px] rounded-full" />
-        </div>
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[480px] h-px bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="inline-flex items-center gap-2 pl-1.5 pr-3 py-1 rounded-full border border-white/[0.1] bg-white/[0.03] text-[13px] text-gray-300 mb-8 relative z-10"
-        >
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/15 text-indigo-300 px-2 py-0.5 text-[11px] font-medium border border-indigo-500/20">
-            <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
-            Live
-          </span>
-          42,000+ developers building together
-        </motion.div>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1 }}
-          className="text-gradient text-4xl md:text-[5rem] lg:text-[6.5rem] tracking-tighter font-semibold mb-8 leading-[0.95] relative z-10 max-w-4xl"
-        >
-          Built by developers. <br className="hidden md:block" />
-          For developers.
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-lg md:text-xl text-[#888] max-w-2xl leading-relaxed relative z-10 mb-10"
-        >
-          Join thousands of engineers from around the world. Share knowledge, debug the hard stuff
-          together, and help build the future of software.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="flex flex-col sm:flex-row items-center gap-4 relative z-10"
-        >
-          <a
-            href="#"
-            className="group bg-white text-black px-7 py-3.5 rounded-full font-medium flex items-center gap-2 hover:bg-gray-100 transition-all duration-300 shadow-[0_0_50px_-12px_rgba(255,255,255,0.5)]"
-          >
-            <DiscordIcon className="w-[18px] h-[18px]" />
-            Join the Discord
-            <ArrowRight className="w-4 h-4 -ml-0.5 opacity-60 group-hover:translate-x-0.5 transition-transform" />
-          </a>
-          <a
-            href="#events"
-            className="bg-white/[0.04] border border-white/[0.1] text-white px-7 py-3.5 rounded-full font-medium hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300 backdrop-blur-sm"
-          >
-            See upcoming events
-          </a>
-        </motion.div>
-
-        {/* Live community feed mockup */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 30 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-24 w-full max-w-[920px] relative z-10 rounded-2xl border border-white/[0.08] bg-[#000] glow-ring overflow-hidden text-left"
-        >
+      <PageHero
+        layout="split"
+        bgPattern="none"
+        glowColor="none"
+        titleClassName="text-5xl md:text-[5.5rem] lg:text-[6.5rem] font-black tracking-tighter text-white"
+        badgeText={
+          <>
+            <MessageSquare className="w-3.5 h-3.5" />
+            Join the Discussion
+          </>
+        }
+        title="Where developers build together."
+        description="Join thousands of developers in the Collab Code community. Share your projects, get help, and shape the future of the platform."
+        primaryCta={{
+          text: "Join Discord",
+          href: "#",
+          icon: <span className="w-3 h-3 bg-black rounded-sm" />
+        }}
+        secondaryCta={{
+          text: "Read the Blog",
+          href: "/blog"
+        }}
+      >
+        {/* Fake PR UI */}
+        <div className="w-full max-w-[920px] relative z-10 rounded-2xl border border-white/[0.08] bg-[#000] glow-ring overflow-hidden text-left">
           <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-white/[0.12] to-transparent opacity-60 pointer-events-none [mask:linear-gradient(#000,transparent_40%)]" />
           {/* window bar */}
           <div className="h-12 border-b border-white/[0.05] bg-[#020202] flex items-center px-4 justify-between relative z-10">
@@ -182,8 +139,8 @@ export function Community() {
               3 people are typing…
             </div>
           </div>
-        </motion.div>
-      </section>
+        </div>
+      </PageHero>
 
       {/* ───────────────── Stats ───────────────── */}
       <motion.section
@@ -268,7 +225,7 @@ export function Community() {
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-500/5 blur-[100px] rounded-full pointer-events-none group-hover:bg-purple-500/10 transition-colors" />
             <div className="absolute bottom-8 right-8 hidden sm:flex -space-x-4 opacity-50 group-hover:opacity-100 transition-opacity">
               {[1, 2, 3, 4].map((n) => (
-                <img key={n} className="w-12 h-12 rounded-full border-2 border-[#050505]" src={`https://i.pravatar.cc/100?img=${n}`} alt="" />
+                <img key={n} className="w-12 h-12 rounded-full border-2 border-[#050505]" src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${n}`} alt="" />
               ))}
             </div>
             <div className="relative z-10">
@@ -331,7 +288,7 @@ export function Community() {
             maintainer. This community changed my career."
           </blockquote>
           <div className="flex items-center gap-4">
-            <img src="https://i.pravatar.cc/100?img=15" alt="June Park" className="w-12 h-12 rounded-full border border-white/[0.1] object-cover" />
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=15" alt="June Park" className="w-12 h-12 rounded-full border border-white/[0.1] object-cover" />
             <div>
               <div className="text-white font-medium text-[15px]">June Park</div>
               <div className="text-[#71717a] text-sm">Core Maintainer · Seoul</div>
@@ -369,7 +326,7 @@ export function Community() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ delay: i * 0.04, duration: 0.3 }}
                 viewport={{ once: true }}
-                src={`https://i.pravatar.cc/100?img=${id}`}
+                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${id}`}
                 alt="Contributor"
                 className="w-full aspect-square rounded-full border border-white/[0.1] hover:border-white/50 transition-colors"
               />
@@ -406,7 +363,7 @@ export function Community() {
 function FeedMessage({ img, name, color, time, msg }: { img: number; name: string; color: string; time: string; msg: string }) {
   return (
     <div className="flex items-start gap-3">
-      <img src={`https://i.pravatar.cc/100?img=${img}`} alt="" className="w-9 h-9 rounded-full border border-white/[0.08] object-cover shrink-0" />
+      <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${img}`} alt="" className="w-9 h-9 rounded-full border border-white/[0.08] object-cover shrink-0" />
       <div className="min-w-0">
         <div className="flex items-baseline gap-2">
           <span className={`text-sm font-medium ${color}`}>{name}</span>

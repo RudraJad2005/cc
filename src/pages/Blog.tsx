@@ -8,7 +8,7 @@ const FEATURED_POST = {
   readTime: "8 min read",
   author: {
     name: "Alex Rivera",
-    avatar: "https://i.pravatar.cc/100?img=11"
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=11"
   },
   cover: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=1200",
   category: "Product"
@@ -22,7 +22,7 @@ const POSTS = [
     readTime: "12 min read",
     author: {
       name: "Sam Chen",
-      avatar: "https://i.pravatar.cc/100?img=33"
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=33"
     },
     category: "Engineering"
   },
@@ -33,7 +33,7 @@ const POSTS = [
     readTime: "6 min read",
     author: {
       name: "Jamie Doe",
-      avatar: "https://i.pravatar.cc/100?img=47"
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=47"
     },
     category: "Security"
   },
@@ -44,7 +44,7 @@ const POSTS = [
     readTime: "10 min read",
     author: {
       name: "Alex Rivera",
-      avatar: "https://i.pravatar.cc/100?img=11"
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=11"
     },
     category: "Tutorial"
   },
@@ -55,7 +55,7 @@ const POSTS = [
     readTime: "15 min read",
     author: {
       name: "Sarah Jenkins",
-      avatar: "https://i.pravatar.cc/100?img=5"
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=5"
     },
     category: "Engineering"
   },
@@ -66,7 +66,7 @@ const POSTS = [
     readTime: "8 min read",
     author: {
       name: "Michael Park",
-      avatar: "https://i.pravatar.cc/100?img=12"
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=12"
     },
     category: "Community"
   },
@@ -77,7 +77,7 @@ const POSTS = [
     readTime: "5 min read",
     author: {
       name: "Sam Chen",
-      avatar: "https://i.pravatar.cc/100?img=33"
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=33"
     },
     category: "Product"
   }

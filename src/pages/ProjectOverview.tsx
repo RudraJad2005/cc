@@ -124,21 +124,6 @@ export function ProjectOverview() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 w-full md:w-auto">
-            <Link 
-              to={`/dashboard/projects/${projectId}/editor`} 
-              className="col-span-2 group relative flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-white text-black font-semibold overflow-hidden transition-all hover:scale-[1.02]"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-white via-blue-100 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ backgroundSize: '200% 100%', animation: 'shimmer 2s infinite linear' }}></div>
-              <Code2 className="w-5 h-5 relative z-10" />
-              <span className="relative z-10">Open Native IDE</span>
-            </Link>
-            <Link 
-              to={`/dashboard/projects/${projectId}/settings`} 
-              className="col-span-2 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/[0.1] hover:bg-white/[0.05] transition-colors text-sm font-medium text-white"
-            >
-              <Settings className="w-4 h-4" />
-              Project Settings
-            </Link>
             <button 
               onClick={() => setIsInviteModalOpen(true)}
               className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/[0.1] hover:bg-white/[0.05] transition-colors text-sm font-medium text-white"

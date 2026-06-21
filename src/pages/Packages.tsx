@@ -1,6 +1,7 @@
 import { motion, type Variants } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { Search, Package, Download, ArrowUpRight, ArrowRight, Terminal, ShieldCheck, Boxes, Zap, Star } from 'lucide-react';
+import { PageHero } from '../components/PageHero';
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -92,46 +93,26 @@ export function Packages() {
   return (
     <main className="w-full flex-1 flex flex-col">
       {/* Hero */}
-      <section className="flex flex-col border-b border-white/[0.08] relative text-center items-center justify-center py-32 md:py-48 px-6 overflow-hidden bg-[#000000]">
-        <div className="absolute inset-0 bg-dots mask-fade opacity-40 pointer-events-none" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-purple-500/10 blur-[120px] rounded-full pointer-events-none mix-blend-screen opacity-60" />
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6 }}
-          className="relative z-10 w-14 h-14 rounded-2xl border border-white/[0.1] bg-white/[0.03] flex items-center justify-center mb-8"
-        >
-          <Package className="w-7 h-7 text-white/70" />
-        </motion.div>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1 }}
-          className="text-4xl md:text-5xl lg:text-[5.5rem] tracking-tighter font-semibold text-white mb-8 leading-[1.05] relative z-10 max-w-4xl"
-        >
-          <span className="text-gradient">Every package.</span> <br />
-          <span className="text-[#888]">Installed instantly.</span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-lg md:text-xl text-[#888] max-w-2xl leading-relaxed relative z-10 mb-10"
-        >
-          A registry of 2 million+ open-source packages, served from the edge and pre-cached in
-          every workspace. No cold installs, no version conflicts.
-        </motion.p>
-
+      <PageHero
+        layout="left"
+        bgPattern="none"
+        glowColor="none"
+        titleClassName="text-5xl md:text-[6rem] lg:text-[7.5rem] font-black tracking-tighter text-white"
+        badgeContent={
+          <div className="w-14 h-14 rounded-2xl border border-white/[0.1] bg-white/[0.03] flex items-center justify-center">
+            <Package className="w-7 h-7 text-white/70" />
+          </div>
+        }
+        title={
+          <>
+            Every package. <br />
+            <span className="text-[#888]">Installed instantly.</span>
+          </>
+        }
+        description="A registry of 2 million+ open-source packages, served from the edge and pre-cached in every workspace. No cold installs, no version conflicts."
+      >
         {/* Search bar (decorative) */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="relative z-10 w-full max-w-xl"
-        >
+        <div className="w-full max-w-xl">
           <div className="flex items-center gap-3 bg-white/[0.03] border border-white/[0.1] rounded-full px-5 py-3.5 hover:bg-white/[0.05] transition-colors focus-within:border-white/30">
             <Search className="w-5 h-5 text-[#71717a] shrink-0" />
             <input
@@ -143,8 +124,8 @@ export function Packages() {
               ⌘K
             </kbd>
           </div>
-        </motion.div>
-      </section>
+        </div>
+      </PageHero>
 
       {/* Stats */}
       <motion.section

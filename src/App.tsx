@@ -25,17 +25,30 @@ import { Packages } from './pages/Packages';
 import { DashboardLayout } from './layouts/DashboardLayout';
 import { Dashboard } from './pages/Dashboard';
 import { Projects } from './pages/Projects';
+import { DashboardActivity } from './pages/DashboardActivity';
 import { DashboardSandboxes } from './pages/DashboardSandboxes';
 import { Settings } from './pages/Settings';
 import { DashboardDeployments } from './pages/DashboardDeployments';
 import { DashboardTemplates } from './pages/DashboardTemplates';
 import { DashboardIntegrations } from './pages/DashboardIntegrations';
 import { DashboardNewProject } from './pages/DashboardNewProject';
+import { DashboardStorage } from './pages/DashboardStorage';
+import { DashboardDatabase } from './pages/DashboardDatabase';
+import { DashboardAuth } from './pages/DashboardAuth';
+import { DashboardProjects } from './pages/DashboardProjects';
+import { DashboardDomains } from './pages/DashboardDomains';
+import { DashboardUsage } from './pages/DashboardUsage';
+import { SupabaseLayout } from './layouts/SupabaseLayout';
 
 import { ProjectLayout } from './layouts/ProjectLayout';
 import { ProjectOverview } from './pages/ProjectOverview';
 import { ProjectSettings } from './pages/ProjectSettings';
 import { NativeIDE } from './pages/NativeIDE';
+import { ProjectDeployments } from './pages/ProjectDeployments';
+import { ProjectLogs } from './pages/ProjectLogs';
+import { ProjectAnalytics } from './pages/ProjectAnalytics';
+import { ProjectEnv } from './pages/ProjectEnv';
+import { ProjectCollaborators } from './pages/ProjectCollaborators';
 
 import { MarketplaceLayout } from './layouts/MarketplaceLayout';
 import { DashboardMarketplace } from './pages/DashboardMarketplace';
@@ -48,7 +61,7 @@ import { AuthProvider } from './contexts/AuthContext';
 
 function MarketingLayout() {
   return (
-    <div className="min-h-screen bg-[#080808] text-white selection:bg-blue-500/30 font-sans flex flex-col items-center">
+    <div className="min-h-screen bg-black text-white selection:bg-blue-500/30 font-sans flex flex-col items-center">
       <ScrollProgress />
       <div className="w-full max-w-[1400px] border-x border-white/[0.08] min-h-screen flex flex-col">
         <Navbar />
@@ -90,16 +103,31 @@ export default function App() {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="projects" element={<Projects />} />
+          <Route path="activity" element={<DashboardActivity />} />
           <Route path="sandboxes" element={<DashboardSandboxes />} />
+          <Route path="domains" element={<DashboardDomains />} />
+          <Route path="usage" element={<DashboardUsage />} />
           <Route path="deployments" element={<DashboardDeployments />} />
           <Route path="templates" element={<DashboardTemplates />} />
           <Route path="integrations" element={<DashboardIntegrations />} />
           <Route path="settings" element={<Settings />} />
           <Route path="new" element={<DashboardNewProject />} />
+          <Route path="backend" element={<DashboardProjects />} />
+        </Route>
+
+        <Route path="/dashboard/backend/editor" element={<SupabaseLayout />}>
+          <Route index element={<DashboardDatabase />} />
+          <Route path="auth" element={<DashboardAuth />} />
+          <Route path="storage" element={<DashboardStorage />} />
         </Route>
 
         <Route path="/dashboard/projects/:projectId" element={<ProjectLayout />}>
           <Route index element={<ProjectOverview />} />
+          <Route path="deployments" element={<ProjectDeployments />} />
+          <Route path="logs" element={<ProjectLogs />} />
+          <Route path="analytics" element={<ProjectAnalytics />} />
+          <Route path="env" element={<ProjectEnv />} />
+          <Route path="collaborators" element={<ProjectCollaborators />} />
           <Route path="settings" element={<ProjectSettings />} />
         </Route>
 

@@ -3,9 +3,10 @@ import {
   LayoutDashboard, Server, FileText, BarChart3, Activity, 
   ShieldAlert, ShieldCheck, Globe, Database, Plug, 
   HardDrive, Flag, Bot, Cpu, Box, Workflow, 
-  PieChart, LifeBuoy, Settings, ChevronRight, ChevronDown, Github, Search, Code2
+  PieChart, LifeBuoy, Settings, ChevronRight, ChevronDown, Github, Search, Code2, Key, Users
 } from 'lucide-react';
 import { NotificationInbox } from '../components/NotificationInbox';
+import { DashboardSidebar } from './DashboardLayout';
 
 export function ProjectLayout() {
   const { projectId } = useParams();
@@ -15,32 +16,45 @@ export function ProjectLayout() {
     { name: 'Overview', path: `/dashboard/projects/${projectId}`, exact: true, icon: <LayoutDashboard className="w-4 h-4" /> },
     { name: 'Native IDE', path: `/dashboard/projects/${projectId}/editor`, icon: <Code2 className="w-4 h-4" /> },
     { type: 'divider' },
+    { name: 'Deployments', path: `/dashboard/projects/${projectId}/deployments`, icon: <Server className="w-4 h-4" /> },
+    { name: 'Logs', path: `/dashboard/projects/${projectId}/logs`, icon: <FileText className="w-4 h-4" /> },
+    { name: 'Analytics', path: `/dashboard/projects/${projectId}/analytics`, icon: <Activity className="w-4 h-4" /> },
+    { type: 'divider' },
+    { name: 'Env Variables', path: `/dashboard/projects/${projectId}/env`, icon: <Key className="w-4 h-4" /> },
+    { name: 'Collaborators', path: `/dashboard/projects/${projectId}/collaborators`, icon: <Users className="w-4 h-4" /> },
+    { type: 'divider' },
     { name: 'Settings', path: `/dashboard/projects/${projectId}/settings`, icon: <Settings className="w-4 h-4" /> },
   ];
 
   return (
     <div className="min-h-screen bg-[#000] text-[#a1a1aa] flex font-sans selection:bg-white/30">
       
+      {/* Global Dashboard Sidebar */}
+      <DashboardSidebar />
+
       {/* Sidebar - Deep Project Context */}
       <aside className="w-64 border-r border-white/[0.08] flex flex-col bg-[#020202] shrink-0 sticky top-0 h-screen hidden md:flex">
         
         {/* Workspace Breadcrumb Context */}
-        <div className="p-4 border-b border-white/[0.08] flex flex-col gap-2">
-           <Link to="/dashboard" className="flex items-center gap-2 hover:bg-white/[0.05] p-1.5 rounded-md transition-colors text-sm text-gray-300 w-fit">
-              <div className="w-5 h-5 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 shrink-0"></div>
-              rudrajad2005's... <ChevronDown className="w-3 h-3" />
+        <div className="p-6 border-b border-white/[0.08] flex flex-col gap-4">
+           <Link to="/dashboard" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 shrink-0 border border-white/[0.1]"></div>
+              <div className="flex flex-col min-w-0">
+                 <span className="text-sm font-medium text-white leading-tight flex items-center gap-1">rudrajad2005 <ChevronDown className="w-3 h-3" /></span>
+                 <span className="text-[10px] text-gray-500 font-mono truncate">{projectId}</span>
+              </div>
            </Link>
            <div className="relative w-full">
-              <Search className="w-3.5 h-3.5 absolute left-2 top-1/2 -translate-y-1/2 text-gray-500" />
-              <input type="text" placeholder="Find..." className="w-full bg-[#050505] border border-white/[0.1] rounded pl-8 pr-2 py-1 text-xs text-white focus:outline-none focus:border-white/[0.3] placeholder:text-[#666]" />
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+              <input type="text" placeholder="Search project..." className="w-full bg-[#050505] border border-white/[0.1] rounded-md pl-9 pr-3 py-1.5 text-sm text-white focus:outline-none focus:border-white/[0.3] placeholder:text-[#666]" />
            </div>
         </div>
 
         {/* Massive Nav List */}
-        <div className="flex-1 py-4 px-2 overflow-y-auto no-scrollbar flex flex-col gap-0.5">
+        <div className="flex-1 py-6 px-3 overflow-y-auto no-scrollbar flex flex-col gap-1">
           {navItems.map((item, i) => {
             if (item.type === 'divider') {
-               return <div key={i} className="h-px bg-white/[0.05] my-2 mx-2"></div>;
+               return <div key={i} className="h-px bg-white/[0.05] my-2 mx-3"></div>;
             }
             
             const isActive = item.exact 
@@ -50,8 +64,8 @@ export function ProjectLayout() {
             return (
               <Link 
                 key={item.path} 
-                to={item.path}
-                className={`flex items-center justify-between px-3 py-1.5 rounded-md text-[13px] transition-colors ${isActive ? 'bg-white/[0.08] text-white font-medium' : 'hover:text-white hover:bg-white/[0.03]'}`}
+                to={item.path!}
+                className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-colors ${isActive ? 'bg-white/[0.08] text-white font-medium' : 'text-[#888] hover:text-white hover:bg-white/[0.03]'}`}
               >
                 <div className="flex items-center gap-3">
                    {item.icon}
@@ -63,14 +77,6 @@ export function ProjectLayout() {
               </Link>
             );
           })}
-        </div>
-        
-        {/* Bottom Workspace Return */}
-        <div className="p-4 border-t border-white/[0.08] bg-[#020202]">
-          <Link to="/dashboard" className="flex items-center gap-3 hover:bg-white/[0.05] p-2 rounded-md transition-colors text-sm">
-             <div className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 shrink-0"></div>
-             rudrajad2005
-          </Link>
         </div>
       </aside>
 

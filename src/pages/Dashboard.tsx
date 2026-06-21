@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, GitBranch, Clock, ArrowRight, FolderOpen, Loader2 } from 'lucide-react';
+import { Plus, GitBranch, Clock, ArrowRight, FolderOpen, Loader2, Github, Upload, X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
@@ -28,6 +28,7 @@ const getSafeIconUrl = (url: string | null | undefined) => {
 
 export function Dashboard() {
   const { user } = useAuth();
+  const [showImportModal, setShowImportModal] = useState(false);
   const userName = user?.email?.split('@')[0] || 'Developer';
 
   const [projects, setProjects] = useState<any[]>([]);
@@ -75,10 +76,10 @@ export function Dashboard() {
            <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="flex flex-col gap-8">
            
-           {/* Left Column: Projects */}
-           <div className="lg:col-span-2 flex flex-col gap-6">
+           {/* Projects */}
+           <div className="flex flex-col gap-6">
               <div className="flex items-center justify-between">
                  <h2 className="text-sm font-medium text-gray-400">Recent Projects</h2>
                  <Link to="/dashboard/projects" className="text-sm text-gray-500 hover:text-white transition-colors flex items-center gap-1">
@@ -124,12 +125,12 @@ export function Dashboard() {
                       </Link>
                     ))}
                     
-                    <Link to="/dashboard/new" className="p-5 rounded-xl border border-white/[0.05] border-dashed bg-transparent hover:border-white/[0.2] hover:bg-white/[0.02] transition-all flex flex-col items-center justify-center gap-2 min-h-[140px] text-gray-500 hover:text-white group">
+                    <button onClick={() => setShowImportModal(true)} className="p-5 rounded-xl border border-white/[0.05] border-dashed bg-transparent hover:border-white/[0.2] hover:bg-white/[0.02] transition-all flex flex-col items-center justify-center gap-2 min-h-[140px] text-gray-500 hover:text-white group">
                        <div className="w-10 h-10 rounded-full border border-white/[0.1] bg-[#050505] flex items-center justify-center group-hover:scale-110 transition-transform">
                           <Plus className="w-5 h-5" />
                        </div>
                        <span className="text-sm font-medium">Import Project</span>
-                    </Link>
+                    </button>
                  </div>
                )}
 
@@ -176,33 +177,44 @@ export function Dashboard() {
                )}
             </div>
 
-           {/* Right Column: Activity */}
-           <div className="flex flex-col gap-6">
-              <h2 className="text-sm font-medium text-gray-400">Activity</h2>
-              
-              <div className="rounded-xl border border-white/[0.1] bg-[#050505] flex flex-col overflow-hidden">
-                 {activity.length === 0 ? (
-                    <div className="p-8 text-center text-sm text-gray-500">
-                       No recent activity.
+        </div>
+      )}
+
+      {/* Import Modal */}
+      {showImportModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+           <div className="bg-[#0a0a0a] border border-white/[0.1] rounded-2xl w-full max-w-lg overflow-hidden flex flex-col shadow-2xl">
+              <div className="p-6 border-b border-white/[0.05] flex items-center justify-between">
+                 <div>
+                    <h3 className="text-xl font-semibold text-white mb-1">Import Project</h3>
+                    <p className="text-sm text-gray-400">Choose how you want to bring your code into Collab Code</p>
+                 </div>
+                 <button onClick={() => setShowImportModal(false)} className="text-gray-500 hover:text-white transition-colors p-1">
+                    <X className="w-5 h-5" />
+                 </button>
+              </div>
+              <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                 
+                 {/* Import via GitHub */}
+                 <Link to="/dashboard/new" className="group flex flex-col p-5 border border-white/[0.08] hover:border-white/[0.2] bg-[#050505] hover:bg-[#111] rounded-xl transition-all h-full">
+                    <div className="w-12 h-12 rounded-full border border-white/[0.1] bg-[#111] flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-white group-hover:text-black transition-all">
+                       <Github className="w-6 h-6" />
                     </div>
-                 ) : (
-                    activity.map((event) => (
-                       <div key={event.id} className="flex items-start gap-4 p-4 border-b border-white/[0.05] last:border-0 hover:bg-white/[0.02] transition-colors">
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 shrink-0 border border-white/[0.1]"></div>
-                          <div className="flex-1 min-w-0">
-                             <p className="text-sm text-gray-300">
-                                <span className="font-medium text-white">{userName}</span> {event.action} <span className="font-mono text-xs bg-white/[0.1] px-1 py-0.5 rounded text-white">{event.target}</span>
-                             </p>
-                             <p className="text-xs text-gray-500 mt-1">{getRelativeTime(event.created_at)} ago</p>
-                          </div>
-                          {event.status === 'success' && <div className="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 shadow-[0_0_8px_#10b981]"></div>}
-                          {event.status === 'building' && <div className="w-2 h-2 rounded-full bg-amber-500 mt-1.5 animate-pulse shadow-[0_0_8px_#f59e0b]"></div>}
-                       </div>
-                    ))
-                 )}
+                    <h4 className="text-white font-medium text-base mb-1">Import from GitHub</h4>
+                    <p className="text-sm text-gray-400">Connect your GitHub account and select a repository to import.</p>
+                 </Link>
+
+                 {/* Import via Local Files */}
+                 <Link to="/dashboard/new?mode=upload" className="group flex flex-col p-5 border border-white/[0.08] hover:border-white/[0.2] bg-[#050505] hover:bg-[#111] rounded-xl transition-all h-full">
+                    <div className="w-12 h-12 rounded-full border border-white/[0.1] bg-[#111] flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-blue-500 group-hover:text-white group-hover:border-blue-500 transition-all text-gray-300">
+                       <Upload className="w-6 h-6" />
+                    </div>
+                    <h4 className="text-white font-medium text-base mb-1">Upload Files</h4>
+                    <p className="text-sm text-gray-400">Drag and drop your local project folder directly.</p>
+                 </Link>
+
               </div>
            </div>
-
         </div>
       )}
 

@@ -182,7 +182,7 @@ function TeamMember({ name, role, img }: { name: string, role: string, img: stri
          <div className="relative mb-6">
             <div className="absolute inset-0 bg-indigo-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <img 
-               src={`https://i.pravatar.cc/150?img=${img}`} 
+               src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${img}`} 
                className="relative z-10 w-24 h-24 md:w-32 md:h-32 rounded-full border border-white/[0.1] grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:border-white/[0.3] transition-all duration-500" 
                alt={name} 
             />

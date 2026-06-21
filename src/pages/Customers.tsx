@@ -1,6 +1,7 @@
 import { motion, type Variants } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight, Quote } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Quote, ShieldCheck, Zap } from 'lucide-react';
+import { PageHero } from '../components/PageHero';
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -28,7 +29,7 @@ const stories = [
     quote: 'We cut our environment setup from two days to two minutes. New engineers ship to production on day one.',
     author: 'Priya Nair',
     role: 'VP Engineering',
-    img: 'https://i.pravatar.cc/100?img=47',
+    img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=47',
     metric: '92% less setup time'
   },
   {
@@ -37,7 +38,7 @@ const stories = [
     quote: 'The collaborative editor replaced three internal tools. Pairing across timezones finally feels native.',
     author: 'Marcus Lee',
     role: 'Staff Engineer',
-    img: 'https://i.pravatar.cc/100?img=13',
+    img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=13',
     metric: '3 tools consolidated'
   },
   {
@@ -46,7 +47,7 @@ const stories = [
     quote: 'Running real Node containers in the browser changed how we prototype. No more "works on my machine".',
     author: 'Sofia Alvarez',
     role: 'Head of Platform',
-    img: 'https://i.pravatar.cc/100?img=32',
+    img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=32',
     metric: '0 local dependencies'
   },
   {
@@ -55,7 +56,7 @@ const stories = [
     quote: 'Our review cycles got dramatically faster. Reviewers open a live workspace instead of pulling branches.',
     author: 'Tom Becker',
     role: 'Engineering Manager',
-    img: 'https://i.pravatar.cc/100?img=68',
+    img: 'https://api.dicebear.com/7.x/avataaars/svg?seed=68',
     metric: '2.5x faster reviews'
   }
 ];
@@ -64,59 +65,32 @@ export function Customers() {
   return (
     <main className="w-full flex-1 flex flex-col">
       {/* Hero */}
-      <section className="flex flex-col border-b border-white/[0.08] relative text-center items-center justify-center py-32 md:py-48 px-6 overflow-hidden bg-[#000000]">
-        <div className="absolute inset-0 bg-dots mask-fade opacity-40 pointer-events-none" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-blue-500/10 blur-[120px] rounded-full pointer-events-none mix-blend-screen opacity-60" />
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-[#71717a] text-[12px] font-medium tracking-[0.2em] mb-8 uppercase relative z-10"
-        >
-          Customers
-        </motion.p>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1 }}
-          className="text-4xl md:text-5xl lg:text-[5.5rem] tracking-tighter font-semibold text-white mb-8 leading-[1.05] relative z-10 max-w-4xl"
-        >
-          <span className="text-gradient">Loved by the teams</span> <br />
-          <span className="text-[#888]">building what's next.</span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-lg md:text-xl text-[#888] max-w-2xl leading-relaxed relative z-10 mb-10"
-        >
-          From seed-stage startups to public companies, engineering teams trust our IDE to ship
-          faster — without ever touching a local environment.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="flex flex-col sm:flex-row items-center gap-4 relative z-10"
-        >
-          <Link
-            to="/signup"
-            className="bg-white text-black hover:bg-white/90 rounded-full px-8 py-3.5 text-[14px] font-semibold transition-all shadow-[0_0_30px_rgba(255,255,255,0.15)] flex items-center gap-2"
-          >
-            Start building <ArrowRight className="w-4 h-4 opacity-70" />
-          </Link>
-          <a
-            href="#stories"
-            className="bg-white/[0.03] border border-white/[0.1] hover:bg-white/[0.08] text-white rounded-full px-8 py-3.5 text-[14px] font-medium transition-all"
-          >
-            Read their stories
-          </a>
-        </motion.div>
-      </section>
+      <PageHero
+        layout="centered"
+        bgPattern="none"
+        glowColor="none"
+        titleClassName="text-5xl md:text-[6rem] lg:text-[7.5rem] font-black tracking-tighter text-white"
+        badgeContent={
+          <p className="text-[#71717a] text-[12px] font-medium tracking-[0.2em] mb-4 uppercase">
+            Customers
+          </p>
+        }
+        title={
+          <>
+            Loved by the teams <br />
+            <span className="text-[#888]">building what's next.</span>
+          </>
+        }
+        description="From seed-stage startups to public companies, engineering teams trust our IDE to ship faster — without ever touching a local environment."
+        primaryCta={{
+          text: "Start building",
+          href: "/signup"
+        }}
+        secondaryCta={{
+          text: "Read their stories",
+          href: "#stories"
+        }}
+      />
 
       {/* Stats */}
       <motion.section
@@ -169,7 +143,7 @@ export function Customers() {
           </blockquote>
           <div className="flex items-center gap-4">
             <img
-              src="https://i.pravatar.cc/100?img=5"
+              src="https://api.dicebear.com/7.x/avataaars/svg?seed=5"
               alt="Elena Cruz"
               className="w-12 h-12 rounded-full border border-white/[0.1] object-cover"
             />

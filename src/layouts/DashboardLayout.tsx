@@ -1,46 +1,47 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Folder, Settings, Search, Bell, User, Server, Blocks, Plug, LogOut, Code2 } from 'lucide-react';
+import { LayoutDashboard, Folder, Settings, Search, Bell, User, Server, Blocks, Plug, LogOut, Code2, Database, Globe, Activity, MoreHorizontal, Box, Clock } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { NotificationInbox } from '../components/NotificationInbox';
 
-export function DashboardLayout() {
+export const navItems = [
+    { name: 'Overview', path: '/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { name: 'Projects', path: '/dashboard/projects', icon: <Folder className="w-4 h-4" /> },
+    { name: 'Activity', path: '/dashboard/activity', icon: <Clock className="w-4 h-4" /> },
+    { name: 'Sandboxes', path: '/dashboard/sandboxes', icon: <Box className="w-4 h-4" /> },
+    { name: 'Backend', path: '/dashboard/backend', icon: <Database className="w-4 h-4" /> },
+    { name: 'Domains', path: '/dashboard/domains', icon: <Globe className="w-4 h-4" /> },
+    { name: 'Usage', path: '/dashboard/usage', icon: <Activity className="w-4 h-4" /> },
+    { name: 'Templates', path: '/dashboard/templates', icon: <Blocks className="w-4 h-4" /> },
+    { name: 'Integrations', path: '/dashboard/integrations', icon: <Plug className="w-4 h-4" /> },
+  ];
+
+export function DashboardSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, signOut, isLoading } = useAuth();
+  const { user, signOut } = useAuth();
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   
-  useEffect(() => {
-    if (!isLoading && !user) {
-      navigate('/login');
-    }
-  }, [user, isLoading, navigate]);
-
   const handleSignOut = async () => {
     await signOut();
     navigate('/login');
   };
   
-  const navItems = [
-    { name: 'Overview', path: '/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
-    { name: 'Projects', path: '/dashboard/projects', icon: <Folder className="w-4 h-4" /> },
-    { name: 'Sandboxes', path: '/dashboard/sandboxes', icon: <Code2 className="w-4 h-4" /> },
-    { name: 'Templates', path: '/dashboard/templates', icon: <Blocks className="w-4 h-4" /> },
-    { name: 'Integrations', path: '/dashboard/integrations', icon: <Plug className="w-4 h-4" /> },
-    { name: 'Settings', path: '/dashboard/settings', icon: <Settings className="w-4 h-4" /> },
-  ];
-
   return (
-    <div className="min-h-screen bg-[#000] text-white flex font-sans selection:bg-white/30">
-      {/* Sidebar */}
-      <aside className="w-64 border-r border-white/[0.08] flex flex-col bg-[#020202] shrink-0 sticky top-0 h-screen hidden md:flex">
-        <Link to="/" className="p-6 border-b border-white/[0.08] flex items-center gap-3 active:scale-95 transition-transform hover:opacity-80">
+    <>
+      {/* Placeholder to reserve space in the layout */}
+      <div className="w-[72px] shrink-0 hidden md:block"></div>
+      
+      {/* The actual sidebar that expands on hover */}
+      <aside className="w-[72px] hover:w-64 border-r border-white/[0.08] flex flex-col bg-[#020202] shrink-0 fixed top-0 left-0 h-screen hidden md:flex transition-[width] duration-300 group z-50 overflow-hidden">
+        <Link to="/" className="h-16 border-b border-white/[0.08] flex items-center px-5 gap-4 active:scale-95 transition-transform hover:opacity-80 shrink-0">
           <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center shrink-0">
              <div className="w-4 h-4 bg-black rounded-sm"></div>
           </div>
-          <span className="font-semibold tracking-tight text-white">Collab Code</span>
+          <span className="font-semibold tracking-tight text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">Collab Code</span>
         </Link>
         
-        <div className="flex-1 py-6 px-3 flex flex-col gap-1 overflow-y-auto no-scrollbar">
+        <div className="flex-1 py-6 flex flex-col gap-2 overflow-y-auto overflow-x-hidden no-scrollbar">
           {navItems.map(item => {
             const isActive = item.path === '/dashboard' 
               ? location.pathname === '/dashboard'
@@ -50,35 +51,68 @@ export function DashboardLayout() {
               <Link 
                 key={item.path} 
                 to={item.path}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${isActive ? 'bg-white/[0.08] text-white font-medium' : 'text-[#888] hover:text-white hover:bg-white/[0.03]'}`}
+                className={`flex items-center gap-4 mx-3 px-3 py-2.5 rounded-xl text-sm transition-colors shrink-0 ${isActive ? 'bg-white/[0.08] text-white font-medium' : 'text-[#888] hover:text-white hover:bg-white/[0.03]'}`}
               >
-                {item.icon}
-                {item.name}
+                <div className="shrink-0 w-5 h-5 flex items-center justify-center">
+                   {item.icon}
+                </div>
+                <span className="whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">{item.name}</span>
               </Link>
             );
           })}
         </div>
         
-        <div className="p-4 border-t border-white/[0.08] bg-[#020202]">
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-white/[0.03] cursor-pointer transition-colors border border-transparent hover:border-white/[0.05]">
-              <div className="flex items-center gap-3">
-                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center overflow-hidden border border-white/[0.1] shrink-0">
-                   <User className="w-4 h-4 text-white" />
-                 </div>
-                 <div className="flex flex-col min-w-0">
-                   <span className="text-sm font-medium text-white leading-tight truncate">{user?.email?.split('@')[0] || 'Developer'}</span>
-                   <span className="text-[10px] text-gray-500 font-mono truncate">{user?.email || 'HOBBY'}</span>
-                 </div>
+        <div className="p-3 border-t border-white/[0.08] bg-[#020202] relative">
+          <div 
+             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+             className="flex items-center justify-between gap-4 px-2 py-2 rounded-xl hover:bg-white/[0.05] cursor-pointer transition-colors border border-transparent hover:border-white/[0.05] relative w-full"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center overflow-hidden border border-white/[0.1] shrink-0">
+                 <User className="w-4 h-4 text-white" />
+              </div>
+              <div className="flex flex-col min-w-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                 <span className="text-sm font-medium text-white leading-tight truncate">{user?.email?.split('@')[0] || 'Developer'}</span>
+                 <span className="text-[10px] text-gray-500 font-mono truncate">{user?.email || 'HOBBY'}</span>
               </div>
             </div>
-            <button onClick={handleSignOut} className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors w-full text-left">
-              <LogOut className="w-4 h-4" />
-              Sign Out
-            </button>
+            <MoreHorizontal className="w-4 h-4 text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </div>
+
+          {/* Vercel-style Dropdown Menu */}
+          {isUserMenuOpen && (
+            <div className="absolute bottom-[110%] left-2 right-2 bg-[#0a0a0a] border border-white/[0.1] rounded-xl shadow-2xl p-1 z-50 animate-in fade-in zoom-in-95 duration-100">
+               <Link to="/dashboard/settings" className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-300 hover:bg-white/[0.05] hover:text-white transition-colors w-full text-left">
+                 <Settings className="w-4 h-4" />
+                 Account Settings
+               </Link>
+               <button onClick={handleSignOut} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors w-full text-left">
+                 <LogOut className="w-4 h-4" />
+                 Log Out
+               </button>
+            </div>
+          )}
         </div>
       </aside>
+    </>
+  );
+}
+
+export function DashboardLayout() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user, isLoading } = useAuth();
+  
+  useEffect(() => {
+    if (!isLoading && !user) {
+      navigate('/login');
+    }
+  }, [user, isLoading, navigate]);
+
+  return (
+    <div className="min-h-screen bg-[#000] text-white flex font-sans selection:bg-white/30">
+      {/* Sidebar */}
+      <DashboardSidebar />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 bg-[#000]">

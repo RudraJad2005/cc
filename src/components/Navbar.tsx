@@ -17,7 +17,7 @@ export function Navbar() {
     }`;
 
   return (
-    <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 xl:px-12 w-full bg-[#080808]/70 backdrop-blur-xl border-b border-white/[0.07] supports-[backdrop-filter]:bg-[#080808]/60">
+    <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 xl:px-12 w-full bg-black/70 backdrop-blur-xl border-b border-white/[0.07] supports-[backdrop-filter]:bg-black/60">
       <div className="flex items-center gap-3">
          <Link to="/" className="flex items-center gap-2 group">
             <div className="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-500/20 group-hover:border-indigo-500/30 transition-all duration-300">

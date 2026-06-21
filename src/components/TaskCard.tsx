@@ -26,10 +26,10 @@ export function TaskCard() {
       <div className="flex items-center justify-between relative z-10 pt-2 border-t border-white/[0.06]">
         <div className="flex -space-x-1.5 relative z-10">
           <div className="w-[18px] h-[18px] rounded-full ring-2 ring-[#161616] overflow-hidden">
-            <img src="https://i.pravatar.cc/100?img=33" className="w-full h-full object-cover" alt="avatar 1" />
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=33" className="w-full h-full object-cover" alt="avatar 1" />
           </div>
           <div className="w-[18px] h-[18px] rounded-full ring-2 ring-[#161616] overflow-hidden">
-            <img src="https://i.pravatar.cc/100?img=47" className="w-full h-full object-cover" alt="avatar 2" />
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=47" className="w-full h-full object-cover" alt="avatar 2" />
           </div>
         </div>
         <div className="flex gap-2 items-center">
