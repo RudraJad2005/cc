@@ -92,6 +92,7 @@ export function Footer() {
                      <a href="#" className="hover:text-white transition-colors">Documentation</a>
                      <a href="#" className="hover:text-white transition-colors">API Reference</a>
                      <Link to="/oss" className="hover:text-white transition-colors">OSS</Link>
+                     <Link to="/sdk" className="hover:text-white transition-colors">SDKs</Link>
                   </div>
                </div>
             </div>

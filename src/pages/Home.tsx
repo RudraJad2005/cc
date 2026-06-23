@@ -1,11 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import {
-  Plus, Terminal, GitBranch, FileCode, Package, Layout, ShieldCheck, Lock, Key, Server,
-  Layers, Zap, Globe, ArrowRight, MessageSquare, Check, ChevronRight, Play, Search,
-  CornerDownLeft, Cloud, Database, Gauge, Activity, Code2, Cpu, Globe2, Network
-} from 'lucide-react';
+import { Terminal, Code2, Globe2, ArrowRight, Zap, GitBranch, Search, Play, CornerDownLeft, Layers, Plus, Network, FileCode, Package, LayoutDashboard, Database, Lock, Box, Cpu, Sparkles, Bot, BrainCircuit, Shield, Share2, GitCommit, ArrowUpCircle, Monitor, Smartphone, Activity, Layout, ShieldCheck, Key, Server, MessageSquare, Check, ChevronRight, Cloud, Gauge } from 'lucide-react';
 import { SiNextdotjs, SiReact, SiNuxt, SiSvelte, SiVite, SiPython, SiNodedotjs, SiRust } from 'react-icons/si';
+import { SiGithub, SiGitlab, SiLinear, SiVercel, SiPostgresql } from 'react-icons/si';
 
 // Reusable Crosshair component
 const Crosshair = ({ className }: { className?: string }) => (
@@ -194,270 +191,315 @@ export function Home() {
                 </div>
 
                 {/* ═══════════════════════════════════════════ */}
-                {/* SECTION 1: MULTIPLAYER                     */}
+                {/* NEW SECTION: UNIFIED ARCHITECTURE          */}
                 {/* ═══════════════════════════════════════════ */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 relative border-b border-white/[0.1]">
-                   <Crosshair className="-top-1.5 -left-1.5" />
-                   <Crosshair className="-top-1.5 left-[50%] -translate-x-1.5" />
-                   <Crosshair className="-top-1.5 -right-1.5" />
-
-                   {/* Left Col */}
-                   <div className="lg:border-r border-white/[0.1] p-16 md:p-24 lg:p-32 flex flex-col justify-center min-h-[550px]">
-                      <div className="flex items-center gap-2 text-purple-400 text-[10px] font-mono uppercase tracking-widest mb-8">
-                         <Layers className="w-4 h-4" />
-                         <span>Collaboration</span>
-                      </div>
-                      <h2 className="text-4xl md:text-[3.5rem] font-medium tracking-tighter text-white leading-[1.05] mb-6">
-                         Multiplayer by default.
+                <section className="border-b border-white/[0.1] py-24 md:py-32 flex flex-col items-center bg-[#000]">
+                   <div className="text-center px-6 max-w-3xl mb-24 relative z-20">
+                      <h2 className="text-3xl md:text-5xl font-bold tracking-tighter leading-tight mb-6">
+                         Everything connects. Seamlessly.
                       </h2>
                       <p className="text-[#888] text-lg leading-relaxed">
-                         Every workspace is shared. See your teammates' cursors, edits, and terminal output in real time. No screen-sharing required.
+                         From your source code to your production deployment, CollabCode acts as the ultimate central engine, seamlessly orchestrating your entire developer toolchain.
                       </p>
                    </div>
 
-                   {/* Right Col: Brutalist File System Mockup */}
-                   <div className="p-16 md:p-24 flex items-center justify-center bg-[#050505] relative overflow-hidden group">
-                      <div className="absolute inset-0 bg-[radial-gradient(rgba(168,85,247,0.15)_1px,transparent_1px)] bg-[size:8px_8px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                   {/* The Connection Diagram */}
+                   <div className="relative w-full max-w-[896px] h-[400px]">
+                      {/* Source Code Nodes (Left) */}
+                      <div className="absolute left-0 top-[60px] w-12 h-12 rounded-full border border-white/10 bg-black flex items-center justify-center z-10 shadow-[0_0_20px_rgba(255,255,255,0.15)]">
+                         <SiGithub className="w-6 h-6 text-white" />
+                      </div>
+                      <div className="absolute left-0 top-[176px] w-12 h-12 rounded-full border border-white/10 bg-black flex items-center justify-center z-10 shadow-[0_0_20px_rgba(226,67,41,0.15)]">
+                         <SiGitlab className="w-6 h-6 text-[#E24329]" />
+                      </div>
+                      <div className="absolute left-0 top-[292px] w-12 h-12 rounded-full border border-white/10 bg-black flex items-center justify-center z-10 shadow-[0_0_20px_rgba(94,106,210,0.15)]">
+                         <SiLinear className="w-6 h-6 text-[#5E6AD2]" />
+                      </div>
+
+                      {/* Central Node (Collab Engine) */}
+                      <div className="absolute left-[424px] top-[176px] w-12 h-12 rounded-full bg-white flex items-center justify-center z-20 shadow-[0_0_40px_rgba(255,255,255,0.4)]">
+                         <span className="text-black font-black text-xl leading-none">Δ</span>
+                      </div>
+
+                      {/* Output Nodes (Right) */}
+                      <div className="absolute right-0 top-[60px] w-12 h-12 rounded-full border border-white/10 bg-black flex items-center justify-center z-10 shadow-[0_0_20px_rgba(255,255,255,0.15)]">
+                         <SiVercel className="w-6 h-6 text-white" />
+                      </div>
+                      <div className="absolute right-0 top-[176px] w-12 h-12 rounded-full border border-white/10 bg-black flex items-center justify-center z-10 shadow-[0_0_20px_rgba(255,153,0,0.15)]">
+                         <Cloud className="w-6 h-6 text-[#FF9900]" />
+                      </div>
+                      <div className="absolute right-0 top-[292px] w-12 h-12 rounded-full border border-white/10 bg-black flex items-center justify-center z-10 shadow-[0_0_20px_rgba(51,103,145,0.15)]">
+                         <SiPostgresql className="w-6 h-6 text-[#336791]" />
+                      </div>
+
+                      {/* Connecting Bezier Curves */}
+                      <svg className="absolute inset-0 w-full h-full pointer-events-none hidden md:block" viewBox="0 0 896 400" preserveAspectRatio="xMidYMid meet">
+                         {/* Left to Center */}
+                         <motion.path d="M 48 84 C 200 84, 300 200, 424 200" stroke="#fff" strokeWidth="2" fill="none" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }} />
+                         <motion.path d="M 48 200 L 424 200" stroke="#E24329" strokeWidth="2" fill="none" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }} />
+                         <motion.path d="M 48 316 C 200 316, 300 200, 424 200" stroke="#5E6AD2" strokeWidth="2" fill="none" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }} />
+                         
+                         {/* Center to Right */}
+                         <motion.path d="M 472 200 C 600 200, 700 84, 848 84" stroke="#fff" strokeWidth="2" fill="none" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }} />
+                         <motion.path d="M 472 200 L 848 200" stroke="#FF9900" strokeWidth="2" fill="none" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }} />
+                         <motion.path d="M 472 200 C 600 200, 700 316, 848 316" stroke="#336791" strokeWidth="2" fill="none" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.6 }} />
+                      </svg>
+                   </div>
+                </section>
+
+                {/* ═══════════════════════════════════════════ */}
+                {/* THE AI CLOUD SECTION                       */}
+                {/* ═══════════════════════════════════════════ */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 relative border-b border-white/[0.1]">
+                   <Crosshair className="-top-1.5 -left-1.5" />
+                   <Crosshair className="-top-1.5 -right-1.5" />
+                   
+                   {/* Left Sticky Column */}
+                   <div className="lg:col-span-4 relative border-b lg:border-b-0 lg:border-r border-white/[0.1]">
+                      <div className="lg:sticky lg:top-32 h-auto p-12 md:p-20 flex flex-col justify-start">
+                         <div className="flex items-center gap-3 mb-6">
+                            <Sparkles className="w-4 h-4 text-[#888]" />
+                            <span className="text-[#888] font-mono text-xs font-bold tracking-widest">The AI Cloud</span>
+                         </div>
+                         <h2 className="text-4xl md:text-5xl font-bold tracking-tighter leading-[1.1] text-white max-w-sm">
+                            The end-to-end platform for AI workloads.
+                         </h2>
+                      </div>
+                   </div>
+
+                   {/* Right Scrolling Column */}
+                   <div className="lg:col-span-8 flex flex-col">
                       
-                      <div className="w-full max-w-lg bg-[#000] border border-white/[0.1] overflow-hidden relative z-10">
-                         <div className="p-4 border-b border-white/[0.1] flex items-center justify-between bg-[#000]">
-                            <h3 className="text-[#888] text-xs font-mono uppercase tracking-widest flex items-center gap-2"><FileCode className="w-4 h-4 text-white" /> Workspace Files</h3>
-                            <span className="text-xs text-white font-mono">3 connected</span>
+                      {/* Block 1: AI Gateway */}
+                      <div className="p-12 md:p-20 border-b border-white/[0.1] bg-[#000] relative overflow-hidden flex flex-col items-start min-h-[600px]">
+                         <div className="w-full text-left mb-16 relative z-10">
+                            <h3 className="text-2xl font-medium text-[#888] tracking-tight mb-6 max-w-lg leading-relaxed">
+                               <strong className="font-bold text-white">AI Gateway.</strong> Switch between AI models without needing to manage API keys, rate limits, or provider accounts.
+                            </h3>
+                            <button className="px-4 py-1.5 bg-white text-black font-medium text-sm rounded-full hover:bg-gray-200 transition-colors">Read the docs</button>
                          </div>
                          
-                         <div className="divide-y divide-white/[0.1]">
-                            {/* Active file */}
-                            <div className="flex items-center justify-between px-5 py-4 bg-purple-500/5">
-                               <div className="flex items-center gap-4">
-                                  <Terminal className="w-4 h-4 text-purple-400" />
-                                  <span className="text-white text-sm font-mono">server.ts</span>
+                         {/* Semi-Circle SVG Diagram */}
+                         <div className="w-full flex justify-center mt-auto">
+                            <div className="relative w-[500px] h-[250px] shrink-0 pointer-events-none">
+                               <svg className="absolute inset-0 w-full h-full" viewBox="0 0 500 250">
+                                  {/* Track lines */}
+                                  <path d="M 50 250 A 200 200 0 0 1 450 250" stroke="#333" strokeWidth="1" strokeDasharray="4 4" fill="none" />
+                                  <path d="M 100 250 A 150 150 0 0 1 400 250" stroke="#333" strokeWidth="1" strokeDasharray="4 4" fill="none" />
+                                  <path d="M 150 250 A 100 100 0 0 1 350 250" stroke="#444" strokeWidth="1" fill="none" />
+                                  
+                                  {/* Animated Connection Lines */}
+                                  <motion.path d="M 50 250 A 200 200 0 0 1 450 250" stroke="#fff" strokeWidth="2" fill="none" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 0.5, opacity: 1 }} viewport={{ once: true }} transition={{ duration: 1.5, ease: "easeOut" }} />
+                                  <motion.path d="M 100 250 A 150 150 0 0 1 400 250" stroke="#a855f7" strokeWidth="2" fill="none" initial={{ pathLength: 0, opacity: 0 }} whileInView={{ pathLength: 0.3, opacity: 1 }} viewport={{ once: true }} transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }} />
+                               </svg>
+                               
+                               {/* Central Gateway Node */}
+                               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-16 h-16 bg-white rounded-full flex items-center justify-center z-20 shadow-[0_0_30px_rgba(255,255,255,0.3)] pointer-events-auto">
+                                  <span className="text-black text-2xl font-black">▲</span>
                                </div>
-                               <div className="flex items-center gap-4">
-                                  <span className="text-[10px] text-[#888] font-mono flex items-center gap-1"><GitBranch className="w-3 h-3" /> main</span>
-                                  <div className="flex -space-x-1.5">
-                                     <div className="w-5 h-5 border border-white/[0.2] bg-cyan-500 text-black text-[10px] flex items-center justify-center font-mono font-bold">A</div>
-                                     <div className="w-5 h-5 border border-white/[0.2] bg-emerald-500 text-black text-[10px] flex items-center justify-center font-mono font-bold">B</div>
+                               
+                               {/* Orbital Nodes */}
+                               {/* Outer Track */}
+                               <div className="absolute w-8 h-8 rounded-full border border-[#333] bg-black flex items-center justify-center text-[#888] z-10 -translate-x-1/2 -translate-y-1/2" style={{ left: '77px', top: '150px' }}><Bot className="w-4 h-4" /></div>
+                               <div className="absolute w-8 h-8 rounded-full border border-[#333] bg-black flex items-center justify-center text-[#888] z-10 -translate-x-1/2 -translate-y-1/2" style={{ left: '250px', top: '50px' }}><BrainCircuit className="w-4 h-4" /></div>
+                               <div className="absolute w-8 h-8 rounded-full border border-[#333] bg-black flex items-center justify-center text-[#888] z-10 -translate-x-1/2 -translate-y-1/2" style={{ left: '423px', top: '150px' }}><Sparkles className="w-4 h-4" /></div>
+                               {/* Inner Track */}
+                               <div className="absolute w-8 h-8 rounded-full border border-[#444] bg-black flex items-center justify-center text-purple-400 z-10 -translate-x-1/2 -translate-y-1/2" style={{ left: '144px', top: '144px' }}><Cpu className="w-4 h-4" /></div>
+                               <div className="absolute w-8 h-8 rounded-full border border-[#444] bg-black flex items-center justify-center text-white z-10 -translate-x-1/2 -translate-y-1/2" style={{ left: '356px', top: '144px' }}><Share2 className="w-4 h-4" /></div>
+                            </div>
+                         </div>
+                      </div>
+
+                      {/* Block 2: Fluid Compute */}
+                      <div className="p-12 md:p-20 border-b lg:border-b-0 border-white/[0.1] bg-[#000] flex flex-col justify-center min-h-[400px]">
+                         <div className="flex items-start justify-between">
+                            <h3 className="text-2xl font-medium text-white tracking-tight max-w-sm leading-tight">
+                               <strong className="font-bold text-white">Fluid Compute.</strong> <span className="text-[#888]">Framework-defined compute platform designed for AI workloads.</span>
+                            </h3>
+                            <button className="px-4 py-1.5 bg-white text-black font-medium text-sm rounded-full hover:bg-gray-200 transition-colors">Read the docs</button>
+                         </div>
+                      </div>
+
+                   </div>
+                </div>
+
+                {/* ═══════════════════════════════════════════ */}
+                {/* AI SDK FULL WIDTH BREAKOUT                   */}
+                {/* ═══════════════════════════════════════════ */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 relative border-b border-white/[0.1] bg-[#020202]">
+                   <Crosshair className="-top-1.5 -left-1.5" />
+                   <Crosshair className="-top-1.5 -right-1.5" />
+
+                   {/* Giant SDK Header */}
+                   <div className="col-span-1 lg:col-span-12 p-12 md:p-32 flex flex-col lg:flex-row lg:items-center justify-between border-b border-white/[0.1]">
+                      <div className="max-w-xl mb-12 lg:mb-0">
+                         <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-6">
+                            Build with our <span className="inline-block border border-white/20 rounded px-2 py-0.5 text-sm align-middle tracking-widest font-mono mx-1">AI SDK</span> today.
+                         </h2>
+                         <p className="text-[#888] text-xl">The open source toolkit for building AI-native frontend apps with JavaScript or TypeScript.</p>
+                      </div>
+                      
+                      {/* npm pill */}
+                      <div className="flex items-center bg-white rounded-full px-6 py-4 shadow-[0_0_40px_rgba(255,255,255,0.15)] max-w-fit">
+                         <span className="font-mono text-black font-bold text-lg mr-8">$ npm i ai</span>
+                         <svg className="w-5 h-5 text-[#888] cursor-pointer hover:text-black transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                      </div>
+                   </div>
+
+                   {/* Split Content Below */}
+                   <div className="col-span-1 lg:col-span-6 p-12 md:p-24 lg:border-r border-b lg:border-b-0 border-white/[0.1] flex flex-col justify-between min-h-[400px]">
+                      <p className="text-xl md:text-2xl text-[#888] leading-relaxed font-medium tracking-tight mb-12">
+                         <span className="text-white">"</span>In the age of AI, getting your product into the market needs to be incredibly fast. We were able to launch Director.ai quickly thanks to Collab Code's primitives like functions, Fluid Compute, AI SDK, and Observability. Launch day was smooth thanks to Collab Code.<span className="text-white">"</span>
+                      </p>
+                      <div className="flex items-center justify-end w-full">
+                         <div className="text-right">
+                            <div className="text-white font-medium text-sm">Paul Klein IV, CEO</div>
+                            <div className="text-[#666] font-mono text-xs uppercase tracking-widest flex justify-end items-center gap-2 mt-1"><div className="w-4 h-4 bg-white text-black font-bold flex items-center justify-center text-[10px]">B</div> Browserbox</div>
+                         </div>
+                      </div>
+                   </div>
+                   
+                   <div className="col-span-1 lg:col-span-6 p-12 md:p-24 flex flex-col justify-center min-h-[400px]">
+                      <h3 className="text-4xl md:text-[3.5rem] font-bold tracking-tighter text-white mb-6 leading-tight">Security by default.</h3>
+                      <div className="grid grid-cols-2 gap-12 mt-8">
+                         <div>
+                            <div className="text-white font-medium mb-2 flex items-center gap-2">Global Defense <ArrowRight className="w-4 h-4 text-[#444]" /></div>
+                            <p className="text-[#666] text-sm">DDoS mitigation and WAF built into every deployment.</p>
+                         </div>
+                         <div>
+                            <div className="text-white font-medium mb-2 flex items-center gap-2">Granular Control <ArrowRight className="w-4 h-4 text-[#444]" /></div>
+                            <p className="text-[#666] text-sm">Role-based access control and strict audit logs.</p>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+
+                {/* ═══════════════════════════════════════════ */}
+                {/* ENTERPRISE STICKY SECTION                  */}
+                {/* ═══════════════════════════════════════════ */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 relative border-b border-white/[0.1]">
+                   <Crosshair className="-top-1.5 -left-1.5" />
+                   <Crosshair className="-top-1.5 -right-1.5" />
+                   
+                   {/* Left Sticky Column */}
+                   <div className="lg:col-span-4 relative border-b lg:border-b-0 lg:border-r border-white/[0.1]">
+                      <div className="lg:sticky lg:top-32 h-auto p-12 md:p-20 flex flex-col justify-start">
+                         <h2 className="text-4xl md:text-5xl font-bold tracking-tighter leading-[1.1] text-white">
+                            Introducing the latest Enterprise tools to power your workflow.
+                         </h2>
+                         <p className="mt-8 text-[#888] text-lg leading-relaxed max-w-sm">
+                            From the way teams collaborate on large codebases, to how apps get rendered—we're excited to announce these upcoming features.
+                         </p>
+                      </div>
+                   </div>
+
+                   {/* Right Scrolling Column */}
+                   <div className="lg:col-span-8 flex flex-col">
+                      
+                      {/* Block 1: Secure Compute */}
+                      <div className="p-12 md:p-20 border-b border-white/[0.1] bg-[#000] relative overflow-hidden flex flex-col min-h-[600px]">
+                         <div className="flex items-center gap-2 text-[#888] text-xs font-mono tracking-widest mb-4">
+                            <Shield className="w-4 h-4" />
+                            <span>Secure Compute</span>
+                         </div>
+                         <h3 className="text-2xl font-medium text-[#888] tracking-tight mb-16 max-w-lg leading-relaxed">
+                            <strong className="font-bold text-white">Limit your exposure.</strong> Your internal APIs and databases are secure from the public internet. Builds and runtime traffic are funnelled through fully dedicated IP addresses.
+                         </h3>
+                         
+                          {/* Diagram Mockup */}
+                          <div className="w-full max-w-2xl mx-auto flex items-center justify-center relative mt-auto border border-white/10 rounded-xl p-8 bg-[#050505] shadow-2xl overflow-hidden">
+                             <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:16px_16px]" />
+                             <div className="relative z-10 w-full flex items-center justify-center gap-0">
+                                {/* Left Side */}
+                                <div className="flex items-center gap-4 shrink-0">
+                                   <div className="bg-[#111] border border-white/10 rounded-md px-4 py-2 flex items-center gap-3">
+                                      <span className="text-[#888] font-black tracking-widest leading-none">...</span>
+                                      <span className="text-emerald-400 font-mono text-sm">~ git push</span>
+                                   </div>
+                                   <div className="w-8 border-t border-dashed border-[#444]" />
+                                   <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-[0_0_20px_rgba(255,255,255,0.3)] z-20 shrink-0">
+                                      <span className="text-black font-black text-xl">▲</span>
+                                   </div>
+                                </div>
+
+                                {/* Branching SVG Paths (Fixed size) */}
+                                <div className="relative w-[150px] h-[160px] shrink-0 pointer-events-none">
+                                   <svg className="absolute inset-0 w-full h-full" viewBox="0 0 150 160">
+                                      <path d="M 0 80 C 50 80, 50 20, 150 20" stroke="#E24329" strokeWidth="2" fill="none" />
+                                      <path d="M 0 80 C 50 80, 50 80, 150 80" stroke="#10b981" strokeWidth="2" fill="none" />
+                                      <path d="M 0 80 C 50 80, 50 140, 150 140" stroke="#3b82f6" strokeWidth="2" fill="none" />
+                                   </svg>
+                                </div>
+
+                                {/* Output Nodes */}
+                                <div className="flex flex-col justify-between h-[160px] z-20 shrink-0">
+                                   <div className="w-10 h-10 rounded-md border border-[#444] bg-black flex items-center justify-center relative">
+                                      <div className="absolute -left-3 w-6 h-6 bg-black flex items-center justify-center"><div className="w-3 h-3 rounded-sm border border-[#888] flex items-center justify-center"><div className="w-1 h-1 bg-[#888] rounded-full" /></div></div>
+                                      <Monitor className="w-4 h-4 text-white" />
+                                   </div>
+                                   <div className="w-10 h-10 rounded-md border border-[#444] bg-black flex items-center justify-center relative">
+                                      <div className="absolute -left-3 w-6 h-6 bg-black flex items-center justify-center"><div className="w-3 h-3 rounded-sm border border-[#888] flex items-center justify-center"><div className="w-1 h-1 bg-[#888] rounded-full" /></div></div>
+                                      <Smartphone className="w-4 h-4 text-white" />
+                                   </div>
+                                   <div className="w-10 h-10 rounded-md border border-[#444] bg-black flex items-center justify-center relative">
+                                      <div className="absolute -left-3 w-6 h-6 bg-black flex items-center justify-center"><div className="w-3 h-3 rounded-sm border border-[#888] flex items-center justify-center"><div className="w-1 h-1 bg-[#888] rounded-full" /></div></div>
+                                      <Database className="w-4 h-4 text-white" />
+                                   </div>
+                                </div>
+                             </div>
+                          </div>
+                      </div>
+
+                      {/* Block 2: Rolling Release */}
+                      <div className="p-12 md:p-20 border-b lg:border-b-0 border-white/[0.1] bg-[#000] flex flex-col min-h-[600px]">
+                         <div className="flex items-center gap-2 text-[#888] text-xs font-mono tracking-widest mb-4">
+                            <ArrowUpCircle className="w-4 h-4" />
+                            <span>Rolling Release</span>
+                         </div>
+                         <h3 className="text-2xl font-medium text-[#888] tracking-tight mb-16 max-w-lg leading-relaxed">
+                            <strong className="font-bold text-white">Manage the rollout.</strong> Minimize the risk by shipping to a fraction of users and monitoring performance before completing the rollout.
+                         </h3>
+                         
+                         {/* Dashboard UI Mockup */}
+                         <div className="w-full bg-[#050505] border border-white/10 rounded-xl overflow-hidden mt-auto">
+                            <div className="p-6 border-b border-white/10 bg-[#0a0a0a]">
+                               <div className="flex items-center justify-between mb-4">
+                                  <span className="text-white font-medium text-sm">Canary: 25% of traffic</span>
+                                  <span className="text-[#888] text-xs">Next stage in 10m</span>
+                               </div>
+                               <div className="w-full h-2 bg-[#222] rounded-full overflow-hidden">
+                                  <div className="w-1/4 h-full bg-blue-500 rounded-full" />
+                               </div>
+                            </div>
+                            <div className="grid grid-cols-2 divide-x divide-white/10 p-6">
+                               <div className="pr-6">
+                                  <div className="text-xs text-[#888] mb-4 uppercase tracking-widest font-mono">Canary: 25%</div>
+                                  <div className="flex items-start gap-3">
+                                     <GitCommit className="w-4 h-4 text-[#666] mt-0.5" />
+                                     <div>
+                                        <div className="text-white text-sm font-medium">b4c6756 Implement added & removed lin...</div>
+                                        <div className="text-[#666] text-xs mt-1 font-mono">@ 8yoR9yx2o 10s ago by <span className="text-white">mitulshah</span></div>
+                                     </div>
+                                  </div>
+                               </div>
+                               <div className="pl-6">
+                                  <div className="text-xs text-[#888] mb-4 uppercase tracking-widest font-mono">Current: 75%</div>
+                                  <div className="flex items-start gap-3">
+                                     <GitCommit className="w-4 h-4 text-[#666] mt-0.5" />
+                                     <div>
+                                        <div className="text-white text-sm font-medium">DdovX6kd7 Make Promotion Requiremen...</div>
+                                        <div className="text-[#666] text-xs mt-1 font-mono">@ 6zjvumm6p 2h ago by <span className="text-white">codybrouwers</span></div>
+                                     </div>
                                   </div>
                                </div>
                             </div>
-                            {/* File 2 */}
-                            <div className="flex items-center justify-between px-5 py-4 hover:bg-white/[0.02] transition-colors">
-                               <div className="flex items-center gap-4">
-                                  <FileCode className="w-4 h-4 text-[#666]" />
-                                  <span className="text-[#888] text-sm font-mono">App.tsx</span>
-                               </div>
-                               <div className="flex items-center gap-4">
-                                  <span className="text-[10px] text-[#666] font-mono flex items-center gap-1"><GitBranch className="w-3 h-3" /> feat/ui</span>
-                                  <div className="w-5 h-5 border border-white/[0.2] bg-purple-500 text-white text-[10px] flex items-center justify-center font-mono font-bold">C</div>
-                               </div>
-                            </div>
-                            {/* File 3 */}
-                            <div className="flex items-center justify-between px-5 py-4 hover:bg-white/[0.02] transition-colors">
-                               <div className="flex items-center gap-4">
-                                  <Package className="w-4 h-4 text-[#666]" />
-                                  <span className="text-[#888] text-sm font-mono">package.json</span>
-                               </div>
-                               <span className="text-[10px] text-[#666] font-mono flex items-center gap-1"><GitBranch className="w-3 h-3" /> main</span>
-                            </div>
                          </div>
                       </div>
+
                    </div>
                 </div>
 
-                {/* ═══════════════════════════════════════════ */}
-                {/* NEW SECTION: GLOBAL EDGE NETWORK           */}
-                {/* ═══════════════════════════════════════════ */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 relative border-b border-white/[0.1] bg-[#020202]">
-                   <Crosshair className="-top-1.5 -left-1.5" />
-                   <Crosshair className="-top-1.5 left-[50%] -translate-x-1.5" />
-                   <Crosshair className="-top-1.5 -right-1.5" />
 
-                   {/* Left Col: Network Visualization */}
-                   <div className="lg:border-r border-white/[0.1] p-16 md:p-24 flex items-center justify-center relative overflow-hidden group">
-                      <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,rgba(16,185,129,0.05)_0,rgba(16,185,129,0.05)_1px,transparent_1px,transparent_16px)] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                      <div className="absolute inset-0 bg-[linear-gradient(rgba(16,185,129,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(16,185,129,0.05)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
-                      
-                      <div className="relative z-10 w-full aspect-square max-w-sm rounded-none border border-emerald-500/20 bg-[#020202] flex items-center justify-center">
-                         <Globe2 className="w-32 h-32 text-emerald-500 opacity-80" />
-                         <div className="absolute inset-0 rounded-full border border-emerald-400 animate-ping opacity-20" />
-                         
-                         {/* Nodes */}
-                         <div className="absolute top-1/4 left-1/4 w-3 h-3 bg-emerald-400 rounded-none border border-emerald-500" />
-                         <div className="absolute bottom-1/3 right-1/4 w-2 h-2 bg-emerald-400 rounded-none border border-emerald-500" />
-                         <div className="absolute top-1/2 right-1/4 w-4 h-4 bg-emerald-400 rounded-none border border-emerald-500" />
-                         <div className="absolute bottom-1/4 left-1/3 w-2 h-2 bg-emerald-400 rounded-none border border-emerald-500" />
-                      </div>
-                   </div>
-
-                   {/* Right Col: Network Content */}
-                   <div className="p-16 md:p-24 lg:p-32 flex flex-col justify-center min-h-[550px] bg-[#000]">
-                      <div className="flex items-center gap-2 text-emerald-400 text-[10px] font-mono uppercase tracking-widest mb-8">
-                         <Network className="w-4 h-4" />
-                         <span>Infrastructure</span>
-                      </div>
-                      <h2 className="text-4xl md:text-[3.5rem] font-medium tracking-tighter text-white leading-[1.05] mb-6">
-                         Global edge network.
-                      </h2>
-                      <p className="text-[#888] text-lg leading-relaxed mb-10">
-                         Your code runs where you are. Collab Code dynamically routes your workspace to the closest region, ensuring incredibly low latency worldwide.
-                      </p>
-                      
-                      <div className="flex gap-12">
-                         <div>
-                            <div className="text-3xl font-medium text-white mb-1">15+</div>
-                            <div className="text-[#888] font-mono text-xs uppercase tracking-widest">Global Regions</div>
-                         </div>
-                         <div>
-                            <div className="text-3xl font-medium text-white mb-1">&lt;50ms</div>
-                            <div className="text-[#888] font-mono text-xs uppercase tracking-widest">Avg Latency</div>
-                         </div>
-                      </div>
-                   </div>
-                </div>
-
-                {/* ═══════════════════════════════════════════ */}
-                {/* SECTION 2: PERFORMANCE                     */}
-                {/* ═══════════════════════════════════════════ */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 relative border-b border-white/[0.1]">
-                   <Crosshair className="-top-1.5 -left-1.5" />
-                   <Crosshair className="-top-1.5 left-[50%] -translate-x-1.5" />
-                   <Crosshair className="-top-1.5 -right-1.5" />
-
-                   {/* Left Col: Testimonial */}
-                   <div className="lg:border-r border-white/[0.1] p-16 md:p-24 lg:p-32 flex flex-col justify-center">
-                      <p className="text-2xl md:text-3xl font-medium text-white leading-snug mb-12 tracking-tight">
-                         <span className="text-[#444]">"</span>Collab Code is the closest thing to teleporting your entire dev environment to the cloud. It's faster than local.<span className="text-[#444]">"</span>
-                      </p>
-                      <div className="flex items-center justify-between">
-                         <div>
-                            <div className="text-white font-medium mb-1">Guillermo Rauch</div>
-                            <div className="text-[#888] text-xs font-mono uppercase tracking-widest">CEO, Vercel</div>
-                         </div>
-                         <div className="w-10 h-10 border border-white/[0.1] flex items-center justify-center hover:bg-white text-white hover:text-black transition-colors cursor-pointer">
-                            <ArrowRight className="w-4 h-4" />
-                         </div>
-                      </div>
-                   </div>
-
-                   {/* Right Col: Performance Metrics */}
-                   <div className="p-16 md:p-24 lg:p-32 flex flex-col justify-center bg-[#000]">
-                      <div className="pl-6 mb-12 border-l border-cyan-500/50">
-                         <h3 className="text-xl font-medium text-white mb-2">
-                            Faster than local.
-                         </h3>
-                         <p className="text-[#888]">High-performance cloud compute with zero overhead.</p>
-                      </div>
-
-                      {/* Brutalist Metric Rows */}
-                      <div className="w-full border border-white/[0.1] bg-[#050505] overflow-hidden">
-                         <div className="divide-y divide-white/[0.1]">
-                            <div className="flex items-center justify-between px-6 py-5 bg-[#000]">
-                               <span className="text-[#888] font-mono text-xs uppercase tracking-widest">Cold Start</span>
-                               <span className="text-cyan-400 text-2xl font-mono">&lt;2s</span>
-                            </div>
-                            <div className="flex items-center justify-between px-6 py-5 bg-[#000]">
-                               <span className="text-[#888] font-mono text-xs uppercase tracking-widest">Max RAM</span>
-                               <span className="text-cyan-400 text-2xl font-mono">64GB</span>
-                            </div>
-                            <div className="flex items-center justify-between px-6 py-5 bg-[#000]">
-                               <span className="text-[#888] font-mono text-xs uppercase tracking-widest">Local Overhead</span>
-                               <span className="text-cyan-400 text-2xl font-mono">0ms</span>
-                            </div>
-                         </div>
-                      </div>
-                   </div>
-                </div>
-
-                {/* ═══════════════════════════════════════════ */}
-                {/* SECTION 3: COMMAND PALETTE                 */}
-                {/* ═══════════════════════════════════════════ */}
-                <div className="flex flex-col items-center relative border-b border-white/[0.1] py-24 md:py-32 px-6 overflow-hidden">
-                   <Crosshair className="-top-1.5 -left-1.5" />
-                   <Crosshair className="-top-1.5 -right-1.5" />
-                   <div className="absolute inset-0 bg-[radial-gradient(rgba(99,102,241,0.15)_1px,transparent_1px)] bg-[size:16px_16px] [mask-image:radial-gradient(circle_at_center,black_10%,transparent_60%)] pointer-events-none" />
-
-                   {/* Command Palette Mockup */}
-                   <div className="w-full max-w-[420px] bg-[#000] border border-white/[0.1] overflow-hidden mb-16 relative">
-                      <Crosshair className="-top-1.5 -left-1.5" />
-                      <Crosshair className="-top-1.5 -right-1.5" />
-                      <Crosshair className="-bottom-1.5 -left-1.5" />
-                      <Crosshair className="-bottom-1.5 -right-1.5" />
-
-                      {/* Search input */}
-                      <div className="flex items-center gap-4 px-5 py-4 border-b border-white/[0.1] bg-[#050505]">
-                         <Search className="w-4 h-4 text-white" />
-                         <span className="text-sm text-[#888] flex-1 font-mono">Run command...</span>
-                      </div>
-                      {/* Command items */}
-                      <div className="divide-y divide-white/[0.1]">
-                         <div className="flex items-center justify-between px-5 py-3.5 bg-indigo-500/10">
-                            <div className="flex items-center gap-4">
-                               <Play className="w-4 h-4 text-indigo-400" />
-                               <span className="text-indigo-400 font-medium text-sm">Start dev server</span>
-                            </div>
-                            <kbd className="px-2 py-1 bg-[#000] border border-indigo-500/30 text-[10px] text-indigo-400 font-mono"><CornerDownLeft className="w-3 h-3 inline" /></kbd>
-                         </div>
-                         <div className="flex items-center justify-between px-5 py-3.5">
-                            <div className="flex items-center gap-4">
-                               <Terminal className="w-4 h-4 text-[#666]" />
-                               <span className="text-[#888] text-sm">Run all tests</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                               <kbd className="px-2 py-1 bg-[#000] border border-white/[0.1] text-[10px] text-[#666] font-mono">⇧</kbd>
-                               <kbd className="px-2 py-1 bg-[#000] border border-white/[0.1] text-[10px] text-[#666] font-mono">T</kbd>
-                            </div>
-                         </div>
-                         <div className="flex items-center justify-between px-5 py-3.5">
-                            <div className="flex items-center gap-4">
-                               <GitBranch className="w-4 h-4 text-[#666]" />
-                               <span className="text-[#888] text-sm">Switch branch</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                               <kbd className="px-2 py-1 bg-[#000] border border-white/[0.1] text-[10px] text-[#666] font-mono">⌘</kbd>
-                               <kbd className="px-2 py-1 bg-[#000] border border-white/[0.1] text-[10px] text-[#666] font-mono">B</kbd>
-                            </div>
-                         </div>
-                      </div>
-                   </div>
-
-                   <h3 className="text-2xl md:text-3xl text-center max-w-2xl tracking-tight leading-[1.2] relative z-10">
-                      <strong className="text-white font-medium">A terminal at your fingertips.</strong>{' '}
-                      <br/>
-                      <span className="text-[#888]">Run commands, switch branches, and manage your entire workflow from a single keyboard shortcut.</span>
-                   </h3>
-                </div>
-
-                {/* ═══════════════════════════════════════════ */}
-                {/* 3-COLUMN FEATURES                          */}
-                {/* ═══════════════════════════════════════════ */}
-                <div className="grid grid-cols-1 md:grid-cols-3 relative border-b border-white/[0.1]">
-                   <Crosshair className="-top-1.5 -left-1.5" />
-                   <Crosshair className="-top-1.5 left-[33.33%] -translate-x-1.5" />
-                   <Crosshair className="-top-1.5 left-[66.66%] -translate-x-1.5" />
-                   <Crosshair className="-top-1.5 -right-1.5" />
-
-                   <div className="col-span-1 md:border-r border-b md:border-b-0 border-white/[0.1] p-12 lg:p-16 flex flex-col bg-[#050505] hover:bg-[#0a0a0a] transition-colors">
-                      <Layers className="w-6 h-6 text-purple-400 mb-6" />
-                      <h3 className="text-xl font-medium text-white mb-3">Multiplayer editing</h3>
-                      <p className="text-[#888] text-[15px] leading-relaxed">
-                         See your teammates' cursors and edits in real time. Pair program without screen sharing.
-                      </p>
-                   </div>
-                   <div className="col-span-1 md:border-r border-b md:border-b-0 border-white/[0.1] p-12 lg:p-16 flex flex-col bg-[#000] hover:bg-[#050505] transition-colors">
-                      <Terminal className="w-6 h-6 text-cyan-400 mb-6" />
-                      <h3 className="text-xl font-medium text-white mb-3">Cloud compute</h3>
-                      <p className="text-[#888] text-[15px] leading-relaxed">
-                         Every workspace runs on high-performance cloud hardware. No fan noise. No battery drain.
-                      </p>
-                   </div>
-                   <div className="col-span-1 p-12 lg:p-16 flex flex-col bg-[#050505] hover:bg-[#0a0a0a] transition-colors">
-                      <GitBranch className="w-6 h-6 text-emerald-400 mb-6" />
-                      <h3 className="text-xl font-medium text-white mb-3">Git version control</h3>
-                      <p className="text-[#888] text-[15px] leading-relaxed">
-                         Built-in git with branch management, conflict resolution, and one-click PRs.
-                      </p>
-                   </div>
-                </div>
 
                 {/* ═══════════════════════════════════════════ */}
                 {/* GIANT 2-COLUMN FINAL CTA                   */}

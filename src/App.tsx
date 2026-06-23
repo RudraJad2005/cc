@@ -27,6 +27,7 @@ import { Enterprise } from './pages/Enterprise';
 import { Startup } from './pages/Startup';
 import { DPA } from './pages/DPA';
 import { OSS } from './pages/OSS';
+import { SDK } from './pages/SDK';
 
 import { DashboardLayout } from './layouts/DashboardLayout';
 import { Dashboard } from './pages/Dashboard';
@@ -110,6 +111,7 @@ export default function App() {
           <Route path="/startup" element={<Startup />} />
           <Route path="/dpa" element={<DPA />} />
           <Route path="/oss" element={<OSS />} />
+          <Route path="/sdk" element={<SDK />} />
         </Route>
 
         <Route path="/dashboard" element={<DashboardLayout />}>
