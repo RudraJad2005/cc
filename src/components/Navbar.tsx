@@ -1,5 +1,68 @@
-import { Terminal, Github } from 'lucide-react';
+import { useState } from 'react';
+import { 
+  Terminal, 
+  Github, 
+  ChevronDown, 
+  LayoutTemplate, 
+  Cpu, 
+  Boxes, 
+  Users, 
+  FileText, 
+  Info, 
+  CircleDollarSign,
+  Sparkles
+} from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+
+function DropdownLink({ to, icon: Icon, title, desc, onClick }: { to: string, icon: any, title: string, desc: string, onClick?: () => void }) {
+  return (
+    <Link to={to} onClick={onClick} className="flex items-start gap-3 p-3 rounded-lg hover:bg-white/[0.04] transition-colors group">
+       <div className="w-8 h-8 rounded-md bg-white/[0.05] border border-white/[0.05] flex items-center justify-center shrink-0 group-hover:bg-white/[0.1] transition-colors">
+          <Icon className="w-4 h-4 text-white/70 group-hover:text-white transition-colors" />
+       </div>
+       <div>
+          <div className="text-[14px] font-medium text-white mb-0.5">{title}</div>
+          <div className="text-[12px] text-gray-400 leading-snug">{desc}</div>
+       </div>
+    </Link>
+  );
+}
+
+function NavItem({ title, children }: { title: string, children: React.ReactNode }) {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  return (
+    <div 
+      className="relative"
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+    >
+      <button className="flex items-center gap-1 px-4 py-2 text-[13px] font-medium rounded-full text-gray-400 hover:text-white hover:bg-white/[0.04] transition-all duration-300">
+        {title}
+        <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+             initial={{ opacity: 0, y: 10, scale: 0.95 }}
+             animate={{ opacity: 1, y: 0, scale: 1 }}
+             exit={{ opacity: 0, y: 10, scale: 0.95 }}
+             transition={{ duration: 0.2, ease: 'easeOut' }}
+             className="absolute top-full left-1/2 -translate-x-1/2 pt-4 w-[320px]"
+          >
+             {/* The invisible bridge pad to prevent hover loss */}
+             <div className="absolute top-0 left-0 w-full h-4" />
+             <div className="bg-[#050505] border border-white/[0.1] rounded-xl p-2 shadow-2xl backdrop-blur-xl">
+               {children}
+             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 export function Navbar() {
   const location = useLocation();
@@ -28,13 +91,30 @@ export function Navbar() {
       </div>
 
       <div className="hidden md:flex items-center rounded-full border border-white/[0.08] bg-white/[0.02] p-1.5 backdrop-blur-md">
-        <Link to="/" className={navLinkClass('/')}>Product</Link>
-        <Link to="/templates" className={navLinkClass('/templates')}>Templates</Link>
-        <Link to="/compute" className={navLinkClass('/compute')}>Compute</Link>
-        <Link to="/pricing" className={navLinkClass('/pricing')}>Pricing</Link>
-        <Link to="/community" className={navLinkClass('/community')}>Community</Link>
-        <Link to="/blog" className={navLinkClass('/blog')}>Blog</Link>
-        <Link to="/about" className={navLinkClass('/about')}>Company</Link>
+        <Link to="/" className={navLinkClass('/')}>Home</Link>
+        
+        <NavItem title="Product">
+          <div className="flex flex-col gap-1">
+             <DropdownLink to="/features" icon={Sparkles} title="Features" desc="Explore everything you can build." />
+             <DropdownLink to="/compute" icon={Cpu} title="Compute" desc="Serverless execution at the edge." />
+             <DropdownLink to="/integrations" icon={Boxes} title="Integrations" desc="Connect with your favorite tools." />
+          </div>
+        </NavItem>
+
+        <NavItem title="Resources">
+          <div className="flex flex-col gap-1">
+             <DropdownLink to="/templates" icon={LayoutTemplate} title="Templates" desc="Jumpstart your next project." />
+             <DropdownLink to="/community" icon={Users} title="Community" desc="Join 42,000+ developers." />
+             <DropdownLink to="/blog" icon={FileText} title="Blog" desc="Latest news and tutorials." />
+          </div>
+        </NavItem>
+
+        <NavItem title="Company">
+          <div className="flex flex-col gap-1">
+             <DropdownLink to="/about" icon={Info} title="About Us" desc="Our mission and the team." />
+             <DropdownLink to="/pricing" icon={CircleDollarSign} title="Pricing" desc="Simple, transparent plans." />
+          </div>
+        </NavItem>
       </div>
 
       <div className="flex items-center gap-3">

@@ -24,21 +24,21 @@ export function TestimonialSection() {
               quote="Collab Code is the only web IDE I've used that actually makes pairing faster. The instant compute is an absolute joy."
               author="Guillermo Rauch"
               role="CEO, Vercel"
-              avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=rauchg"
+              avatar="https://ui-avatars.com/api/?background=random&color=fff&name=rauchg"
               delay={0.1}
            />
            <TestimonialCard 
               quote="We evaluated every cloud editor. Collab Code's speed, keyboard shortcuts, and deep Git integrations made it the clear winner."
               author="David Cramer"
               role="CTO, Sentry"
-              avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=zeeg"
+              avatar="https://ui-avatars.com/api/?background=random&color=fff&name=zeeg"
               delay={0.2}
            />
            <TestimonialCard 
               quote="Collab Code gave our engineering team their time back. Local setup is gone, so shipping features no longer feels like a chore."
               author="Vlad Magdalin"
               role="CEO, Webflow"
-              avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=callmevlad"
+              avatar="https://ui-avatars.com/api/?background=random&color=fff&name=callmevlad"
               delay={0.3}
            />
         </div>

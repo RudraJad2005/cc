@@ -1,25 +1,33 @@
-import { motion } from 'motion/react';
-import { Check, X } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Check, X, Plus } from 'lucide-react';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+// Reusable Crosshair
+const Crosshair = ({ className }: { className?: string }) => (
+  <div className={`absolute w-3 h-3 text-white/[0.2] flex items-center justify-center pointer-events-none z-10 ${className}`}>
+    <Plus className="w-3 h-3" />
+  </div>
+);
 
 export function Pricing() {
-  const fadeUp = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-  };
-
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 }
-    }
-  };
-
   return (
-    <main className="w-full flex-1 flex flex-col bg-[#000]">
+    <main className="w-full flex-1 flex flex-col bg-[#000] text-white selection:bg-white selection:text-black font-sans">
        {/* Hero Section */}
-       <section className="flex flex-col items-center justify-center p-8 md:p-12 lg:p-20 xl:p-[100px] text-center border-b border-white/[0.08] relative overflow-hidden min-h-[40vh] bg-[#000]">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-green-500/10 blur-[120px] rounded-full pointer-events-none mix-blend-screen opacity-50" />
+       <section className="flex flex-col items-center justify-center p-8 md:p-12 lg:p-20 xl:p-[100px] text-center border-b border-white/[0.1] relative overflow-hidden min-h-[40vh] bg-[#000]">
+          {/* Strict Grid Background */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none [mask-image:linear-gradient(to_bottom,black_20%,transparent_100%)]" />
           
           <motion.h1 
              initial={{ opacity: 0, y: 20 }}
@@ -46,8 +54,11 @@ export function Pricing() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-3 border-b border-white/[0.08]"
+          className="grid grid-cols-1 md:grid-cols-3 border-b border-white/[0.1] relative max-w-[1400px] mx-auto w-full"
        >
+          <Crosshair className="-top-1.5 -left-1.5" />
+          <Crosshair className="-top-1.5 -right-1.5" />
+
           <PricingCard 
              name="Hobby"
              price="Free"
@@ -66,7 +77,6 @@ export function Pricing() {
              ]}
              buttonText="Start for free"
              borderRight
-             variants={fadeUp}
           />
           <PricingCard 
              name="Pro"
@@ -88,7 +98,6 @@ export function Pricing() {
              buttonText="Upgrade to Pro"
              active
              borderRight
-             variants={fadeUp}
           />
           <PricingCard 
              name="Enterprise"
@@ -98,90 +107,98 @@ export function Pricing() {
                "Unlimited compute",
                "Up to 32 vCPU, 64GB RAM",
                "24/7 Phone & Slack support",
-               "Private repositories",
-               "Instant cold starts",
-               "Custom domains",
+               "Private cloud deployments",
+               "Custom domain routing",
+               "Dedicated success manager",
                "SSO & SAML",
                "SOC2 compliance reports"
              ]}
              notIncluded={[]}
              buttonText="Contact Sales"
-             variants={fadeUp}
           />
        </motion.section>
 
-       {/* FAQ Section */}
-       <section className="flex flex-col py-24 px-6 md:px-12 lg:px-20 xl:px-[100px] items-center relative border-b border-white/[0.08] bg-transparent">
-          <h2 className="text-3xl font-medium text-white mb-16 tracking-tight">Frequently asked questions</h2>
-          
-          <div className="w-full max-w-3xl flex flex-col gap-8">
-             <FaqItem 
-                q="What counts as an hour of compute?" 
-                a="Compute time is measured only while your workspace is actively running. If you close your browser tab or go idle for 15 minutes, the workspace automatically suspends and stops billing." 
-             />
-             <div className="w-full h-px bg-white/[0.08]"></div>
-             <FaqItem 
-                q="Can I switch plans anytime?" 
-                a="Yes, you can upgrade or downgrade your plan at any time. Prorated charges will be applied to your account automatically upon upgrading." 
-             />
-             <div className="w-full h-px bg-white/[0.08]"></div>
-             <FaqItem 
-                q="Do you offer discounts for students or non-profits?" 
-                a="We offer the Pro plan free of charge for students enrolled in accredited educational institutions, and a 50% discount for registered non-profits. Please contact support to apply." 
-             />
-             <div className="w-full h-px bg-white/[0.08]"></div>
-             <FaqItem 
-                q="What happens when I exceed my free tier limits?" 
-                a="Your running workspaces will be safely persisted and suspended. You will not be charged automatically. You can either wait until the next billing cycle begins or upgrade to a Pro plan to resume work immediately." 
-             />
+       {/* Enterprise CTA */}
+       <section className="flex flex-col md:flex-row items-center justify-between p-8 md:p-12 lg:p-20 max-w-[1400px] mx-auto w-full border-b border-white/[0.1] relative">
+          <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.02)_0,rgba(255,255,255,0.02)_1px,transparent_1px,transparent_10px)] pointer-events-none" />
+          <div className="relative z-10 mb-8 md:mb-0">
+             <h2 className="text-3xl font-semibold tracking-tighter text-white mb-2">Need a custom plan?</h2>
+             <p className="text-[#888] text-lg">Contact us for large teams and self-hosted options.</p>
           </div>
+          <button className="relative z-10 px-8 py-3.5 bg-[#050505] border border-white/[0.2] text-white text-[14px] font-bold hover:bg-[#111] transition-colors flex items-center gap-2">
+             Contact Sales
+          </button>
        </section>
     </main>
   );
 }
 
-function PricingCard({ name, price, interval, desc, features, notIncluded, buttonText, active, borderRight, variants }: any) {
+function PricingCard({ 
+  name, 
+  price, 
+  interval = "", 
+  desc, 
+  features, 
+  notIncluded, 
+  buttonText, 
+  active = false,
+  borderRight = false
+}: {
+  name: string,
+  price: string,
+  interval?: string,
+  desc: string,
+  features: string[],
+  notIncluded: string[],
+  buttonText: string,
+  active?: boolean,
+  borderRight?: boolean
+}) {
   return (
-    <motion.div variants={variants} className={`p-8 md:p-12 lg:p-16 xl:p-[80px] flex flex-col ${borderRight ? 'md:border-r border-white/[0.08]' : ''} border-b md:border-b-0 border-white/[0.08] relative ${active ? 'bg-white/[0.02]' : ''}`}>
-       {active && (
-         <div className="absolute top-0 left-0 w-full h-1 bg-green-500"></div>
-       )}
-       
-       <h3 className="text-xl font-medium text-[#f4f4f5] mb-2 tracking-tight">{name}</h3>
-       <div className="mb-4 flex items-end gap-1">
-          <span className="text-4xl lg:text-5xl font-medium text-white tracking-tighter">{price}</span>
-          {interval && <span className="text-[#a1a1aa] mb-1">{interval}</span>}
-       </div>
-       <p className="text-[#a1a1aa] leading-relaxed text-sm mb-8 min-h-[40px]">{desc}</p>
-       
-       <button className={`w-full py-3 px-6 rounded-full text-sm font-semibold transition-colors mb-10 ${active ? 'bg-white text-black hover:bg-gray-200' : 'bg-white/[0.05] border border-white/[0.1] text-white hover:bg-white/[0.1]'}`}>
-          {buttonText}
-       </button>
-       
-       <div className="flex flex-col gap-4">
-          <div className="text-[13px] font-medium tracking-wider text-white uppercase mb-2">Features</div>
-          {features.map((f: string, i: number) => (
-             <div key={i} className="flex gap-3 text-sm text-gray-300">
-                <Check className="w-5 h-5 text-green-500 shrink-0" />
-                <span>{f}</span>
-             </div>
-          ))}
-          {notIncluded.map((f: string, i: number) => (
-             <div key={i} className="flex gap-3 text-sm text-gray-600">
-                <X className="w-5 h-5 opacity-50 shrink-0" />
-                <span>{f}</span>
-             </div>
-          ))}
-       </div>
-    </motion.div>
-  )
-}
+    <motion.div 
+      variants={fadeUp}
+      className={`p-8 md:p-12 flex flex-col relative
+        ${borderRight ? 'md:border-r border-b md:border-b-0 border-white/[0.1]' : 'border-b md:border-b-0 border-white/[0.1]'}
+        ${active ? 'bg-white text-black' : 'bg-[#000] text-white hover:bg-[#050505]'}
+        transition-colors duration-300
+      `}
+    >
+      <h3 className={`text-xl tracking-tight mb-2 font-medium ${active ? 'text-black' : 'text-white'}`}>{name}</h3>
+      <div className="flex items-baseline gap-1 mb-4">
+        <span className="text-5xl font-bold tracking-tighter">{price}</span>
+        {interval && <span className={`text-lg ${active ? 'text-[#666]' : 'text-[#888]'}`}>{interval}</span>}
+      </div>
+      <p className={`text-[15px] mb-8 min-h-[48px] leading-relaxed ${active ? 'text-[#444]' : 'text-[#888]'}`}>{desc}</p>
+      
+      <button 
+        className={`w-full py-4 text-[14px] font-bold transition-all mb-10 border
+          ${active 
+            ? 'bg-black text-white hover:bg-[#222] border-black' 
+            : 'bg-[#050505] text-white border-white/[0.2] hover:bg-[#111]'
+          }
+        `}
+      >
+        {buttonText}
+      </button>
 
-function FaqItem({ q, a }: { q: string, a: string }) {
-  return (
-    <div className="flex flex-col gap-3">
-       <h4 className="text-lg font-medium text-white tracking-tight">{q}</h4>
-       <p className="text-[#a1a1aa] leading-relaxed">{a}</p>
-    </div>
-  )
+      <div className="flex flex-col gap-4 flex-1">
+        {features.map((f, i) => (
+          <div key={i} className="flex items-start gap-3">
+             <div className={`mt-0.5 shrink-0 ${active ? 'text-black' : 'text-white'}`}>
+                <Check className="w-5 h-5" />
+             </div>
+             <span className={`text-[15px] leading-relaxed ${active ? 'text-black' : 'text-white'}`}>{f}</span>
+          </div>
+        ))}
+        {notIncluded.map((f, i) => (
+          <div key={i} className="flex items-start gap-3 opacity-50">
+             <div className={`mt-0.5 shrink-0 ${active ? 'text-[#666]' : 'text-[#888]'}`}>
+                <X className="w-5 h-5" />
+             </div>
+             <span className={`text-[15px] leading-relaxed ${active ? 'text-[#666]' : 'text-[#888]'}`}>{f}</span>
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
 }

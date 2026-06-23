@@ -21,6 +21,12 @@ import { Careers } from './pages/Careers';
 import { Changelog } from './pages/Changelog';
 import { Customers } from './pages/Customers';
 import { Packages } from './pages/Packages';
+import { Contact } from './pages/Contact';
+import { Security } from './pages/Security';
+import { Enterprise } from './pages/Enterprise';
+import { Startup } from './pages/Startup';
+import { DPA } from './pages/DPA';
+import { OSS } from './pages/OSS';
 
 import { DashboardLayout } from './layouts/DashboardLayout';
 import { Dashboard } from './pages/Dashboard';
@@ -61,13 +67,13 @@ import { AuthProvider } from './contexts/AuthContext';
 
 function MarketingLayout() {
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-blue-500/30 font-sans flex flex-col items-center">
+    <div className="min-h-screen bg-black text-white selection:bg-blue-500/30 font-sans flex flex-col items-center w-full">
       <ScrollProgress />
       <div className="w-full max-w-[1400px] border-x border-white/[0.08] min-h-screen flex flex-col">
         <Navbar />
         <Outlet />
-        <Footer />
       </div>
+      <Footer />
     </div>
   );
 }
@@ -98,6 +104,12 @@ export default function App() {
           <Route path="/blog" element={<Blog />} />
           <Route path="/careers" element={<Careers />} />
           <Route path="/changelog" element={<Changelog />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/security" element={<Security />} />
+          <Route path="/enterprise" element={<Enterprise />} />
+          <Route path="/startup" element={<Startup />} />
+          <Route path="/dpa" element={<DPA />} />
+          <Route path="/oss" element={<OSS />} />
         </Route>
 
         <Route path="/dashboard" element={<DashboardLayout />}>

@@ -79,11 +79,11 @@ function FileRow({ name, tag, branch, active, icon }: { name: string, tag: strin
             {/* Active editing avatars */}
             <div className={`flex -space-x-1.5 ${active ? 'opacity-100' : 'opacity-30'}`}>
                <div className="w-[20px] h-[20px] rounded-full ring-2 ring-[#161616] overflow-hidden bg-white/[0.1]">
-                  <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${name}`} className="w-full h-full object-cover" alt="user" />
+                  <img src={`https://ui-avatars.com/api/?background=random&color=fff&name=${name}`} className="w-full h-full object-cover" alt="user" />
                </div>
                {active && (
                  <div className="w-[20px] h-[20px] rounded-full ring-2 ring-[#161616] overflow-hidden bg-white/[0.1]">
-                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=team`} className="w-full h-full object-cover" alt="user2" />
+                    <img src={`https://ui-avatars.com/api/?background=random&color=fff&name=team`} className="w-full h-full object-cover" alt="user2" />
                  </div>
                )}
             </div>

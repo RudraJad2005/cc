@@ -1,16 +1,24 @@
-import React from 'react';
 import { motion } from 'motion/react';
-import { ArrowRight, GitBranch, Webhook, Database, Cloud, Search, Terminal, Boxes, Bell, BarChart3, Lock, Workflow, Plus } from 'lucide-react';
-import { PageHero } from '../components/PageHero';
+import { ArrowRight, GitBranch, Webhook, Database, Cloud, Search, Terminal, Boxes, Bell, BarChart3, Lock, Workflow, Plus, Sparkles, Server } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-// Reusable Crosshair component
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
+};
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1 } },
+};
+
+// Vercel-style Crosshair
 const Crosshair = ({ className }: { className?: string }) => (
-  <div className={`absolute w-3 h-3 text-white/[0.2] flex items-center justify-center pointer-events-none z-10 ${className}`}>
+  <div className={`absolute w-3 h-3 text-white/[0.15] flex items-center justify-center pointer-events-none z-10 ${className}`}>
     <Plus className="w-3 h-3" />
   </div>
 );
 
-// Custom SVG Icons for Brands
+// Custom SVG Icons
 function GithubIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -23,14 +31,6 @@ function GitlabIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
       <path d="M23.955 8.452l-2.288-7.042c-.22-.676-1.17-.676-1.39 0l-1.923 5.92H5.646l-1.923-5.92c-.22-.676-1.17-.676-1.39 0L.045 8.452a1.474 1.474 0 00.536 1.648l11.419 8.293L12 18.5l.001-.001.001.001 11.418-8.293a1.474 1.474 0 00.535-1.655z" />
-    </svg>
-  );
-}
-
-function VercelIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
-      <path d="M24 22.525H0l12-21.05 12 21.05z" />
     </svg>
   );
 }
@@ -66,246 +66,354 @@ function LinearIcon({ className }: { className?: string }) {
   );
 }
 
+function VercelIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M24 22.525H0l12-21.05 12 21.05z" />
+    </svg>
+  );
+}
+
 export function Integrations() {
   return (
-    <main className="w-full flex-1 flex flex-col bg-black text-white selection:bg-white selection:text-black">
+    <main className="w-full flex-1 flex flex-col bg-black text-white selection:bg-white selection:text-black font-sans">
       
-      <div className="relative z-10 flex flex-col w-full">
-         {/* Hero */}
-         <PageHero
-            layout="centered"
-            bgPattern="none"
-            glowColor="none"
-            titleClassName="text-5xl md:text-[6rem] lg:text-[8rem] font-black tracking-tighter text-white"
-            title="Connect your toolchain."
-            description="Collab Code integrates deeply with the tools you already use. From version control to deployment and issue tracking, keep your workflow uninterrupted."
-            primaryCta={{
-              text: "Browse Directory",
-              href: "#",
-              icon: <span className="w-3 h-3 bg-black rounded-sm" />
-            }}
-            secondaryCta={{
-              text: "Build an App",
-              href: "#"
-            }}
-          />
+      {/* ───────────────── Hero Section (Vercel Style) ───────────────── */}
+      <section className="relative flex flex-col items-center justify-center pt-32 pb-24 px-6 overflow-hidden border-b border-white/[0.1]">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-white/[0.03] blur-[120px] rounded-full pointer-events-none" />
+        
+        <motion.div 
+          initial="hidden" 
+          animate="show" 
+          variants={stagger}
+          className="relative z-10 flex flex-col items-center text-center max-w-4xl"
+        >
+          <motion.h1 variants={fadeUp} className="text-5xl md:text-7xl lg:text-[80px] font-bold tracking-tighter leading-[1.1] mb-6">
+            Connect your <span className="inline-flex items-center justify-center border border-white/[0.2] rounded-full px-4 py-1 text-4xl md:text-5xl translate-y-[-4px]">toolchain.</span>
+          </motion.h1>
+          
+          <motion.p variants={fadeUp} className="text-xl text-[#888] max-w-2xl leading-relaxed mb-10">
+            Integrate deeply with the tools you already use. From version control to deployment and issue tracking, keep your workflow completely uninterrupted.
+          </motion.p>
+          
+          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center gap-4">
+            <button className="flex items-center gap-4 bg-white text-black rounded-full px-6 py-3.5 font-mono text-[14px] hover:bg-white/90 transition-colors shadow-[0_0_40px_rgba(255,255,255,0.1)]">
+              <span className="opacity-50">$</span> 
+              <span>mcp install integrations</span>
+            </button>
+          </motion.div>
+        </motion.div>
+      </section>
 
-          {/* Vercel Strict Grid Architecture Container */}
-          <section className="bg-black border-y border-white/[0.1] relative">
-             <div className="max-w-[1200px] mx-auto border-x border-white/[0.1] relative">
+      {/* ───────────────── Strict Grid Container ───────────────── */}
+      <section className="bg-black relative w-full">
+        <div className="max-w-[1200px] mx-auto border-x border-white/[0.1] relative flex flex-col">
 
-                {/* 1. VISUAL INTEGRATIONS GRID */}
-                <div className="flex flex-col border-b border-white/[0.1] relative">
-                   <Crosshair className="-top-1.5 -left-1.5" />
-                   <Crosshair className="-top-1.5 -right-1.5" />
-                   
-                   {/* Top Header Row */}
-                   <div className="text-center py-24 px-6 relative">
-                      <div className="inline-flex items-center justify-center gap-2 text-gray-400 mb-6 text-xs font-mono uppercase tracking-widest">
-                         <Workflow className="w-3 h-3" /> Extensibility
-                      </div>
-                      <h2 className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tighter text-white mb-6">Seamless ecosystem.</h2>
-                      <p className="text-gray-400 text-lg leading-relaxed max-w-2xl mx-auto">
-                         Connect your codebase to your preferred services via webhooks, native OAuth integrations, and automated pipelines.
-                      </p>
-                   </div>
-
-                   {/* 3-Column Visual Grid */}
-                   <div className="grid grid-cols-1 md:grid-cols-3 relative border-t border-white/[0.1]">
-                      <Crosshair className="-top-1.5 -left-1.5" />
-                      <Crosshair className="-top-1.5 left-[33.33%] -translate-x-1.5" />
-                      <Crosshair className="-top-1.5 left-[66.66%] -translate-x-1.5" />
-                      <Crosshair className="-top-1.5 -right-1.5" />
-
-                      {/* Col 1: Webhook */}
-                      <div className="col-span-1 border-r border-white/[0.1] p-10 lg:p-16 flex items-center justify-center h-[300px]">
-                         <div className="w-full max-w-[280px] flex flex-col gap-3 font-mono text-[10px]">
-                            <div className="p-3 border border-white/[0.1] bg-[#050505] rounded flex items-center gap-2">
-                               <div className="w-2 h-2 rounded-full bg-emerald-400" />
-                               <span className="text-gray-400">POST /api/webhooks/github 200 OK</span>
-                            </div>
-                            <div className="p-3 border border-white/[0.1] bg-[#050505] rounded flex items-center gap-2">
-                               <div className="w-2 h-2 rounded-full bg-emerald-400" />
-                               <span className="text-gray-400">POST /api/webhooks/slack 200 OK</span>
-                            </div>
-                            <div className="p-3 border border-white/[0.1] bg-[#050505] rounded flex items-center gap-2 opacity-50">
-                               <div className="w-2 h-2 rounded-full bg-emerald-400" />
-                               <span className="text-gray-400">POST /api/webhooks/linear 200 OK</span>
-                            </div>
-                         </div>
-                      </div>
-
-                      {/* Col 2: OAuth / PRs */}
-                      <div className="col-span-1 border-r border-white/[0.1] p-10 lg:p-16 flex items-center justify-center h-[300px]">
-                         <div className="w-full max-w-[280px] rounded-lg border border-white/[0.1] bg-[#050505] p-4 text-[12px]">
-                            <div className="flex items-center gap-2 mb-4 text-white">
-                               <GithubIcon className="w-4 h-4" /> fix/auth-flow
-                            </div>
-                            <div className="flex flex-col gap-2">
-                               <div className="flex items-center gap-2 text-gray-400">
-                                  <div className="w-2 h-2 rounded-full bg-emerald-400" /> Vercel build successful
-                               </div>
-                               <div className="flex items-center gap-2 text-gray-400">
-                                  <div className="w-2 h-2 rounded-full bg-emerald-400" /> 1 approved review
-                               </div>
-                            </div>
-                            <button className="mt-4 w-full py-1.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded">
-                               Squash and Merge
-                            </button>
-                         </div>
-                      </div>
-
-                      {/* Col 3: Cloud Node */}
-                      <div className="col-span-1 p-10 lg:p-16 flex items-center justify-center h-[300px] relative overflow-hidden">
-                         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.03),_transparent_70%)] pointer-events-none" />
-                         <div className="relative w-full aspect-square flex items-center justify-center">
-                            <div className="w-16 h-16 rounded-full border border-white/[0.1] bg-[#050505] flex items-center justify-center z-20">
-                               <Database className="w-5 h-5 text-white" />
-                            </div>
-                            <svg className="absolute inset-0 w-full h-full z-10 pointer-events-none" viewBox="0 0 200 200">
-                               <path d="M 100 100 L 160 50" stroke="#fff" strokeOpacity="0.1" strokeWidth="1" strokeDasharray="4 4" />
-                               <path d="M 100 100 L 170 120" stroke="#fff" strokeOpacity="0.1" strokeWidth="1" strokeDasharray="4 4" />
-                               <path d="M 100 100 L 130 180" stroke="#fff" strokeOpacity="0.1" strokeWidth="1" strokeDasharray="4 4" />
-                            </svg>
-                         </div>
-                      </div>
-                   </div>
-
-                   {/* 3-Column Text Grid */}
-                   <div className="grid grid-cols-1 md:grid-cols-3 relative border-t border-white/[0.1]">
-                      <Crosshair className="-top-1.5 -left-1.5" />
-                      <Crosshair className="-top-1.5 left-[33.33%] -translate-x-1.5" />
-                      <Crosshair className="-top-1.5 left-[66.66%] -translate-x-1.5" />
-                      <Crosshair className="-top-1.5 -right-1.5" />
-
-                      <div className="col-span-1 border-r border-white/[0.1] p-10 lg:p-12">
-                         <h3 className="text-xl font-medium text-white mb-4">Event Streams</h3>
-                         <p className="text-gray-400 text-sm leading-relaxed">Listen to repository events via native webhooks to trigger downstream CI/CD pipelines.</p>
-                      </div>
-                      <div className="col-span-1 border-r border-white/[0.1] p-10 lg:p-12">
-                         <h3 className="text-xl font-medium text-white mb-4">Native Git</h3>
-                         <p className="text-gray-400 text-sm leading-relaxed">Don't compromise your workflow. Rebasing, squashing, and PR reviews happen directly in the editor.</p>
-                      </div>
-                      <div className="col-span-1 p-10 lg:p-12">
-                         <h3 className="text-xl font-medium text-white mb-4">Cloud Resources</h3>
-                         <p className="text-gray-400 text-sm leading-relaxed">Provision isolated database branches natively connected to your development workspace.</p>
-                      </div>
-                   </div>
-                </div>
-
-                {/* 2. APP DIRECTORY GRID */}
-                <div className="flex flex-col relative border-b border-white/[0.1]">
-                   <Crosshair className="-top-1.5 -left-1.5" />
-                   <Crosshair className="-top-1.5 -right-1.5" />
-
-                   <div className="grid grid-cols-1 md:grid-cols-3">
-                      <div className="col-span-3 p-16 md:py-24 text-center">
-                         <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white">Integration Directory</h2>
-                      </div>
-                   </div>
-
-                   {/* Grid Row 1 */}
-                   <div className="grid grid-cols-1 md:grid-cols-3 relative border-t border-white/[0.1]">
-                      <Crosshair className="-top-1.5 -left-1.5" />
-                      <Crosshair className="-top-1.5 left-[33.33%] -translate-x-1.5" />
-                      <Crosshair className="-top-1.5 left-[66.66%] -translate-x-1.5" />
-                      <Crosshair className="-top-1.5 -right-1.5" />
-
-                      {[
-                         { icon: <GithubIcon className="w-8 h-8 text-white"/>, title: 'GitHub', desc: 'Sync repositories, manage pull requests, and resolve merge conflicts.' },
-                         { icon: <GitlabIcon className="w-8 h-8 text-white"/>, title: 'GitLab', desc: 'Native support for GitLab repositories, CI/CD pipelines, and MR workflows.' },
-                         { icon: <VercelIcon className="w-8 h-8 text-white"/>, title: 'Vercel', desc: 'Automatically deploy preview environments for every branch.' },
-                      ].map((item, i) => (
-                         <div key={i} className={`col-span-1 p-10 lg:p-12 hover:bg-white/[0.02] transition-colors ${i < 2 ? 'border-r border-white/[0.1]' : ''}`}>
-                            <div className="mb-6">{item.icon}</div>
-                            <h3 className="text-xl font-medium text-white mb-2">{item.title}</h3>
-                            <p className="text-gray-500 text-[15px] leading-relaxed">{item.desc}</p>
-                         </div>
-                      ))}
-                   </div>
-
-                   {/* Grid Row 2 */}
-                   <div className="grid grid-cols-1 md:grid-cols-3 relative border-t border-white/[0.1]">
-                      <Crosshair className="-top-1.5 -left-1.5" />
-                      <Crosshair className="-top-1.5 left-[33.33%] -translate-x-1.5" />
-                      <Crosshair className="-top-1.5 left-[66.66%] -translate-x-1.5" />
-                      <Crosshair className="-top-1.5 -right-1.5" />
-
-                      {[
-                         { icon: <SlackIcon className="w-8 h-8 text-white"/>, title: 'Slack', desc: 'Get notifications for build statuses, review requests, and workspace invites.' },
-                         { icon: <FigmaIcon className="w-7 h-8 text-white"/>, title: 'Figma', desc: 'Embed live Figma designs directly next to your code to ensure pixel-perfect implementation.' },
-                         { icon: <LinearIcon className="w-8 h-8 text-white"/>, title: 'Linear & Jira', desc: 'Link code changes to issues. Automatically update issue status on merge.' },
-                      ].map((item, i) => (
-                         <div key={i} className={`col-span-1 p-10 lg:p-12 hover:bg-white/[0.02] transition-colors ${i < 2 ? 'border-r border-white/[0.1]' : ''}`}>
-                            <div className="mb-6">{item.icon}</div>
-                            <h3 className="text-xl font-medium text-white mb-2">{item.title}</h3>
-                            <p className="text-gray-500 text-[15px] leading-relaxed">{item.desc}</p>
-                         </div>
-                      ))}
-                   </div>
-                </div>
-
-                {/* 3. FRAMEWORKS GRID */}
-                <div className="flex flex-col relative border-b border-white/[0.1]">
-                   <Crosshair className="-top-1.5 -left-1.5" />
-                   <Crosshair className="-top-1.5 -right-1.5" />
-
-                   <div className="grid grid-cols-1 md:grid-cols-3">
-                      <div className="col-span-2 border-r border-white/[0.1] p-16 md:py-32 md:px-24 flex items-center">
-                         <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white">Native framework support.</h2>
-                      </div>
-                      <div className="col-span-1 p-16 flex items-center justify-center gap-6">
-                         <div className="flex items-center gap-2 text-gray-400 font-mono text-sm border border-white/[0.1] px-4 py-2 rounded-full"><Boxes className="w-4 h-4"/> Zero Config</div>
-                      </div>
-                   </div>
-
-                   {/* Frameworks Row */}
-                   <div className="grid grid-cols-1 md:grid-cols-3 relative border-t border-white/[0.1]">
-                      <Crosshair className="-top-1.5 -left-1.5" />
-                      <Crosshair className="-top-1.5 left-[33.33%] -translate-x-1.5" />
-                      <Crosshair className="-top-1.5 left-[66.66%] -translate-x-1.5" />
-                      <Crosshair className="-top-1.5 -right-1.5" />
-
-                      {[
-                         { title: 'Frontend', list: ['React', 'Next.js', 'Vue.js', 'SvelteKit', 'Angular'] },
-                         { title: 'Backend', list: ['Node.js', 'Python', 'Go', 'Rust', 'Ruby on Rails'] },
-                         { title: 'Databases', list: ['Supabase', 'Neon', 'PlanetScale', 'MongoDB', 'Upstash'] },
-                      ].map((item, i) => (
-                         <div key={i} className={`col-span-1 p-10 lg:p-12 hover:bg-white/[0.02] transition-colors ${i < 2 ? 'border-r border-white/[0.1]' : ''}`}>
-                            <div className="text-xs font-mono tracking-widest text-gray-500 uppercase mb-8">{item.title}</div>
-                            <div className="flex flex-col gap-4">
-                               {item.list.map((fw, j) => (
-                                  <div key={j} className="text-[15px] text-white flex items-center gap-2">
-                                     <span className="w-1.5 h-1.5 bg-white/[0.2] rounded-full"></span> {fw}
-                                  </div>
-                               ))}
-                            </div>
-                         </div>
-                      ))}
-                   </div>
-                </div>
-
+           {/* Frameworks Banner inside Grid */}
+           <div className="p-12 md:p-24 border-b border-white/[0.1] text-center flex flex-col items-center">
+             <div className="inline-flex items-center justify-center gap-2 text-[#888] mb-6 text-xs font-mono uppercase tracking-widest">
+                <Workflow className="w-3 h-3" /> Extensibility
              </div>
-          </section>
+             <h2 className="text-4xl md:text-6xl font-bold tracking-tighter text-white mb-6">Seamless ecosystem.</h2>
+             <p className="text-lg text-[#888] max-w-2xl">
+               Connect your codebase to your preferred services via webhooks, native OAuth integrations, and automated pipelines.
+             </p>
+           </div>
 
-          {/* Continue your AI journey CTA */}
-          <section className="py-32 md:py-40 bg-black relative">
-             <div className="max-w-4xl mx-auto px-6 text-center">
-                <h3 className="text-4xl md:text-5xl font-medium tracking-tighter text-white mb-10">
-                   Start integrating today.
-                </h3>
-                
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                   <button className="bg-white text-black px-8 py-3 rounded-full text-[15px] font-semibold hover:bg-gray-200 transition-colors w-full sm:w-auto text-center whitespace-nowrap">
-                      Browse Directory
-                   </button>
-                   <button className="px-8 py-3 text-white text-[15px] font-medium border border-white/[0.2] hover:bg-white/[0.05] rounded-full transition-colors w-full sm:w-auto text-center whitespace-nowrap">
-                      Read Documentation
-                   </button>
-                </div>
-             </div>
-          </section>
-      </div>
+           {/* ───────────────── Integration Directory (Linear Style Blocks) ───────────────── */}
+           <div className="grid grid-cols-1 lg:grid-cols-2 relative border-b border-white/[0.1]">
+              <Crosshair className="-top-1.5 -left-1.5" />
+              <Crosshair className="-top-1.5 -right-1.5" />
+
+              {/* Block 1 (Soft Pink/Red - Code/Git) */}
+              <div className="h-[550px] lg:border-r border-b lg:border-b-0 border-white/[0.1] bg-[#FFA2A2] p-12 lg:p-16 flex flex-col justify-between text-[#0a0a0a] relative overflow-hidden group">
+                 <div className="absolute -right-10 -top-10 opacity-10 transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-700">
+                   <GitBranch className="w-96 h-96" />
+                 </div>
+                 
+                 <div className="w-12 h-12 rounded-xl bg-black flex items-center justify-center text-white mb-8 shadow-2xl">
+                   <GithubIcon className="w-6 h-6" />
+                 </div>
+
+                 <div className="relative z-10">
+                    <h3 className="text-3xl lg:text-4xl font-bold tracking-tight mb-4 leading-tight max-w-md">Source Control</h3>
+                    <p className="text-[#0a0a0a]/70 text-lg leading-relaxed max-w-md font-medium">
+                       Native support for GitHub and GitLab. Sync repositories, manage pull requests, and resolve merge conflicts without ever leaving the editor.
+                    </p>
+                 </div>
+              </div>
+
+              {/* Block 2 (Deep Blue/Indigo - Infrastructure) */}
+              <div className="h-[550px] bg-[#A2B2FF] p-12 lg:p-16 flex flex-col justify-between text-[#0a0a0a] relative overflow-hidden group">
+                 
+                 {/* Floating mockup UI */}
+                 <div className="absolute top-1/2 left-1/2 w-[110%] -translate-y-1/2 -translate-x-1/4 rounded-xl border border-white/20 bg-white/20 backdrop-blur-md p-6 shadow-2xl transform group-hover:-translate-x-[20%] transition-transform duration-700">
+                    <div className="flex items-center gap-3 mb-4">
+                       <VercelIcon className="w-5 h-5 text-black" />
+                       <span className="font-semibold text-sm text-black">Deployment successful</span>
+                    </div>
+                    <div className="space-y-3">
+                       <div className="w-full h-2 bg-black/10 rounded-full" />
+                       <div className="w-3/4 h-2 bg-black/10 rounded-full" />
+                    </div>
+                 </div>
+                 
+                 <div className="w-12 h-12 rounded-xl bg-black flex items-center justify-center text-white mb-8 shadow-2xl relative z-10">
+                   <Cloud className="w-6 h-6" />
+                 </div>
+
+                 <div className="relative z-10 mt-auto">
+                    <h3 className="text-3xl lg:text-4xl font-bold tracking-tight mb-4 leading-tight max-w-md">Infrastructure</h3>
+                    <p className="text-[#0a0a0a]/70 text-lg leading-relaxed max-w-md font-medium">
+                       Automatically deploy preview environments for every branch directly to Vercel, AWS, or your custom cloud providers.
+                    </p>
+                 </div>
+              </div>
+           </div>
+
+           {/* ───────────────── App Directory Grid (The "Missing" Section) ───────────────── */}
+           <div className="flex flex-col relative border-b border-white/[0.1]">
+              <Crosshair className="-top-1.5 -left-1.5" />
+              <Crosshair className="-top-1.5 -right-1.5" />
+              
+              <div className="p-12 md:py-24 text-center border-b border-white/[0.1]">
+                 <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white">Integration Directory</h2>
+              </div>
+
+              {/* Grid Row 1 */}
+              <div className="grid grid-cols-1 md:grid-cols-3 relative border-b border-white/[0.1]">
+                 {[
+                    { icon: GithubIcon, title: 'GitHub', desc: 'Sync repositories, manage pull requests, and resolve merge conflicts.', glow: 'from-white/20 to-transparent', color: 'text-white' },
+                    { icon: GitlabIcon, title: 'GitLab', desc: 'Native support for GitLab repositories, CI/CD pipelines, and MR workflows.', glow: 'from-[#E24329]/20 to-transparent', color: 'text-[#E24329]' },
+                    { icon: VercelIcon, title: 'Vercel', desc: 'Automatically deploy preview environments for every branch.', glow: 'from-white/20 to-transparent', color: 'text-white' },
+                 ].map((item, i) => {
+                    const Icon = item.icon;
+                    return (
+                       <div key={i} className={`group col-span-1 p-10 lg:p-12 transition-all duration-700 min-h-[300px] flex flex-col overflow-hidden relative cursor-pointer ${i < 2 ? 'md:border-r border-white/[0.1]' : ''} border-b md:border-b-0 border-white/[0.1]`}>
+                          
+                          {/* Unique Background Glow & Scaled Logo Effect */}
+                          <div className={`absolute inset-0 bg-gradient-to-br ${item.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
+                          <div className="absolute -right-4 -bottom-4 opacity-0 group-hover:opacity-[0.05] transform group-hover:scale-125 group-hover:-rotate-12 transition-all duration-700 pointer-events-none z-0">
+                             <Icon className="w-48 h-48 text-white" />
+                          </div>
+
+                          <div className="mb-auto relative z-10">
+                             <div className="w-12 h-12 rounded-xl border border-white/[0.1] bg-[#050505] flex items-center justify-center group-hover:scale-110 group-hover:border-white/[0.3] transition-all duration-500 shadow-xl">
+                                <Icon className={`w-6 h-6 text-white group-hover:${item.color} transition-colors duration-500`} />
+                             </div>
+                          </div>
+                          
+                          <div className="mt-8 relative z-10 transform group-hover:translate-y-[-8px] transition-transform duration-500">
+                             <h3 className="text-xl font-medium text-white mb-2 tracking-tight group-hover:text-white transition-colors">{item.title}</h3>
+                             <p className="text-[#888] text-[15px] leading-relaxed group-hover:text-[#aaa] transition-colors">{item.desc}</p>
+                          </div>
+                       </div>
+                    );
+                 })}
+              </div>
+
+              {/* Grid Row 2 */}
+              <div className="grid grid-cols-1 md:grid-cols-3 relative">
+                 {[
+                    { icon: SlackIcon, title: 'Slack', desc: 'Get notifications for build statuses, review requests, and workspace invites.', glow: 'from-[#E01E5A]/20 to-transparent', color: 'text-[#E01E5A]' },
+                    { icon: FigmaIcon, title: 'Figma', desc: 'Embed live Figma designs directly next to your code to ensure pixel-perfect implementation.', glow: 'from-[#F24E1E]/20 to-transparent', color: 'text-[#F24E1E]' },
+                    { icon: LinearIcon, title: 'Linear & Jira', desc: 'Link code changes to issues. Automatically update issue status on merge.', glow: 'from-[#5E6AD2]/20 to-transparent', color: 'text-[#5E6AD2]' },
+                 ].map((item, i) => {
+                    const Icon = item.icon;
+                    return (
+                       <div key={i} className={`group col-span-1 p-10 lg:p-12 transition-all duration-700 min-h-[300px] flex flex-col overflow-hidden relative cursor-pointer ${i < 2 ? 'md:border-r border-white/[0.1]' : ''} border-b md:border-b-0 border-white/[0.1]`}>
+                          
+                          {/* Unique Background Glow & Scaled Logo Effect */}
+                          <div className={`absolute inset-0 bg-gradient-to-br ${item.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
+                          <div className="absolute -right-4 -bottom-4 opacity-0 group-hover:opacity-[0.05] transform group-hover:scale-125 group-hover:-rotate-12 transition-all duration-700 pointer-events-none z-0">
+                             <Icon className="w-48 h-48 text-white" />
+                          </div>
+
+                          <div className="mb-auto relative z-10">
+                             <div className="w-12 h-12 rounded-xl border border-white/[0.1] bg-[#050505] flex items-center justify-center group-hover:scale-110 group-hover:border-white/[0.3] transition-all duration-500 shadow-xl">
+                                <Icon className={`w-6 h-6 text-white group-hover:${item.color} transition-colors duration-500`} />
+                             </div>
+                          </div>
+                          
+                          <div className="mt-8 relative z-10 transform group-hover:translate-y-[-8px] transition-transform duration-500">
+                             <h3 className="text-xl font-medium text-white mb-2 tracking-tight group-hover:text-white transition-colors">{item.title}</h3>
+                             <p className="text-[#888] text-[15px] leading-relaxed group-hover:text-[#aaa] transition-colors">{item.desc}</p>
+                          </div>
+                       </div>
+                    );
+                 })}
+              </div>
+           </div>
+
+           {/* ───────────────── NEW: Workflow Automation Section (Highly Unique UI) ───────────────── */}
+           <div className="flex flex-col md:flex-row relative border-b border-white/[0.1] overflow-hidden bg-[#050505]">
+              <div className="p-12 md:p-24 lg:p-32 md:w-1/2 flex flex-col justify-center border-b md:border-b-0 md:border-r border-white/[0.1] relative z-10">
+                 <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white mb-6">Automate your entire lifecycle.</h2>
+                 <p className="text-[#888] text-lg leading-relaxed max-w-md font-medium mb-10">
+                    Connect your existing tools to CollabCode to create seamless, bidirectional workflows. PRs trigger deployments, comments trigger Jira tickets, and errors alert your Slack channels instantly.
+                 </p>
+                 <button className="bg-white text-black px-6 py-3 rounded-full font-medium w-fit hover:scale-105 transition-transform flex items-center gap-2">
+                    Explore webhooks
+                 </button>
+              </div>
+
+              <div className="p-12 md:p-24 lg:p-32 md:w-1/2 relative min-h-[500px] flex items-center justify-center">
+                 {/* Glowing ambient backdrop */}
+                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-br from-[#A2B2FF]/20 via-[#D7CAFF]/10 to-transparent rounded-full blur-[100px] pointer-events-none" />
+                 
+                 {/* Workflow Nodes */}
+                 <div className="relative w-full max-w-sm aspect-square">
+                    
+                    {/* Center Node */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl flex items-center justify-center z-20 shadow-[0_0_50px_rgba(255,255,255,0.1)]">
+                       <Cloud className="w-10 h-10 text-white" />
+                    </div>
+
+                    {/* Surrounding Nodes */}
+                    <div className="absolute top-[10%] left-[50%] -translate-x-1/2 w-16 h-16 bg-[#111] border border-white/10 rounded-2xl flex items-center justify-center z-10">
+                       <GithubIcon className="w-8 h-8 text-white" />
+                    </div>
+                    <div className="absolute top-[50%] left-[10%] -translate-y-1/2 w-16 h-16 bg-[#111] border border-white/10 rounded-2xl flex items-center justify-center z-10">
+                       <FigmaIcon className="w-7 h-8 text-[#F24E1E]" />
+                    </div>
+                    <div className="absolute top-[50%] right-[10%] -translate-y-1/2 w-16 h-16 bg-[#111] border border-white/10 rounded-2xl flex items-center justify-center z-10">
+                       <SlackIcon className="w-8 h-8 text-[#E01E5A]" />
+                    </div>
+                    <div className="absolute bottom-[10%] left-[50%] -translate-x-1/2 w-16 h-16 bg-[#111] border border-white/10 rounded-2xl flex items-center justify-center z-10">
+                       <LinearIcon className="w-8 h-8 text-[#5E6AD2]" />
+                    </div>
+
+                    {/* Animated Connecting Lines (SVG) */}
+                    <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" style={{ strokeDasharray: "4 4" }}>
+                       <line x1="50%" y1="20%" x2="50%" y2="40%" stroke="rgba(255,255,255,0.2)" strokeWidth="2" />
+                       <line x1="50%" y1="60%" x2="50%" y2="80%" stroke="rgba(255,255,255,0.2)" strokeWidth="2" />
+                       <line x1="20%" y1="50%" x2="40%" y2="50%" stroke="rgba(255,255,255,0.2)" strokeWidth="2" />
+                       <line x1="60%" y1="50%" x2="80%" y2="50%" stroke="rgba(255,255,255,0.2)" strokeWidth="2" />
+                    </svg>
+
+                    {/* Animated Data Pulses */}
+                    <div className="absolute top-[30%] left-[50%] -translate-x-1/2 w-2 h-2 bg-white rounded-full shadow-[0_0_10px_white] animate-[ping_2s_infinite]" />
+                    <div className="absolute top-[50%] left-[30%] -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow-[0_0_10px_white] animate-[ping_2.5s_infinite]" />
+                 </div>
+              </div>
+           </div>
+
+           {/* ───────────────── Frameworks Grid (Vercel Style) ───────────────── */}
+           <div className="flex flex-col relative border-b border-white/[0.1]">
+              <div className="grid grid-cols-1 md:grid-cols-3 relative">
+                 <Crosshair className="-top-1.5 -left-1.5" />
+                 <Crosshair className="-top-1.5 left-[33.33%] -translate-x-1.5" />
+                 <Crosshair className="-top-1.5 left-[66.66%] -translate-x-1.5" />
+                 <Crosshair className="-top-1.5 -right-1.5" />
+
+                 {[
+                    { title: 'Frontend', list: ['React', 'Next.js', 'Vue.js', 'SvelteKit', 'Angular'] },
+                    { title: 'Backend', list: ['Node.js', 'Python', 'Go', 'Rust', 'Ruby on Rails'] },
+                    { title: 'Databases', list: ['Supabase', 'Neon', 'PlanetScale', 'MongoDB', 'Upstash'] },
+                 ].map((item, i) => (
+                    <div key={i} className={`col-span-1 p-10 lg:p-12 hover:bg-white/[0.02] transition-colors ${i < 2 ? 'md:border-r border-white/[0.1]' : ''} border-b md:border-b-0 border-white/[0.1]`}>
+                       <div className="text-xs font-mono tracking-widest text-[#888] uppercase mb-8">{item.title}</div>
+                       <div className="flex flex-col gap-4">
+                          {item.list.map((fw, j) => (
+                             <div key={j} className="text-[15px] text-white flex items-center gap-3">
+                                <span className="w-1 h-1 bg-white/[0.3] rounded-full" /> {fw}
+                             </div>
+                          ))}
+                       </div>
+                    </div>
+                 ))}
+              </div>
+           </div>
+
+           {/* ───────────────── NEW: Ecosystem Marquee Section ───────────────── */}
+           <div className="flex flex-col relative border-b border-white/[0.1] bg-black overflow-hidden py-24">
+              <div className="text-center mb-16 relative z-10 px-6">
+                 <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-white mb-4">The ultimate developer ecosystem.</h2>
+                 <p className="text-[#888] text-lg max-w-xl mx-auto">
+                    Seamlessly connect your existing stack. Over 50+ native integrations available right out of the box.
+                 </p>
+              </div>
+
+              {/* Glowing background behind marquee */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[200px] bg-gradient-to-r from-transparent via-[#D6FF00]/5 to-transparent pointer-events-none" />
+
+              {/* Infinite Scrolling Logo Marquee */}
+              <div className="relative w-full flex overflow-hidden border-y border-white/[0.05] bg-[#050505]">
+                 <div className="flex w-[200%] md:w-[150%] animate-[marquee_30s_linear_infinite] hover:[animation-play-state:paused]">
+                    
+                    {/* First set of logos */}
+                    <div className="flex w-1/2 items-center justify-around py-8 px-4">
+                       <GithubIcon className="w-10 h-10 text-white/50 hover:text-white transition-colors cursor-pointer" />
+                       <Database className="w-10 h-10 text-emerald-400/50 hover:text-emerald-400 transition-colors cursor-pointer" />
+                       <GitlabIcon className="w-10 h-10 text-[#E24329]/50 hover:text-[#E24329] transition-colors cursor-pointer" />
+                       <Cloud className="w-10 h-10 text-blue-400/50 hover:text-blue-400 transition-colors cursor-pointer" />
+                       <SlackIcon className="w-10 h-10 text-[#E01E5A]/50 hover:text-[#E01E5A] transition-colors cursor-pointer" />
+                       <Server className="w-10 h-10 text-purple-400/50 hover:text-purple-400 transition-colors cursor-pointer" />
+                       <FigmaIcon className="w-10 h-10 text-[#F24E1E]/50 hover:text-[#F24E1E] transition-colors cursor-pointer" />
+                       <Terminal className="w-10 h-10 text-yellow-400/50 hover:text-yellow-400 transition-colors cursor-pointer" />
+                       <LinearIcon className="w-10 h-10 text-[#5E6AD2]/50 hover:text-[#5E6AD2] transition-colors cursor-pointer" />
+                       <Workflow className="w-10 h-10 text-pink-400/50 hover:text-pink-400 transition-colors cursor-pointer" />
+                       <VercelIcon className="w-10 h-10 text-white/50 hover:text-white transition-colors cursor-pointer" />
+                       <Boxes className="w-10 h-10 text-orange-400/50 hover:text-orange-400 transition-colors cursor-pointer" />
+                    </div>
+                    
+                    {/* Duplicate set for infinite scroll */}
+                    <div className="flex w-1/2 items-center justify-around py-8 px-4">
+                       <GithubIcon className="w-10 h-10 text-white/50 hover:text-white transition-colors cursor-pointer" />
+                       <Database className="w-10 h-10 text-emerald-400/50 hover:text-emerald-400 transition-colors cursor-pointer" />
+                       <GitlabIcon className="w-10 h-10 text-[#E24329]/50 hover:text-[#E24329] transition-colors cursor-pointer" />
+                       <Cloud className="w-10 h-10 text-blue-400/50 hover:text-blue-400 transition-colors cursor-pointer" />
+                       <SlackIcon className="w-10 h-10 text-[#E01E5A]/50 hover:text-[#E01E5A] transition-colors cursor-pointer" />
+                       <Server className="w-10 h-10 text-purple-400/50 hover:text-purple-400 transition-colors cursor-pointer" />
+                       <FigmaIcon className="w-10 h-10 text-[#F24E1E]/50 hover:text-[#F24E1E] transition-colors cursor-pointer" />
+                       <Terminal className="w-10 h-10 text-yellow-400/50 hover:text-yellow-400 transition-colors cursor-pointer" />
+                       <LinearIcon className="w-10 h-10 text-[#5E6AD2]/50 hover:text-[#5E6AD2] transition-colors cursor-pointer" />
+                       <Workflow className="w-10 h-10 text-pink-400/50 hover:text-pink-400 transition-colors cursor-pointer" />
+                       <VercelIcon className="w-10 h-10 text-white/50 hover:text-white transition-colors cursor-pointer" />
+                       <Boxes className="w-10 h-10 text-orange-400/50 hover:text-orange-400 transition-colors cursor-pointer" />
+                    </div>
+
+                 </div>
+              </div>
+
+              <style>{`
+                 @keyframes marquee {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                 }
+              `}</style>
+           </div>
+
+           {/* ───────────────── Final CTA (Soft Glowing Dark Mode Block) ───────────────── */}
+           <div className="p-12 md:p-24 lg:p-32 bg-black flex flex-col items-center text-center relative overflow-hidden">
+              <Crosshair className="-top-1.5 -left-1.5" />
+              <Crosshair className="-top-1.5 -right-1.5" />
+              
+              {/* Soft Colors Shine Contrast */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-gradient-to-b from-[#A2B2FF]/20 via-[#D7CAFF]/10 to-transparent blur-[120px] rounded-[100%] pointer-events-none" />
+              <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[#D6FF00]/5 blur-[100px] rounded-[100%] pointer-events-none" />
+
+              <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white mb-10 relative z-10 shadow-[0_0_50px_rgba(255,255,255,0.05)] backdrop-blur-xl">
+                 <Terminal className="w-8 h-8" />
+              </div>
+
+              <h2 className="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-6 relative z-10">Start integrating today.</h2>
+              <p className="text-[#888] text-xl max-w-xl mx-auto mb-10 font-medium relative z-10">
+                 From LLMs to full-stack frameworks, supercharge your workspace with a running start.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
+                 <button className="bg-white text-black px-8 py-4 rounded-full font-bold text-[15px] hover:bg-white/90 transition-colors shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+                    Browse Directory
+                 </button>
+                 <button className="px-8 py-4 text-white text-[15px] font-bold rounded-full border border-white/20 hover:bg-white/5 transition-colors backdrop-blur-md">
+                    Read Documentation
+                 </button>
+              </div>
+           </div>
+
+        </div>
+      </section>
     </main>
   );
 }
