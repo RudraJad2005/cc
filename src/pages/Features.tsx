@@ -112,10 +112,10 @@ export function Features() {
 
                     {/* SVG Connections */}
                     <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1 }}>
-                       <path d="M 180 100 L 280 100" stroke="#444" strokeWidth="1" strokeDasharray="4 4" fill="none" />
-                       <path d="M 320 100 C 380 100, 360 40, 460 40" stroke="#ef4444" strokeWidth="2" fill="none" />
-                       <path d="M 320 100 C 380 100, 360 100, 460 100" stroke="#10b981" strokeWidth="2" fill="none" />
-                       <path d="M 320 100 C 380 100, 360 160, 460 160" stroke="#3b82f6" strokeWidth="2" fill="none" />
+                       <motion.path d="M 180 100 L 280 100" stroke="#444" strokeWidth="1" strokeDasharray="4 4" fill="none" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 }} />
+                       <motion.path d="M 320 100 C 380 100, 360 40, 460 40" stroke="#ef4444" strokeWidth="2" fill="none" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }} />
+                       <motion.path d="M 320 100 C 380 100, 360 100, 460 100" stroke="#10b981" strokeWidth="2" fill="none" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }} />
+                       <motion.path d="M 320 100 C 380 100, 360 160, 460 160" stroke="#3b82f6" strokeWidth="2" fill="none" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.7 }} />
                     </svg>
 
                     <div className="absolute z-10 w-10 h-10 rounded-full bg-white text-black flex items-center justify-center font-bold left-[280px] top-[80px] shadow-[0_0_20px_rgba(255,255,255,0.2)]">
@@ -220,15 +220,15 @@ export function Features() {
 
               {/* Connecting Bezier Curves */}
               <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
-                 <path d="M 60 48 C 60 180, 448 150, 448 250" stroke="#888" strokeWidth="2" fill="none" />
-                 <path d="M 215 48 C 215 180, 448 160, 448 250" stroke="#3b82f6" strokeWidth="2" fill="none" />
-                 <path d="M 370 48 C 370 180, 448 170, 448 250" stroke="#10b981" strokeWidth="2" fill="none" />
-                 <path d="M 525 48 C 525 180, 448 180, 448 250" stroke="#ef4444" strokeWidth="2" fill="none" />
-                 <path d="M 680 48 C 680 180, 448 190, 448 250" stroke="#ec4899" strokeWidth="2" fill="none" />
-                 <path d="M 835 48 C 835 180, 448 200, 448 250" stroke="#eab308" strokeWidth="2" fill="none" />
+                 <motion.path d="M 60 48 C 60 180, 448 150, 448 250" stroke="#888" strokeWidth="2" fill="none" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }} />
+                 <motion.path d="M 215 48 C 215 180, 448 160, 448 250" stroke="#3b82f6" strokeWidth="2" fill="none" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.15 }} />
+                 <motion.path d="M 370 48 C 370 180, 448 170, 448 250" stroke="#10b981" strokeWidth="2" fill="none" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }} />
+                 <motion.path d="M 525 48 C 525 180, 448 180, 448 250" stroke="#ef4444" strokeWidth="2" fill="none" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.25 }} />
+                 <motion.path d="M 680 48 C 680 180, 448 190, 448 250" stroke="#ec4899" strokeWidth="2" fill="none" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }} />
+                 <motion.path d="M 835 48 C 835 180, 448 200, 448 250" stroke="#eab308" strokeWidth="2" fill="none" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.35 }} />
                  
                  {/* Vertical line going down from Deploy pill */}
-                 <path d="M 448 300 L 448 500" stroke="#888" strokeWidth="1" fill="none" />
+                 <motion.path d="M 448 300 L 448 500" stroke="#888" strokeWidth="1" fill="none" initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }} />
               </svg>
 
               {/* Deployed Pill */}

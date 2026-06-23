@@ -20,129 +20,130 @@ export function Home() {
           {/* ═══════════════════════════════════════════════ */}
           {/* HERO SECTION                                    */}
           {/* ═══════════════════════════════════════════════ */}
-          <section className="bg-[#000] pt-32 pb-20 md:pt-44 md:pb-28 relative overflow-hidden">
-             {/* Stark grid background with subtle cyan glow */}
-             <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none opacity-40 [mask-image:linear-gradient(to_bottom,black_40%,transparent_100%)]" />
-             {/* Removed background glow */}
+          <section className="bg-black pt-40 pb-0 relative overflow-hidden flex flex-col items-center w-full min-h-[90vh]">
              
-             <div className="max-w-[1200px] mx-auto px-6 lg:px-0 relative z-10">
-                <div className="flex flex-col items-center text-center">
-                   {/* Tagline pill */}
+             {/* Dot grid background */}
+             <div className="absolute inset-0 z-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+             
+             {/* Soft center glow */}
+             <div className="absolute top-[25%] left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-white/[0.02] blur-[120px] rounded-full pointer-events-none z-0" />
+
+             <div className="max-w-[1200px] mx-auto px-6 lg:px-12 relative z-10 w-full flex flex-col lg:flex-row items-start justify-between flex-1">
+                
+                {/* Left — Heading & CTAs */}
+                <div className="flex flex-col items-start text-left pt-16 lg:pt-24 z-20 max-w-[520px]">
+                   
                    <motion.div 
-                     initial={{ opacity: 0, y: 10 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     transition={{ duration: 0.5 }}
-                     className="flex items-center gap-3 px-4 py-1.5 border border-cyan-500/30 bg-cyan-500/5 mb-8 rounded-none"
+                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}
+                     className="text-[13px] font-mono text-white/40 uppercase tracking-[0.2em] mb-8"
                    >
-                      <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse" />
-                      <span className="text-xs font-mono uppercase tracking-widest text-cyan-400">Environment 2.0 is Live</span>
+                      Collab Code
                    </motion.div>
 
-                   {/* Main heading */}
                    <motion.h1 
-                     initial={{ opacity: 0, y: 20 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     transition={{ duration: 0.6, delay: 0.1 }}
-                     className="text-5xl md:text-7xl lg:text-[6.5rem] font-medium tracking-tighter text-white leading-[1] max-w-5xl mb-6"
+                     initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }}
+                     className="text-6xl md:text-7xl lg:text-[5.5rem] font-bold tracking-[-0.04em] text-white leading-[1] mb-8"
                    >
-                      Code at the speed of thought.
+                      Ship code,{' '}
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white/60 to-white bg-[length:200%_100%] animate-[shimmer_3s_ease-in-out_infinite]">
+                        together.
+                      </span>
                    </motion.h1>
 
-                   {/* Subtitle */}
                    <motion.p 
-                     initial={{ opacity: 0, y: 20 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     transition={{ duration: 0.6, delay: 0.2 }}
-                     className="text-[#888] text-lg md:text-xl leading-relaxed max-w-2xl mb-12"
+                     initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.25 }}
+                     className="text-[#71717a] text-lg leading-relaxed mb-12 max-w-[440px]"
                    >
-                      A cloud development environment that gives every developer the power of a high-performance workstation. No local setup. No waiting. Just code.
+                      The development platform for teams that move fast. Real-time collaboration, instant environments, zero config.
                    </motion.p>
 
-                   {/* CTA Buttons */}
                    <motion.div 
-                     initial={{ opacity: 0, y: 20 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     transition={{ duration: 0.6, delay: 0.3 }}
-                     className="flex items-center gap-4 mb-24"
+                     initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }}
+                     className="flex items-center gap-3"
                    >
-                      <button className="bg-white text-black px-8 py-3.5 rounded-none text-[14px] font-semibold hover:bg-gray-200 transition-all flex items-center gap-2">
-                         Start Coding <ArrowRight className="w-4 h-4" />
+                      <button className="px-5 py-2.5 bg-white text-black rounded-full text-sm font-medium hover:bg-gray-200 transition-colors">
+                         Start Building
                       </button>
-                      <button className="px-8 py-3.5 border border-white/[0.2] text-white rounded-none text-[14px] font-medium hover:bg-white/[0.05] transition-colors">
-                         View Documentation
+                      <button className="px-5 py-2.5 border border-white/15 text-white/80 rounded-full text-sm font-medium hover:bg-white/5 hover:text-white transition-all">
+                         Request Demo
                       </button>
-                   </motion.div>
-
-                   {/* Brutalist IDE Mockup with Syntax Colors */}
-                   <motion.div 
-                     initial={{ opacity: 0, y: 40 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                     className="w-full max-w-5xl relative group"
-                   >
-                      <div className="absolute inset-0 bg-[linear-gradient(rgba(34,211,238,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,0.1)_1px,transparent_1px)] bg-[size:16px_16px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                      
-                      <Crosshair className="-top-1.5 -left-1.5" />
-                      <Crosshair className="-top-1.5 -right-1.5" />
-                      <Crosshair className="-bottom-1.5 -left-1.5" />
-                      <Crosshair className="-bottom-1.5 -right-1.5" />
-
-                      <div className="w-full bg-[#000] border border-white/[0.1] overflow-hidden relative z-10">
-                         {/* Window chrome */}
-                         <div className="h-10 border-b border-white/[0.1] flex items-center justify-between px-4 bg-[#050505]">
-                            <div className="flex items-center gap-2 text-[#666]">
-                               <Terminal className="w-4 h-4 text-cyan-400" />
-                               <span className="font-mono text-xs uppercase tracking-widest text-[#888]">Collab Code</span>
-                            </div>
-                            <div className="flex items-center gap-4 text-xs font-mono text-[#666]">
-                               <span>main</span>
-                               <span className="w-px h-3 bg-white/[0.1]" />
-                               <span className="flex items-center gap-1"><div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" /> 30ms</span>
-                            </div>
-                         </div>
-                         
-                         <div className="flex">
-                            {/* Sidebar */}
-                            <div className="w-48 border-r border-white/[0.1] p-3 hidden md:block bg-[#000]">
-                               <div className="text-[10px] text-[#666] font-mono uppercase tracking-widest mb-3 px-2">Explorer</div>
-                               <div className="flex flex-col gap-0.5 text-xs font-mono">
-                                  <div className="px-2 py-1 text-[#888] flex items-center gap-2"><span className="text-[#666]">▼</span> src/</div>
-                                  <div className="px-2 py-1 pl-6 text-white bg-white/[0.05] flex items-center gap-2 border border-white/[0.05]"><FileCode className="w-3 h-3 text-cyan-400" /> server.ts</div>
-                                  <div className="px-2 py-1 pl-6 text-[#888] flex items-center gap-2"><FileCode className="w-3 h-3 text-emerald-400" /> app.tsx</div>
-                                  <div className="px-2 py-1 pl-6 text-[#888] flex items-center gap-2"><Layout className="w-3 h-3 text-purple-400" /> styles.css</div>
-                                  <div className="px-2 py-1 text-[#888] flex items-center gap-2 mt-2"><Package className="w-3 h-3 text-yellow-400" /> package.json</div>
-                               </div>
-                            </div>
-
-                            {/* Editor + Terminal */}
-                            <div className="flex-1 flex flex-col bg-[#020202]">
-                               {/* Code Editor with proper Syntax Highlighting */}
-                               <div className="p-6 font-mono text-[13px] leading-6 flex-1 min-h-[240px] text-left">
-                                  <div className="flex"><span className="w-8 text-[#444] select-none">1</span><span className="text-[#c678dd]">import</span> <span className="text-white">{'{ createServer }'}</span> <span className="text-[#c678dd]">from</span> <span className="text-[#98c379]">'collab-engine'</span>;</div>
-                                  <div className="flex"><span className="w-8 text-[#444] select-none">2</span></div>
-                                  <div className="flex"><span className="w-8 text-[#444] select-none">3</span><span className="text-[#c678dd]">const</span> <span className="text-[#e5c07b]">server</span> <span className="text-[#56b6c2]">=</span> <span className="text-[#61afef]">createServer</span>({'{'}</div>
-                                  <div className="flex"><span className="w-8 text-[#444] select-none">4</span><span className="pl-6"><span className="text-[#e06c75]">port</span>: <span className="text-[#d19a66]">3000</span>,</span></div>
-                                  <div className="flex"><span className="w-8 text-[#444] select-none">5</span><span className="pl-6"><span className="text-[#e06c75]">workers</span>: <span className="text-[#d19a66]">4</span>,</span></div>
-                                  <div className="flex"><span className="w-8 text-[#444] select-none">6</span><span className="pl-6"><span className="text-[#e06c75]">hotReload</span>: <span className="text-[#d19a66]">true</span>,</span></div>
-                                  <div className="flex"><span className="w-8 text-[#444] select-none">7</span><div className="text-white">{'}'});</div></div>
-                                  <div className="flex"><span className="w-8 text-[#444] select-none">8</span></div>
-                                  <div className="flex"><span className="w-8 text-[#444] select-none">9</span><div><span className="text-[#e5c07b]">server</span>.<span className="text-[#61afef]">listen</span>();</div></div>
-                               </div>
-
-                               {/* Terminal */}
-                               <div className="border-t border-white/[0.1] p-4 font-mono text-xs bg-[#000] text-left">
-                                  <div className="text-[#444] mb-2 uppercase tracking-widest text-[10px]">Terminal</div>
-                                  <div className="text-[#888] mb-1"><span className="text-emerald-400">~/project</span> $ collab dev</div>
-                                  <div className="text-white mt-1">✓ Server running on port <span className="text-cyan-400">3000</span></div>
-                                  <div className="text-[#888]">✓ Hot reload enabled</div>
-                                  <div className="text-[#888] flex items-center mt-2">Ready <span className="w-1.5 h-3 bg-cyan-400 ml-2 animate-pulse" /></div>
-                               </div>
-                            </div>
-                         </div>
-                      </div>
                    </motion.div>
                 </div>
+
+                {/* Center — Animated Logo Mark */}
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
+                  className="absolute left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none"
+                >
+                   {/* Outer glow */}
+                   <div className="absolute -inset-16 bg-white/[0.03] blur-[80px] rounded-full" />
+                   
+                   {/* Interlocking brackets — representing collaboration */}
+                   <svg width="180" height="200" viewBox="0 0 180 200" className="relative z-10">
+                      {/* Left bracket */}
+                      <motion.path 
+                        d="M 75 30 L 40 55 L 40 145 L 75 170" 
+                        stroke="rgba(255,255,255,0.12)" strokeWidth="2" fill="none" strokeLinecap="round"
+                        initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.5, delay: 0.6 }}
+                      />
+                      {/* Right bracket */}
+                      <motion.path 
+                        d="M 105 30 L 140 55 L 140 145 L 105 170" 
+                        stroke="rgba(255,255,255,0.12)" strokeWidth="2" fill="none" strokeLinecap="round"
+                        initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.5, delay: 0.9 }}
+                      />
+                      {/* Center connecting line */}
+                      <motion.line 
+                        x1="60" y1="100" x2="120" y2="100" 
+                        stroke="rgba(255,255,255,0.08)" strokeWidth="1.5" strokeDasharray="4 6"
+                        initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, delay: 1.4 }}
+                      />
+                      {/* Left node */}
+                      <motion.circle cx="55" cy="100" r="3" fill="rgba(255,255,255,0.15)"
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}
+                      />
+                      {/* Right node */}
+                      <motion.circle cx="125" cy="100" r="3" fill="rgba(255,255,255,0.15)"
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.2 }}
+                      />
+                   </svg>
+                </motion.div>
+
+                {/* Right — Descriptor Labels */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.6 }}
+                  className="hidden lg:flex flex-col items-end text-right gap-4 pt-16 lg:pt-24 z-20"
+                >
+                   <span className="text-[13px] font-mono text-white/40 uppercase tracking-[0.15em]">Real-Time Editing</span>
+                   <span className="text-[13px] font-mono text-white/40 uppercase tracking-[0.15em]">Instant Environments</span>
+                   <span className="text-[13px] font-mono text-white/40 uppercase tracking-[0.15em]">Built for Teams</span>
+                </motion.div>
+
              </div>
+
+             {/* Bottom stats row */}
+             <motion.div 
+               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 1 }}
+               className="w-full max-w-[1200px] mx-auto px-6 lg:px-12 pb-16 pt-20 flex items-center justify-between z-10"
+             >
+                <div className="flex items-center gap-16">
+                   <div>
+                      <div className="text-2xl font-bold text-white tracking-tight">50K+</div>
+                      <div className="text-[11px] font-mono text-white/30 uppercase tracking-wider mt-1">Developers</div>
+                   </div>
+                   <div className="w-px h-8 bg-white/10" />
+                   <div>
+                      <div className="text-2xl font-bold text-white tracking-tight">99.9%</div>
+                      <div className="text-[11px] font-mono text-white/30 uppercase tracking-wider mt-1">Uptime</div>
+                   </div>
+                   <div className="w-px h-8 bg-white/10" />
+                   <div>
+                      <div className="text-2xl font-bold text-white tracking-tight">&lt;50ms</div>
+                      <div className="text-[11px] font-mono text-white/30 uppercase tracking-wider mt-1">Latency</div>
+                   </div>
+                </div>
+             </motion.div>
+
           </section>
 
           {/* ═══════════════════════════════════════════════ */}

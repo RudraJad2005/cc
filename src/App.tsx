@@ -28,6 +28,7 @@ import { Startup } from './pages/Startup';
 import { DPA } from './pages/DPA';
 import { OSS } from './pages/OSS';
 import { SDK } from './pages/SDK';
+import { CICD } from './pages/CICD';
 
 import { DashboardLayout } from './layouts/DashboardLayout';
 import { Dashboard } from './pages/Dashboard';
@@ -112,6 +113,7 @@ export default function App() {
           <Route path="/dpa" element={<DPA />} />
           <Route path="/oss" element={<OSS />} />
           <Route path="/sdk" element={<SDK />} />
+          <Route path="/cicd" element={<CICD />} />
         </Route>
 
         <Route path="/dashboard" element={<DashboardLayout />}>

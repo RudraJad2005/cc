@@ -22,6 +22,8 @@ export function Footer() {
      gradientColors = "rgba(16,185,129,0.9) 48%, rgba(124,58,237,0.9) 52%"; // Emerald & Purple
   } else if (location.pathname === '/oss') {
      gradientColors = "rgba(20,184,166,0.9) 48%, rgba(217,70,239,0.9) 52%"; // Teal & Fuchsia
+  } else if (location.pathname === '/cicd') {
+     gradientColors = "rgba(59,130,246,0.9) 48%, rgba(236,72,153,0.9) 52%"; // Blue & Pink
   }
 
 
@@ -58,6 +60,7 @@ export function Footer() {
                      <Link to="/features" className="hover:text-white transition-colors">Features</Link>
                      <Link to="/templates" className="hover:text-white transition-colors">Templates</Link>
                      <Link to="/integrations" className="hover:text-white transition-colors">Integrations</Link>
+                     <Link to="/cicd" className="hover:text-white transition-colors">CI/CD</Link>
                      <Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link>
                      <Link to="/changelog" className="hover:text-white transition-colors">Changelog</Link>
                      <Link to="/security" className="hover:text-white transition-colors">Security</Link>
