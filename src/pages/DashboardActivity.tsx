@@ -28,13 +28,24 @@ export function DashboardActivity() {
         .from('activity')
         .select('*')
         .order('created_at', { ascending: false })
-        .limit(50); // Get more activity for the dedicated page
+        .limit(50);
 
       if (activityRes.data) setActivity(activityRes.data);
       setLoading(false);
     }
     
     fetchData();
+
+    // Set up real-time subscription for live updates!
+    const channel = supabase.channel('realtime:activity')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'activity' }, () => {
+        fetchData();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user]);
 
   return (

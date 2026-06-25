@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Plus, GitBranch, Globe, Clock, MoreVertical, ChevronDown, Github, FolderOpen, Loader2 } from 'lucide-react';
+import { Search, Plus, GitBranch, Globe, Clock, MoreVertical, ChevronDown, Github, FolderOpen, Loader2, Trash2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -40,6 +40,18 @@ export function Projects() {
     }
     fetchProjects();
   }, [user]);
+
+  const handleDelete = async (e: React.MouseEvent, projectId: string) => {
+    e.preventDefault();
+    if (window.confirm('Are you sure you want to delete this project?')) {
+      const { error } = await supabase.from('projects').delete().eq('id', projectId);
+      if (!error) {
+        setProjects(prev => prev.filter(p => p.id !== projectId));
+      } else {
+        alert('Failed to delete project: ' + error.message);
+      }
+    }
+  };
 
   return (
     <div className="flex flex-col gap-8 w-full max-w-[1200px] mx-auto pb-20">
@@ -123,8 +135,8 @@ export function Projects() {
                        {project.status === 'Building' && <div className="px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-medium flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b] animate-pulse"></div> Building</div>}
                        {project.status === 'Error' && <div className="px-2.5 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444]"></div> Error</div>}
                        
-                       <div className="p-2 hover:bg-white/[0.1] rounded-md transition-colors text-gray-400 hover:text-white" onClick={(e) => e.preventDefault()}>
-                          <MoreVertical className="w-4 h-4" />
+                       <div className="p-2 hover:bg-red-500/10 rounded-md transition-colors text-gray-400 hover:text-red-400" onClick={(e) => handleDelete(e, project.id)} title="Delete Project">
+                          <Trash2 className="w-4 h-4" />
                        </div>
                     </div>
                  </div>

@@ -24,6 +24,16 @@ export function Footer() {
      gradientColors = "rgba(20,184,166,0.9) 48%, rgba(217,70,239,0.9) 52%"; // Teal & Fuchsia
   } else if (location.pathname === '/cicd') {
      gradientColors = "rgba(59,130,246,0.9) 48%, rgba(236,72,153,0.9) 52%"; // Blue & Pink
+  } else if (location.pathname === '/events') {
+     gradientColors = "rgba(245,158,11,0.9) 48%, rgba(239,68,68,0.9) 52%"; // Amber & Red
+  } else if (location.pathname === '/storage-sdk') {
+     gradientColors = "rgba(168,85,247,0.9) 48%, rgba(59,130,246,0.9) 52%"; // Purple & Blue
+  } else if (location.pathname === '/ai') {
+     gradientColors = "rgba(255,255,255,0.9) 48%, rgba(100,100,100,0.9) 52%"; // White & Gray
+  } else if (location.pathname === '/observability') {
+     gradientColors = "rgba(34,197,94,0.9) 48%, rgba(16,185,129,0.9) 52%"; // Emerald & Green
+  } else if (location.pathname === '/docs') {
+     gradientColors = "rgba(251,191,36,0.9) 48%, rgba(245,158,11,0.9) 52%"; // Gold & Amber
   }
 
 
@@ -61,6 +71,8 @@ export function Footer() {
                      <Link to="/templates" className="hover:text-white transition-colors">Templates</Link>
                      <Link to="/integrations" className="hover:text-white transition-colors">Integrations</Link>
                      <Link to="/cicd" className="hover:text-white transition-colors">CI/CD</Link>
+                     <Link to="/ai" className="hover:text-white transition-colors text-white font-medium flex items-center gap-1">AI <span className="bg-white/10 px-1.5 rounded text-[10px] uppercase font-bold text-white">New</span></Link>
+                     <Link to="/observability" className="hover:text-white transition-colors text-white font-medium flex items-center gap-1">Observability <span className="bg-green-500/10 border border-green-500/20 px-1.5 rounded text-[10px] uppercase font-bold text-green-400">Beta</span></Link>
                      <Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link>
                      <Link to="/changelog" className="hover:text-white transition-colors">Changelog</Link>
                      <Link to="/security" className="hover:text-white transition-colors">Security</Link>
@@ -74,6 +86,7 @@ export function Footer() {
                      <Link to="/blog" className="hover:text-white transition-colors">Blog</Link>
                      <Link to="/careers" className="hover:text-white transition-colors">Careers</Link>
                      <Link to="/customers" className="hover:text-white transition-colors">Customers</Link>
+                     <Link to="/events" className="hover:text-white transition-colors">Events</Link>
                   </div>
                </div>
                
@@ -92,10 +105,10 @@ export function Footer() {
                <div className="flex flex-col gap-6">
                   <h5 className="text-white font-semibold text-[14px]">Developers</h5>
                   <div className="flex flex-col gap-4 text-[#888] text-[14px]">
-                     <a href="#" className="hover:text-white transition-colors">Documentation</a>
-                     <a href="#" className="hover:text-white transition-colors">API Reference</a>
-                     <Link to="/oss" className="hover:text-white transition-colors">OSS</Link>
+                     <Link to="/docs" className="hover:text-white transition-colors">Documentation</Link>
+                     <Link to="/oss" className="hover:text-white transition-colors">Open Source</Link>
                      <Link to="/sdk" className="hover:text-white transition-colors">SDKs</Link>
+                     <Link to="/storage-sdk" className="hover:text-white transition-colors">Storage SDK</Link>
                   </div>
                </div>
             </div>

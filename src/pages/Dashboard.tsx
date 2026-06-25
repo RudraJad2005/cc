@@ -115,12 +115,27 @@ export function Dashboard() {
                          </div>
                          
                          <div className="flex items-center gap-4 text-xs text-gray-400 mt-2">
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex items-center gap-1.5 flex-1">
                                <GitBranch className="w-3.5 h-3.5" /> {project.branch}
                             </div>
                             <div className="flex items-center gap-1.5">
                                <Clock className="w-3.5 h-3.5" /> {getRelativeTime(project.created_at)}
                             </div>
+                            <button 
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                if (confirm('Are you sure you want to delete this project?')) {
+                                  supabase.from('projects').delete().eq('id', project.id).then(() => {
+                                    setProjects(prev => prev.filter(p => p.id !== project.id));
+                                  });
+                                }
+                              }}
+                              className="p-1.5 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-md transition-colors ml-auto"
+                              title="Delete Project"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                            </button>
                          </div>
                       </Link>
                     ))}
@@ -167,9 +182,24 @@ export function Dashboard() {
                           </div>
                           
                           <div className="flex items-center gap-4 text-xs text-gray-400 mt-2">
-                             <div className="flex items-center gap-1.5">
+                             <div className="flex items-center gap-1.5 flex-1">
                                 <Clock className="w-3.5 h-3.5" /> {getRelativeTime(sandbox.created_at)}
                              </div>
+                             <button 
+                               onClick={(e) => {
+                                 e.preventDefault();
+                                 e.stopPropagation();
+                                 if (confirm('Are you sure you want to delete this sandbox?')) {
+                                   supabase.from('projects').delete().eq('id', sandbox.id).then(() => {
+                                     setSandboxes(prev => prev.filter(p => p.id !== sandbox.id));
+                                   });
+                                 }
+                               }}
+                               className="p-1.5 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-md transition-colors ml-auto"
+                               title="Delete Sandbox"
+                             >
+                               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                             </button>
                           </div>
                        </Link>
                      ))}
@@ -196,7 +226,7 @@ export function Dashboard() {
               <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                  
                  {/* Import via GitHub */}
-                 <Link to="/dashboard/new" className="group flex flex-col p-5 border border-white/[0.08] hover:border-white/[0.2] bg-[#050505] hover:bg-[#111] rounded-xl transition-all h-full">
+                 <Link to="/dashboard/import" className="group flex flex-col p-5 border border-white/[0.08] hover:border-white/[0.2] bg-[#050505] hover:bg-[#111] rounded-xl transition-all h-full">
                     <div className="w-12 h-12 rounded-full border border-white/[0.1] bg-[#111] flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-white group-hover:text-black transition-all">
                        <Github className="w-6 h-6" />
                     </div>
@@ -205,7 +235,7 @@ export function Dashboard() {
                  </Link>
 
                  {/* Import via Local Files */}
-                 <Link to="/dashboard/new?mode=upload" className="group flex flex-col p-5 border border-white/[0.08] hover:border-white/[0.2] bg-[#050505] hover:bg-[#111] rounded-xl transition-all h-full">
+                 <Link to="/dashboard/import" className="group flex flex-col p-5 border border-white/[0.08] hover:border-white/[0.2] bg-[#050505] hover:bg-[#111] rounded-xl transition-all h-full">
                     <div className="w-12 h-12 rounded-full border border-white/[0.1] bg-[#111] flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-blue-500 group-hover:text-white group-hover:border-blue-500 transition-all text-gray-300">
                        <Upload className="w-6 h-6" />
                     </div>

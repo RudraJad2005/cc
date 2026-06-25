@@ -1,14 +1,49 @@
-import { Search, Clock, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
+import { Search, Clock, CheckCircle2, XCircle, Loader2, AlertCircle } from 'lucide-react';
 
 export function DashboardDeployments() {
-  const deployments = [
-    { id: 'dpl_98s7df98sd', project: 'collab-marketing', env: 'Production', branch: 'main', commit: 'Update hero section text', hash: 'a1b2c3d', status: 'Ready', duration: '45s', time: '2m ago' },
-    { id: 'dpl_12k3j123kl', project: 'docs-site', env: 'Preview', branch: 'feat/new-api', commit: 'Add authentication docs', hash: '8f92js9', status: 'Building', duration: '-', time: 'Just now' },
-    { id: 'dpl_m123m12km3', project: 'auth-service', env: 'Production', branch: 'main', commit: 'Fix OAuth token refresh bug', hash: 'c9d8e7f', status: 'Ready', duration: '1m 12s', time: '5h ago' },
-    { id: 'dpl_987asdf89s', project: 'dashboard-ui', env: 'Preview', branch: 'fix/sidebar-bug', commit: 'Revert sidebar changes', hash: '1a2b3c4', status: 'Error', duration: '22s', time: '1d ago' },
-    { id: 'dpl_k1j23k123j', project: 'collab-marketing', env: 'Preview', branch: 'staging', commit: 'Test new pricing grid', hash: '4d5e6f7', status: 'Ready', duration: '41s', time: '3d ago' },
-    { id: 'dpl_z9x8c7v6b5', project: 'auth-service', env: 'Production', branch: 'main', commit: 'Merge pull request #42', hash: '0p9o8i7', status: 'Ready', duration: '1m 05s', time: '1w ago' },
-  ];
+  const [deployments, setDeployments] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchDeployments() {
+      const { data } = await supabase
+        .from('deployments')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (data) setDeployments(data);
+      setLoading(false);
+    }
+    
+    fetchDeployments();
+
+    // Set up real-time subscription for live updates!
+    const channel = supabase.channel('realtime:deployments')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'deployments' }, () => {
+        fetchDeployments();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const formatTimeAgo = (dateString: string) => {
+    if (!dateString) return 'Just now';
+    const date = new Date(dateString);
+    const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+    
+    if (seconds < 60) return `${seconds}s ago`;
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    return `${days}d ago`;
+  };
 
   return (
     <div className="flex flex-col gap-8">
@@ -33,56 +68,81 @@ export function DashboardDeployments() {
          {/* Table Header (hidden on mobile) */}
          <div className="hidden md:grid grid-cols-12 gap-4 p-4 border-b border-white/[0.1] text-xs font-medium text-gray-500 bg-[#050505]">
             <div className="col-span-3">Project & Environment</div>
-            <div className="col-span-5">Commit</div>
+            <div className="col-span-5">Commit / Info</div>
             <div className="col-span-2">Status</div>
             <div className="col-span-2 text-right">Time</div>
          </div>
 
          {/* List Items */}
          <div className="flex flex-col divide-y divide-white/[0.05]">
-            {deployments.map((dep) => (
-               <div key={dep.id} className="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 items-center hover:bg-white/[0.02] transition-colors cursor-pointer group">
-                  
-                  {/* Project & Env */}
-                  <div className="col-span-1 md:col-span-3 flex flex-col gap-1">
-                     <div className="flex items-center gap-2">
-                        <span className="font-semibold text-white group-hover:text-blue-400 transition-colors">{dep.project}</span>
-                     </div>
-                     <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs text-gray-500">{dep.id}</span>
-                        <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${dep.env === 'Production' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-white/[0.05] text-gray-400 border border-white/[0.1]'}`}>
-                           {dep.env}
-                        </span>
-                     </div>
-                  </div>
+            {loading ? (
+              <div className="p-8 flex justify-center text-gray-500"><Loader2 className="w-6 h-6 animate-spin" /></div>
+            ) : deployments.length === 0 ? (
+              <div className="p-8 flex flex-col items-center justify-center text-gray-500">
+                <p>No deployments found.</p>
+              </div>
+            ) : (
+              deployments.map((dep) => (
+                <div key={dep.id} className="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 items-center hover:bg-white/[0.02] transition-colors cursor-pointer group" onClick={() => window.open(`https://${dep.project_name}-${dep.id}.52.172.229.65.nip.io/`, '_blank')}>
+                    
+                    {/* Project & Env */}
+                    <div className="col-span-1 md:col-span-3 flex flex-col gap-1">
+                      <div className="flex items-center gap-2">
+                          <span className="font-semibold text-white group-hover:text-blue-400 transition-colors">{dep.project_name}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                          <span className="font-mono text-xs text-gray-500">{dep.id.slice(0, 12)}...</span>
+                          <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20`}>
+                            Production
+                          </span>
+                      </div>
+                    </div>
 
-                  {/* Commit Details */}
-                  <div className="col-span-1 md:col-span-5 flex flex-col gap-1">
-                     <span className="text-sm text-gray-300 truncate">{dep.commit}</span>
-                     <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <span className="font-mono bg-white/[0.05] px-1 rounded">{dep.branch}</span>
-                        <span>•</span>
-                        <span className="font-mono">{dep.hash}</span>
-                     </div>
-                  </div>
+                    {/* Commit Details */}
+                    <div className="col-span-1 md:col-span-5 flex flex-col gap-1">
+                      <span className="text-sm text-gray-300 truncate">Manual ZIP Upload Deployment</span>
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                          <span className="font-mono bg-white/[0.05] px-1 rounded">main</span>
+                          <span>•</span>
+                          <span className="font-mono">{dep.commit_hash || 'manual-build'}</span>
+                      </div>
+                    </div>
 
-                  {/* Status */}
-                  <div className="col-span-1 md:col-span-2 flex items-center">
-                     {dep.status === 'Ready' && <span className="flex items-center gap-2 text-emerald-400 text-sm"><CheckCircle2 className="w-4 h-4" /> Ready</span>}
-                     {dep.status === 'Building' && <span className="flex items-center gap-2 text-amber-400 text-sm"><Loader2 className="w-4 h-4 animate-spin" /> Building</span>}
-                     {dep.status === 'Error' && <span className="flex items-center gap-2 text-red-400 text-sm"><XCircle className="w-4 h-4" /> Error</span>}
-                  </div>
+                    {/* Status */}
+                    <div className="col-span-1 md:col-span-2 flex items-center">
+                      {dep.status === 'Ready' && <span className="flex items-center gap-2 text-emerald-400 text-sm"><CheckCircle2 className="w-4 h-4" /> Ready</span>}
+                      {dep.status === 'Building' && <span className="flex items-center gap-2 text-blue-400 text-sm"><Loader2 className="w-4 h-4 animate-spin" /> Building</span>}
+                      {dep.status === 'Queued' && <span className="flex items-center gap-2 text-amber-400 text-sm"><AlertCircle className="w-4 h-4" /> Queued</span>}
+                      {dep.status === 'Error' && <span className="flex items-center gap-2 text-red-400 text-sm"><XCircle className="w-4 h-4" /> Error</span>}
+                    </div>
 
-                  {/* Time & Duration */}
-                  <div className="col-span-1 md:col-span-2 flex md:flex-col items-center md:items-end justify-between md:justify-center gap-1">
-                     <span className="text-sm text-gray-400">{dep.time}</span>
-                     <div className="flex items-center gap-1 text-xs text-gray-600">
-                        <Clock className="w-3 h-3" /> {dep.duration}
-                     </div>
-                  </div>
+                    {/* Time & Actions */}
+                    <div className="col-span-1 md:col-span-2 flex items-center justify-end gap-4">
+                      <div className="flex md:flex-col items-center md:items-end justify-between md:justify-center gap-1">
+                        <span className="text-sm text-gray-400">{formatTimeAgo(dep.created_at)}</span>
+                        <div className="flex items-center gap-1 text-xs text-gray-600">
+                            <Clock className="w-3 h-3" /> {dep.updated_at ? `${Math.floor((new Date(dep.updated_at).getTime() - new Date(dep.created_at).getTime()) / 1000)}s` : '-'}
+                        </div>
+                      </div>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (confirm('Are you sure you want to delete this deployment?')) {
+                            supabase.from('deployments').delete().eq('id', dep.id).then(() => {
+                              // Local state update or let real-time handle it
+                            });
+                          }
+                        }}
+                        className="p-2 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-md transition-colors"
+                        title="Delete Deployment"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                      </button>
+                    </div>
 
-               </div>
-            ))}
+                </div>
+              ))
+            )}
          </div>
       </div>
     </div>

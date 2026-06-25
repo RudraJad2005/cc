@@ -28,7 +28,12 @@ import { Startup } from './pages/Startup';
 import { DPA } from './pages/DPA';
 import { OSS } from './pages/OSS';
 import { SDK } from './pages/SDK';
+import { StorageSDK } from './pages/StorageSDK';
+import { AI } from './pages/AI';
+import { Observability } from './pages/Observability';
+import { Docs } from './pages/Docs';
 import { CICD } from './pages/CICD';
+import { Event } from './pages/Event';
 
 import { DashboardLayout } from './layouts/DashboardLayout';
 import { Dashboard } from './pages/Dashboard';
@@ -40,6 +45,7 @@ import { DashboardDeployments } from './pages/DashboardDeployments';
 import { DashboardTemplates } from './pages/DashboardTemplates';
 import { DashboardIntegrations } from './pages/DashboardIntegrations';
 import { DashboardNewProject } from './pages/DashboardNewProject';
+import { DashboardImportProject } from './pages/DashboardImportProject';
 import { DashboardStorage } from './pages/DashboardStorage';
 import { DashboardDatabase } from './pages/DashboardDatabase';
 import { DashboardAuth } from './pages/DashboardAuth';
@@ -113,7 +119,12 @@ export default function App() {
           <Route path="/dpa" element={<DPA />} />
           <Route path="/oss" element={<OSS />} />
           <Route path="/sdk" element={<SDK />} />
+          <Route path="/storage-sdk" element={<StorageSDK />} />
+          <Route path="/ai" element={<AI />} />
+          <Route path="/observability" element={<Observability />} />
           <Route path="/cicd" element={<CICD />} />
+          <Route path="/events" element={<Event />} />
+          <Route path="/docs" element={<Docs />} />
         </Route>
 
         <Route path="/dashboard" element={<DashboardLayout />}>
@@ -128,6 +139,7 @@ export default function App() {
           <Route path="integrations" element={<DashboardIntegrations />} />
           <Route path="settings" element={<Settings />} />
           <Route path="new" element={<DashboardNewProject />} />
+          <Route path="import" element={<DashboardImportProject />} />
           <Route path="backend" element={<DashboardProjects />} />
         </Route>
 
