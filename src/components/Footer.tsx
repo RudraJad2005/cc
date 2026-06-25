@@ -34,6 +34,8 @@ export function Footer() {
      gradientColors = "rgba(34,197,94,0.9) 48%, rgba(16,185,129,0.9) 52%"; // Emerald & Green
   } else if (location.pathname === '/docs') {
      gradientColors = "rgba(251,191,36,0.9) 48%, rgba(245,158,11,0.9) 52%"; // Gold & Amber
+  } else if (location.pathname === '/compute') {
+     gradientColors = "rgba(255,255,255,0.9) 48%, rgba(150,150,150,0.9) 52%"; // Silver/White
   }
 
 
@@ -67,15 +69,25 @@ export function Footer() {
                <div className="flex flex-col gap-6">
                   <h5 className="text-white font-semibold text-[14px]">Product</h5>
                   <div className="flex flex-col gap-4 text-[#888] text-[14px]">
+                     <Link to="/compute" className="hover:text-white transition-colors text-white font-medium">Compute</Link>
+                     <Link to="/ai" className="hover:text-white transition-colors text-white font-medium flex items-center gap-1">AI <span className="bg-white/10 px-1.5 rounded text-[10px] uppercase font-bold text-white">New</span></Link>
+                     <Link to="/observability" className="hover:text-white transition-colors text-white font-medium flex items-center gap-1">Observability <span className="bg-green-500/10 border border-green-500/20 px-1.5 rounded text-[10px] uppercase font-bold text-green-400">Beta</span></Link>
+                     <Link to="/cicd" className="hover:text-white transition-colors">CI/CD</Link>
                      <Link to="/features" className="hover:text-white transition-colors">Features</Link>
                      <Link to="/templates" className="hover:text-white transition-colors">Templates</Link>
                      <Link to="/integrations" className="hover:text-white transition-colors">Integrations</Link>
-                     <Link to="/cicd" className="hover:text-white transition-colors">CI/CD</Link>
-                     <Link to="/ai" className="hover:text-white transition-colors text-white font-medium flex items-center gap-1">AI <span className="bg-white/10 px-1.5 rounded text-[10px] uppercase font-bold text-white">New</span></Link>
-                     <Link to="/observability" className="hover:text-white transition-colors text-white font-medium flex items-center gap-1">Observability <span className="bg-green-500/10 border border-green-500/20 px-1.5 rounded text-[10px] uppercase font-bold text-green-400">Beta</span></Link>
-                     <Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link>
+                  </div>
+               </div>
+               
+               <div className="flex flex-col gap-6">
+                  <h5 className="text-white font-semibold text-[14px]">Resources</h5>
+                  <div className="flex flex-col gap-4 text-[#888] text-[14px]">
+                     <Link to="/docs" className="hover:text-white transition-colors">Documentation</Link>
+                     <Link to="/sdk" className="hover:text-white transition-colors">SDKs</Link>
+                     <Link to="/storage-sdk" className="hover:text-white transition-colors">Storage SDK</Link>
+                     <Link to="/oss" className="hover:text-white transition-colors">Open Source</Link>
+                     <Link to="/community" className="hover:text-white transition-colors">Community</Link>
                      <Link to="/changelog" className="hover:text-white transition-colors">Changelog</Link>
-                     <Link to="/security" className="hover:text-white transition-colors">Security</Link>
                   </div>
                </div>
                
@@ -83,32 +95,23 @@ export function Footer() {
                   <h5 className="text-white font-semibold text-[14px]">Company</h5>
                   <div className="flex flex-col gap-4 text-[#888] text-[14px]">
                      <Link to="/about" className="hover:text-white transition-colors">About</Link>
+                     <Link to="/enterprise" className="hover:text-white transition-colors">Enterprise</Link>
+                     <Link to="/startup" className="hover:text-white transition-colors">Startup</Link>
+                     <Link to="/customers" className="hover:text-white transition-colors">Customers</Link>
                      <Link to="/blog" className="hover:text-white transition-colors">Blog</Link>
                      <Link to="/careers" className="hover:text-white transition-colors">Careers</Link>
-                     <Link to="/customers" className="hover:text-white transition-colors">Customers</Link>
                      <Link to="/events" className="hover:text-white transition-colors">Events</Link>
                   </div>
                </div>
                
                <div className="flex flex-col gap-6">
-                  <h5 className="text-white font-semibold text-[14px]">Resources</h5>
+                  <h5 className="text-white font-semibold text-[14px]">Legal & Support</h5>
                   <div className="flex flex-col gap-4 text-[#888] text-[14px]">
-                     <Link to="/community" className="hover:text-white transition-colors">Community</Link>
+                     <Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link>
                      <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
-                     <Link to="/enterprise" className="hover:text-white transition-colors">Enterprise</Link>
-                     <Link to="/startup" className="hover:text-white transition-colors">Startup</Link>
+                     <Link to="/security" className="hover:text-white transition-colors">Security</Link>
                      <Link to="/dpa" className="hover:text-white transition-colors">DPA</Link>
                      <a href="#" className="hover:text-white transition-colors">Privacy</a>
-                  </div>
-               </div>
-               
-               <div className="flex flex-col gap-6">
-                  <h5 className="text-white font-semibold text-[14px]">Developers</h5>
-                  <div className="flex flex-col gap-4 text-[#888] text-[14px]">
-                     <Link to="/docs" className="hover:text-white transition-colors">Documentation</Link>
-                     <Link to="/oss" className="hover:text-white transition-colors">Open Source</Link>
-                     <Link to="/sdk" className="hover:text-white transition-colors">SDKs</Link>
-                     <Link to="/storage-sdk" className="hover:text-white transition-colors">Storage SDK</Link>
                   </div>
                </div>
             </div>

@@ -1,0 +1,33 @@
+{
+  "categories": [
+    {
+      "title": "Overview",
+      "items": [
+        { "id": "getting-started", "title": "Getting Started", "file": "getting-started.md" },
+        { "id": "authentication", "title": "Authentication", "file": "authentication.md" }
+      ]
+    },
+    {
+      "title": "Platform APIs",
+      "items": [
+        { "id": "projects", "title": "Projects", "file": "projects.md" },
+        { "id": "deployments", "title": "Deployments", "file": "deployments.md" },
+        { "id": "domains", "title": "Domains", "file": "domains.md" },
+        { "id": "env-vars", "title": "Environment Variables", "file": "env-vars.md" }
+      ]
+    },
+    {
+      "title": "Supabase Integration",
+      "items": [
+        { "id": "database", "title": "Database", "file": "database.md" },
+        { "id": "storage", "title": "Storage", "file": "storage.md" }
+      ]
+    },
+    {
+      "title": "Reference",
+      "items": [
+        { "id": "cli", "title": "CLI Reference", "file": "cli.md" }
+      ]
+    }
+  ]
+}
