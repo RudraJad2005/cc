@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Terminal, Code2, Globe2, ArrowRight, Zap, GitBranch, Search, Play, CornerDownLeft, Layers, Plus, Network, FileCode, Package, LayoutDashboard, Database, Lock, Box, Cpu, Sparkles, Bot, BrainCircuit, Shield, Share2, GitCommit, ArrowUpCircle, Monitor, Smartphone, Activity, Layout, ShieldCheck, Key, Server, MessageSquare, Check, ChevronRight, Cloud, Gauge } from 'lucide-react';
 import { SiNextdotjs, SiReact, SiNuxt, SiSvelte, SiVite, SiPython, SiNodedotjs, SiRust } from 'react-icons/si';
 import { SiGithub, SiGitlab, SiLinear, SiVercel, SiPostgresql } from 'react-icons/si';
@@ -12,6 +12,9 @@ const Crosshair = ({ className }: { className?: string }) => (
 );
 
 export function Home() {
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 1000], [0, 300]);
+
   return (
     <main className="w-full flex-1 flex flex-col bg-[#000] text-white selection:bg-cyan-500/30 selection:text-white font-sans">
       
@@ -20,127 +23,74 @@ export function Home() {
           {/* ═══════════════════════════════════════════════ */}
           {/* HERO SECTION                                    */}
           {/* ═══════════════════════════════════════════════ */}
-          <section className="bg-black pt-40 pb-0 relative overflow-hidden flex flex-col items-center w-full min-h-[90vh]">
+          <section className="bg-black pt-32 pb-0 relative overflow-hidden flex flex-col items-center w-full min-h-[90vh] lg:min-h-screen">
              
-             {/* Dot grid background */}
-             <div className="absolute inset-0 z-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
-             
-             {/* Soft center glow */}
-             <div className="absolute top-[25%] left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-white/[0.02] blur-[120px] rounded-full pointer-events-none z-0" />
+             {/* The Cinematic Clouds Background */}
+             <motion.div style={{ y }} className="absolute -inset-[20%] z-0 pointer-events-none">
+                <div className="sky-bg"></div>
+             </motion.div>
+             <div className="sky-grain"></div>
+             <div className="sky-vignette"></div>
 
-             <div className="max-w-[1200px] mx-auto px-6 lg:px-12 relative z-10 w-full flex flex-col lg:flex-row items-start justify-between flex-1">
+             <div className="max-w-[1000px] mx-auto px-6 lg:px-12 relative z-10 w-full flex flex-col items-center justify-center flex-1 text-center mt-12 lg:mt-24">
                 
-                {/* Left — Heading & CTAs */}
-                <div className="flex flex-col items-start text-left pt-16 lg:pt-24 z-20 max-w-[520px]">
-                   
-                   <motion.div 
-                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}
-                     className="text-[13px] font-mono text-white/40 uppercase tracking-[0.2em] mb-8"
-                   >
-                      Collab Code
-                   </motion.div>
-
-                   <motion.h1 
-                     initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }}
-                     className="text-6xl md:text-7xl lg:text-[5.5rem] font-bold tracking-[-0.04em] text-white leading-[1] mb-8"
-                   >
-                      Ship code,{' '}
-                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white/60 to-white bg-[length:200%_100%] animate-[shimmer_3s_ease-in-out_infinite]">
-                        together.
-                      </span>
-                   </motion.h1>
-
-                   <motion.p 
-                     initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.25 }}
-                     className="text-[#71717a] text-lg leading-relaxed mb-12 max-w-[440px]"
-                   >
-                      The development platform for teams that move fast. Real-time collaboration, instant environments, zero config.
-                   </motion.p>
-
-                   <motion.div 
-                     initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }}
-                     className="flex items-center gap-3"
-                   >
-                      <button className="px-5 py-2.5 bg-white text-black rounded-full text-sm font-medium hover:bg-gray-200 transition-colors">
-                         Start Building
-                      </button>
-                      <button className="px-5 py-2.5 border border-white/15 text-white/80 rounded-full text-sm font-medium hover:bg-white/5 hover:text-white transition-all">
-                         Request Demo
-                      </button>
-                   </motion.div>
-                </div>
-
-                {/* Center — Animated Logo Mark */}
                 <motion.div 
-                  initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.5, delay: 0.3, ease: "easeOut" }}
-                  className="absolute left-1/2 top-[45%] -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none"
+                  initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-8 cursor-pointer hover:bg-white/10 transition-colors"
                 >
-                   {/* Outer glow */}
-                   <div className="absolute -inset-16 bg-white/[0.03] blur-[80px] rounded-full" />
-                   
-                   {/* Interlocking brackets — representing collaboration */}
-                   <svg width="180" height="200" viewBox="0 0 180 200" className="relative z-10">
-                      {/* Left bracket */}
-                      <motion.path 
-                        d="M 75 30 L 40 55 L 40 145 L 75 170" 
-                        stroke="rgba(255,255,255,0.12)" strokeWidth="2" fill="none" strokeLinecap="round"
-                        initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.5, delay: 0.6 }}
-                      />
-                      {/* Right bracket */}
-                      <motion.path 
-                        d="M 105 30 L 140 55 L 140 145 L 105 170" 
-                        stroke="rgba(255,255,255,0.12)" strokeWidth="2" fill="none" strokeLinecap="round"
-                        initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.5, delay: 0.9 }}
-                      />
-                      {/* Center connecting line */}
-                      <motion.line 
-                        x1="60" y1="100" x2="120" y2="100" 
-                        stroke="rgba(255,255,255,0.08)" strokeWidth="1.5" strokeDasharray="4 6"
-                        initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, delay: 1.4 }}
-                      />
-                      {/* Left node */}
-                      <motion.circle cx="55" cy="100" r="3" fill="rgba(255,255,255,0.15)"
-                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2 }}
-                      />
-                      {/* Right node */}
-                      <motion.circle cx="125" cy="100" r="3" fill="rgba(255,255,255,0.15)"
-                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.2 }}
-                      />
-                   </svg>
+                   <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                   <span className="text-xs font-medium text-white/80">CollabCode 2.0 is now live</span>
+                   <ArrowRight className="w-3 h-3 text-white/50 ml-1" />
                 </motion.div>
 
-                {/* Right — Descriptor Labels */}
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.6 }}
-                  className="hidden lg:flex flex-col items-end text-right gap-4 pt-16 lg:pt-24 z-20"
+                <motion.h1 
+                  initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }}
+                  className="text-5xl md:text-7xl lg:text-[6.5rem] font-bold tracking-tighter text-white leading-[1.05] mb-8"
                 >
-                   <span className="text-[13px] font-mono text-white/40 uppercase tracking-[0.15em]">Real-Time Editing</span>
-                   <span className="text-[13px] font-mono text-white/40 uppercase tracking-[0.15em]">Instant Environments</span>
-                   <span className="text-[13px] font-mono text-white/40 uppercase tracking-[0.15em]">Built for Teams</span>
-                </motion.div>
+                   Ship code,{' '}
+                   <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-white/80 to-white/40">
+                     together.
+                   </span>
+                </motion.h1>
 
+                <motion.p 
+                  initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.25 }}
+                  className="text-[#9ca3af] text-lg md:text-xl leading-relaxed mb-10 max-w-[600px]"
+                >
+                   The development platform for teams that move fast. Real-time collaboration, instant environments, and zero configuration.
+                </motion.p>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }}
+                  className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
+                >
+                   <button className="w-full sm:w-auto px-8 py-3.5 bg-white text-black rounded-full text-sm font-bold hover:scale-105 transition-transform shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+                      Start Building
+                   </button>
+                   <button className="w-full sm:w-auto px-8 py-3.5 border border-white/10 bg-black/40 backdrop-blur-md text-white rounded-full text-sm font-medium hover:bg-white/5 transition-colors">
+                      Request Demo
+                   </button>
+                </motion.div>
              </div>
 
              {/* Bottom stats row */}
              <motion.div 
-               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 1 }}
-               className="w-full max-w-[1200px] mx-auto px-6 lg:px-12 pb-16 pt-20 flex items-center justify-between z-10"
+               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.8 }}
+               className="w-full max-w-[1000px] mx-auto px-6 lg:px-12 pb-16 pt-24 flex flex-wrap items-center justify-center gap-12 lg:gap-24 z-10"
              >
-                <div className="flex items-center gap-16">
-                   <div>
-                      <div className="text-2xl font-bold text-white tracking-tight">50K+</div>
-                      <div className="text-[11px] font-mono text-white/30 uppercase tracking-wider mt-1">Developers</div>
-                   </div>
-                   <div className="w-px h-8 bg-white/10" />
-                   <div>
-                      <div className="text-2xl font-bold text-white tracking-tight">99.9%</div>
-                      <div className="text-[11px] font-mono text-white/30 uppercase tracking-wider mt-1">Uptime</div>
-                   </div>
-                   <div className="w-px h-8 bg-white/10" />
-                   <div>
-                      <div className="text-2xl font-bold text-white tracking-tight">&lt;50ms</div>
-                      <div className="text-[11px] font-mono text-white/30 uppercase tracking-wider mt-1">Latency</div>
-                   </div>
+                <div className="flex flex-col items-center text-center">
+                   <div className="text-3xl font-bold text-white tracking-tight">50K+</div>
+                   <div className="text-[11px] font-mono text-white/40 uppercase tracking-widest mt-2">Developers</div>
+                </div>
+                <div className="hidden sm:block w-px h-10 bg-white/10" />
+                <div className="flex flex-col items-center text-center">
+                   <div className="text-3xl font-bold text-white tracking-tight">99.9%</div>
+                   <div className="text-[11px] font-mono text-white/40 uppercase tracking-widest mt-2">Uptime</div>
+                </div>
+                <div className="hidden sm:block w-px h-10 bg-white/10" />
+                <div className="flex flex-col items-center text-center">
+                   <div className="text-3xl font-bold text-white tracking-tight">&lt;50ms</div>
+                   <div className="text-[11px] font-mono text-white/40 uppercase tracking-widest mt-2">Latency</div>
                 </div>
              </motion.div>
 
