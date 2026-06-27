@@ -245,7 +245,7 @@ export function DashboardDatabase() {
 
   if (!activeInstance || isAddingNew) {
     return (
-      <div className="flex flex-col gap-6 h-full pb-20 items-center justify-center max-w-xl mx-auto">
+      <div className="flex flex-col gap-6 h-full pb-20 items-center justify-center max-w-xl mx-auto px-4 sm:px-6">
         <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-2">
            <Server className="w-8 h-8 text-indigo-400" />
         </div>
@@ -266,7 +266,7 @@ export function DashboardDatabase() {
            <p className="text-blue-400/80">Using your <code>service_role</code> secret key allows this dashboard to bypass RLS so you can query all your tables.</p>
         </div>
 
-        <form onSubmit={handleConnect} className="w-full bg-[#050505] border border-white/[0.1] rounded-xl p-8 flex flex-col gap-6">
+        <form onSubmit={handleConnect} className="w-full bg-[#050505] border border-white/[0.1] rounded-xl p-5 sm:p-8 flex flex-col gap-6">
            <div className="flex flex-col gap-2">
               <label className="text-sm font-medium text-white">Connection Name</label>
               <input 
@@ -328,7 +328,7 @@ export function DashboardDatabase() {
   return (
     <div className="flex flex-1 h-screen overflow-hidden bg-[#000]">
       {/* Inner Sidebar */}
-      <aside className="w-64 border-r border-white/[0.08] bg-[#020202] flex flex-col shrink-0">
+      <aside className="hidden lg:flex w-64 border-r border-white/[0.08] bg-[#020202] flex-col shrink-0">
         <div className="p-3 border-b border-white/[0.08]">
            <button onClick={() => window.location.href = '/dashboard/backend'} className="flex items-center gap-2 text-xs font-medium text-gray-400 hover:text-white transition-colors">
               <div className="w-5 h-5 rounded flex items-center justify-center bg-white/[0.05]">
@@ -442,7 +442,7 @@ export function DashboardDatabase() {
          </div>
 
          {/* Toolbar */}
-         <div className="h-12 border-b border-white/[0.08] flex items-center justify-between px-4 bg-[#050505] shrink-0">
+         <div className="h-auto min-h-[48px] border-b border-white/[0.08] flex flex-wrap items-center justify-between gap-2 px-3 sm:px-4 py-2 bg-[#050505] shrink-0">
             <div className="flex items-center gap-4">
                <div className="relative flex items-center">
                   <Search className="w-3.5 h-3.5 text-gray-400 absolute left-2" />

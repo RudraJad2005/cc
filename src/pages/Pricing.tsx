@@ -25,7 +25,7 @@ export function Pricing() {
   return (
     <main className="w-full flex-1 flex flex-col bg-[#000] text-white selection:bg-white selection:text-black font-sans">
        {/* Hero Section */}
-       <section className="flex flex-col items-center justify-center p-8 md:p-12 lg:p-20 xl:p-[100px] text-center border-b border-white/[0.1] relative overflow-hidden min-h-[40vh] bg-[#000]">
+       <section className="flex flex-col items-center justify-center p-6 sm:p-8 md:p-12 lg:p-20 xl:p-[100px] text-center border-b border-white/[0.1] relative overflow-hidden min-h-[40vh] bg-[#000]">
           {/* Strict Grid Background */}
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none [mask-image:linear-gradient(to_bottom,black_20%,transparent_100%)]" />
           
@@ -54,7 +54,7 @@ export function Pricing() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-3 border-b border-white/[0.1] relative max-w-[1400px] mx-auto w-full"
+          className="grid grid-cols-1 lg:grid-cols-3 border-b border-white/[0.1] relative max-w-[1400px] mx-auto w-full"
        >
           <Crosshair className="-top-1.5 -left-1.5" />
           <Crosshair className="-top-1.5 -right-1.5" />
@@ -119,7 +119,7 @@ export function Pricing() {
        </motion.section>
 
        {/* Enterprise CTA */}
-       <section className="flex flex-col md:flex-row items-center justify-between p-8 md:p-12 lg:p-20 max-w-[1400px] mx-auto w-full border-b border-white/[0.1] relative">
+       <section className="flex flex-col md:flex-row items-center justify-between p-6 sm:p-8 md:p-12 lg:p-20 max-w-[1400px] mx-auto w-full border-b border-white/[0.1] relative">
           <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.02)_0,rgba(255,255,255,0.02)_1px,transparent_1px,transparent_10px)] pointer-events-none" />
           <div className="relative z-10 mb-8 md:mb-0">
              <h2 className="text-3xl font-semibold tracking-tighter text-white mb-2">Need a custom plan?</h2>
@@ -157,8 +157,8 @@ function PricingCard({
   return (
     <motion.div 
       variants={fadeUp}
-      className={`p-8 md:p-12 flex flex-col relative
-        ${borderRight ? 'md:border-r border-b md:border-b-0 border-white/[0.1]' : 'border-b md:border-b-0 border-white/[0.1]'}
+      className={`p-6 sm:p-8 md:p-12 flex flex-col relative
+        ${borderRight ? 'lg:border-r border-b lg:border-b-0 border-white/[0.1]' : 'border-b lg:border-b-0 border-white/[0.1]'}
         ${active ? 'bg-white text-black' : 'bg-[#000] text-white hover:bg-[#050505]'}
         transition-colors duration-300
       `}

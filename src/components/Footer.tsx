@@ -8,6 +8,8 @@ export function Footer() {
   let gradientColors = "rgba(162,178,255,0.9) 48%, rgba(215,202,255,0.9) 52%"; // Default (Integrations)
   if (location.pathname === '/') {
      gradientColors = "rgba(79,70,229,0.9) 48%, rgba(6,182,212,0.9) 52%"; // Indigo & Neon Cyan
+  } else if (location.pathname === '/infrastructure') {
+     gradientColors = "rgba(52,211,153,0.9) 48%, rgba(34,211,238,0.9) 52%"; // Emerald & Cyan
   } else if (location.pathname === '/features') {
      gradientColors = "rgba(34,211,238,0.9) 48%, rgba(196,181,253,0.9) 52%"; // Cyan & Soft Purple
   } else if (location.pathname === '/templates') {
@@ -43,7 +45,7 @@ export function Footer() {
     <footer ref={containerRef} className="w-full relative overflow-hidden bg-[#050505] border-t border-white/[0.1] font-sans">
       <div className="w-full relative">
          
-         <div className="p-8 md:p-12 lg:p-20 xl:p-24 flex flex-col lg:flex-row justify-between gap-16 relative z-10 w-full">
+         <div className="p-6 md:p-12 lg:p-20 xl:p-24 flex flex-col lg:flex-row justify-between gap-10 md:gap-16 relative z-10 w-full">
             
             {/* Left side: Branding */}
             <div className="flex flex-col max-w-sm lg:w-1/3">
@@ -65,10 +67,11 @@ export function Footer() {
             </div>
             
             {/* Right side: Strict Grid Links */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-x-12 gap-y-12 lg:w-2/3 lg:justify-items-end">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 md:gap-x-12 gap-y-8 md:gap-y-12 lg:w-2/3 lg:justify-items-end">
                <div className="flex flex-col gap-6">
                   <h5 className="text-white font-semibold text-[14px]">Product</h5>
                   <div className="flex flex-col gap-4 text-[#888] text-[14px]">
+                     <Link to="/infrastructure" className="hover:text-white transition-colors text-white font-medium flex items-center gap-1">Infrastructure <span className="bg-emerald-500/10 border border-emerald-500/20 px-1.5 rounded text-[10px] uppercase font-bold text-emerald-400">New</span></Link>
                      <Link to="/compute" className="hover:text-white transition-colors text-white font-medium">Compute</Link>
                      <Link to="/ai" className="hover:text-white transition-colors text-white font-medium flex items-center gap-1">AI <span className="bg-white/10 px-1.5 rounded text-[10px] uppercase font-bold text-white">New</span></Link>
                      <Link to="/observability" className="hover:text-white transition-colors text-white font-medium flex items-center gap-1">Observability <span className="bg-green-500/10 border border-green-500/20 px-1.5 rounded text-[10px] uppercase font-bold text-green-400">Beta</span></Link>
@@ -118,13 +121,13 @@ export function Footer() {
          </div>
          
          {/* Massive Background Typography Watermark with LangChain-style Outline Shine */}
-         <div className="relative w-full h-[120px] md:h-[180px] lg:h-[220px] overflow-hidden pointer-events-none flex items-end justify-center pb-8 lg:pb-16">
+         <div className="relative w-full h-[80px] sm:h-[120px] md:h-[180px] lg:h-[220px] overflow-hidden pointer-events-none flex items-end justify-center pb-4 sm:pb-8 lg:pb-16">
             
             {/* Outline base (LangChain style) */}
             <div 
-               className="absolute text-[13vw] font-bold tracking-tighter leading-none select-none translate-y-[20%] w-full text-center flex justify-center"
+               className="absolute text-[15vw] sm:text-[13vw] font-bold tracking-tighter leading-none select-none translate-y-[20%] w-full text-center flex justify-center"
                style={{ 
-                  WebkitTextStroke: "2px rgba(255,255,255,0.1)",
+                  WebkitTextStroke: "1px rgba(255,255,255,0.1)",
                   color: "transparent",
                }}
             >
@@ -133,14 +136,14 @@ export function Footer() {
 
             {/* Shine overlay (infinite loop) */}
             <div 
-               className="absolute text-[13vw] font-bold tracking-tighter leading-none select-none translate-y-[20%] w-full text-center flex justify-center animate-[shine_5s_linear_infinite]"
+               className="absolute text-[15vw] sm:text-[13vw] font-bold tracking-tighter leading-none select-none translate-y-[20%] w-full text-center flex justify-center animate-[shine_5s_linear_infinite]"
                style={{ 
                   color: "transparent",
                   backgroundImage: `linear-gradient(110deg, transparent 40%, ${gradientColors}, transparent 60%)`,
                   backgroundSize: "200% auto",
                   backgroundClip: "text",
                   WebkitBackgroundClip: "text",
-                  WebkitTextStroke: "2px transparent",
+                  WebkitTextStroke: "1px transparent",
                }}
             >
                CollabCode

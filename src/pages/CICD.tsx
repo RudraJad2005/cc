@@ -12,7 +12,7 @@ export function CICD() {
     <main className="w-full flex-1 flex flex-col bg-black text-white selection:bg-blue-500/30 selection:text-white font-sans">
       
       {/* Top Hero Section */}
-      <section className="pt-40 pb-32 flex flex-col items-center justify-center relative border-b border-white/[0.05]">
+      <section className="pt-24 md:pt-40 pb-16 md:pb-32 flex flex-col items-center justify-center relative border-b border-white/[0.05]">
         {/* Subtle grid background */}
         <div className="absolute inset-0 z-0 pointer-events-none opacity-20" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
         
@@ -25,10 +25,10 @@ export function CICD() {
             <div className="px-4 py-1.5 rounded-full bg-[#111] text-[#888] border border-white/10 text-sm font-medium">Share</div>
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-bold tracking-tight text-white mb-6 leading-tight">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6 leading-tight">
             A deployment for every idea.
           </h1>
-          <p className="text-xl text-[#888] leading-relaxed mb-10 max-w-[600px]">
+          <p className="text-base md:text-xl text-[#888] leading-relaxed mb-10 max-w-[600px]">
             Traditional deployment tools weren't built for modern development. Get the platform that has teams shipping faster with higher quality.
           </p>
           
@@ -44,7 +44,7 @@ export function CICD() {
       </section>
 
       {/* Interactive Timeline Section */}
-      <section ref={containerRef} className="relative w-full max-w-[1200px] mx-auto pb-40">
+      <section ref={containerRef} className="relative w-full max-w-[1200px] mx-auto px-4 md:px-0 pb-20 md:pb-40">
         
         {/* Central Line Structure */}
         <div className="absolute left-1/2 top-0 bottom-0 w-[2px] -translate-x-1/2 hidden md:block z-0" style={{ maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)' }}>
@@ -92,7 +92,7 @@ export function CICD() {
                 </div>
                 <div className="p-4">
                   <p className="text-sm text-[#ccc] mb-4">The latest updates on your project. <span className="text-blue-400 cursor-pointer hover:underline">Learn more</span></p>
-                  <table className="w-full text-left text-sm">
+                  <div className="overflow-x-auto"><table className="w-full text-left text-sm min-w-[400px]">
                     <thead>
                       <tr className="text-[#666] border-b border-white/5">
                         <th className="pb-2 font-medium">Name</th>
@@ -115,7 +115,7 @@ export function CICD() {
                         <td className="py-3"><span className="flex items-center gap-1 text-[#666]"><MessageSquare className="w-4 h-4" /> Comment</span></td>
                       </tr>
                     </tbody>
-                  </table>
+                  </table></div>
                 </div>
               </div>
             </div>
@@ -270,7 +270,7 @@ export function CICD() {
       {/* Bottom CTA Split */}
       <section className="w-full flex flex-col md:flex-row min-h-[400px]">
          {/* Left Green Block */}
-         <div className="w-full md:w-1/2 bg-[#22c55e] p-12 md:p-20 flex flex-col justify-center">
+         <div className="w-full md:w-1/2 bg-[#22c55e] p-8 md:p-12 lg:p-20 flex flex-col justify-center">
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6 leading-tight max-w-lg">
               Scale with<br/>confidence.
             </h2>
@@ -283,7 +283,7 @@ export function CICD() {
          </div>
 
          {/* Right Purple Block */}
-         <div className="w-full md:w-1/2 bg-[#8b5cf6] p-12 md:p-20 flex flex-col justify-center">
+         <div className="w-full md:w-1/2 bg-[#8b5cf6] p-8 md:p-12 lg:p-20 flex flex-col justify-center">
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-6 leading-tight max-w-lg">
               Start building<br/>for free.
             </h2>

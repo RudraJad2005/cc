@@ -45,7 +45,7 @@ export function Home() {
 
                 <motion.h1 
                   initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.1 }}
-                  className="text-5xl md:text-7xl lg:text-[6.5rem] font-bold tracking-tighter text-white leading-[1.05] mb-8"
+                  className="text-4xl sm:text-5xl md:text-7xl lg:text-[6.5rem] font-bold tracking-tighter text-white leading-[1.05] mb-8"
                 >
                    Ship code,{' '}
                    <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-white/80 to-white/40">
@@ -76,7 +76,7 @@ export function Home() {
              {/* Bottom stats row */}
              <motion.div 
                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.8 }}
-               className="w-full max-w-[1000px] mx-auto px-6 lg:px-12 pb-16 pt-24 flex flex-wrap items-center justify-center gap-12 lg:gap-24 z-10"
+               className="w-full max-w-[1000px] mx-auto px-6 lg:px-12 pb-16 pt-16 sm:pt-24 flex flex-wrap items-center justify-center gap-8 sm:gap-12 lg:gap-24 z-10"
              >
                 <div className="flex flex-col items-center text-center">
                    <div className="text-3xl font-bold text-white tracking-tight">50K+</div>
@@ -107,7 +107,7 @@ export function Home() {
                    <Crosshair className="-top-1.5 -left-1.5" />
                    <Crosshair className="-top-1.5 -right-1.5" />
                    <p className="text-center text-xs text-[#666] font-mono uppercase tracking-widest mb-12">Powering the best engineering teams</p>
-                   <div className="flex flex-wrap items-center justify-center gap-x-16 gap-y-10 px-10 opacity-60 text-white">
+                   <div className="flex flex-wrap items-center justify-center gap-x-8 md:gap-x-16 gap-y-8 md:gap-y-10 px-6 md:px-10 opacity-60 text-white">
                       <span className="text-xl font-bold tracking-tighter hover:opacity-100 hover:text-white transition-opacity cursor-pointer">▲ Vercel</span>
                       <span className="text-xl font-serif italic hover:opacity-100 hover:text-white transition-opacity cursor-pointer">Retool</span>
                       <span className="text-xl font-mono tracking-tight hover:opacity-100 hover:text-white transition-opacity cursor-pointer">Arc</span>
@@ -128,7 +128,7 @@ export function Home() {
                    
                    <p className="text-center text-xs text-[#888] font-mono uppercase tracking-widest mb-12 relative z-20">Works with your entire stack</p>
                    
-                   <div className="flex items-center justify-center gap-12 lg:gap-20 opacity-80 overflow-hidden relative z-20 whitespace-nowrap">
+                   <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 md:gap-12 lg:gap-20 opacity-80 overflow-hidden relative z-20">
                       {/* Flex row serving as a static marquee representation */}
                       <SiNextdotjs className="w-10 h-10 text-white hover:text-white hover:scale-110 transition-all cursor-pointer" />
                       <SiReact className="w-10 h-10 text-[#61DAFB] hover:scale-110 transition-all cursor-pointer" />
@@ -144,7 +144,7 @@ export function Home() {
                 {/* ═══════════════════════════════════════════ */}
                 {/* NEW SECTION: UNIFIED ARCHITECTURE          */}
                 {/* ═══════════════════════════════════════════ */}
-                <section className="border-b border-white/[0.1] py-24 md:py-32 flex flex-col items-center bg-[#000]">
+                <section className="border-b border-white/[0.1] py-16 md:py-32 flex flex-col items-center bg-[#000]">
                    <div className="text-center px-6 max-w-3xl mb-24 relative z-20">
                       <h2 className="text-3xl md:text-5xl font-bold tracking-tighter leading-tight mb-6">
                          Everything connects. Seamlessly.
@@ -155,7 +155,7 @@ export function Home() {
                    </div>
 
                    {/* The Connection Diagram */}
-                   <div className="relative w-full max-w-[896px] h-[400px]">
+                   <div className="relative w-full max-w-[896px] h-[400px] hidden md:block">
                       {/* Source Code Nodes (Left) */}
                       <div className="absolute left-0 top-[60px] w-12 h-12 rounded-full border border-white/10 bg-black flex items-center justify-center z-10 shadow-[0_0_20px_rgba(255,255,255,0.15)]">
                          <SiGithub className="w-6 h-6 text-white" />
@@ -207,7 +207,7 @@ export function Home() {
                    
                    {/* Left Sticky Column */}
                    <div className="lg:col-span-4 relative border-b lg:border-b-0 lg:border-r border-white/[0.1]">
-                      <div className="lg:sticky lg:top-32 h-auto p-12 md:p-20 flex flex-col justify-start">
+                      <div className="lg:sticky lg:top-32 h-auto p-6 sm:p-12 md:p-20 flex flex-col justify-start">
                          <div className="flex items-center gap-3 mb-6">
                             <Sparkles className="w-4 h-4 text-[#888]" />
                             <span className="text-[#888] font-mono text-xs font-bold tracking-widest">The AI Cloud</span>
@@ -222,7 +222,7 @@ export function Home() {
                    <div className="lg:col-span-8 flex flex-col">
                       
                       {/* Block 1: AI Gateway */}
-                      <div className="p-12 md:p-20 border-b border-white/[0.1] bg-[#000] relative overflow-hidden flex flex-col items-start min-h-[600px]">
+                      <div className="p-6 sm:p-8 md:p-12 lg:p-20 border-b border-white/[0.1] bg-[#000] relative overflow-hidden flex flex-col items-start min-h-[400px] md:min-h-[600px]">
                          <div className="w-full text-left mb-16 relative z-10">
                             <h3 className="text-2xl font-medium text-[#888] tracking-tight mb-6 max-w-lg leading-relaxed">
                                <strong className="font-bold text-white">AI Gateway.</strong> Switch between AI models without needing to manage API keys, rate limits, or provider accounts.
@@ -231,7 +231,7 @@ export function Home() {
                          </div>
                          
                          {/* Semi-Circle SVG Diagram */}
-                         <div className="w-full flex justify-center mt-auto">
+                         <div className="w-full flex justify-center mt-auto hidden sm:flex">
                             <div className="relative w-[500px] h-[250px] shrink-0 pointer-events-none">
                                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 500 250">
                                   {/* Track lines */}
@@ -262,8 +262,8 @@ export function Home() {
                       </div>
 
                       {/* Block 2: Fluid Compute */}
-                      <div className="p-12 md:p-20 border-b lg:border-b-0 border-white/[0.1] bg-[#000] flex flex-col justify-center min-h-[400px]">
-                         <div className="flex items-start justify-between">
+                      <div className="p-6 sm:p-8 md:p-12 lg:p-20 border-b lg:border-b-0 border-white/[0.1] bg-[#000] flex flex-col justify-center min-h-[300px] md:min-h-[400px]">
+                         <div className="flex flex-col sm:flex-row items-start justify-between gap-6">
                             <h3 className="text-2xl font-medium text-white tracking-tight max-w-sm leading-tight">
                                <strong className="font-bold text-white">Fluid Compute.</strong> <span className="text-[#888]">Framework-defined compute platform designed for AI workloads.</span>
                             </h3>
@@ -282,7 +282,7 @@ export function Home() {
                    <Crosshair className="-top-1.5 -right-1.5" />
 
                    {/* Giant SDK Header */}
-                   <div className="col-span-1 lg:col-span-12 p-12 md:p-32 flex flex-col lg:flex-row lg:items-center justify-between border-b border-white/[0.1]">
+                   <div className="col-span-1 lg:col-span-12 p-6 sm:p-8 md:p-16 lg:p-32 flex flex-col lg:flex-row lg:items-center justify-between border-b border-white/[0.1]">
                       <div className="max-w-xl mb-12 lg:mb-0">
                          <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-6">
                             Build with our <span className="inline-block border border-white/20 rounded px-2 py-0.5 text-sm align-middle tracking-widest font-mono mx-1">AI SDK</span> today.
@@ -291,14 +291,14 @@ export function Home() {
                       </div>
                       
                       {/* npm pill */}
-                      <div className="flex items-center bg-white rounded-full px-6 py-4 shadow-[0_0_40px_rgba(255,255,255,0.15)] max-w-fit">
-                         <span className="font-mono text-black font-bold text-lg mr-8">$ npm i ai</span>
+                      <div className="flex items-center bg-white rounded-full px-4 sm:px-6 py-3 sm:py-4 shadow-[0_0_40px_rgba(255,255,255,0.15)] max-w-fit w-full sm:w-auto overflow-hidden">
+                         <span className="font-mono text-black font-bold text-sm sm:text-lg mr-4 sm:mr-8 truncate">$ npm i ai</span>
                          <svg className="w-5 h-5 text-[#888] cursor-pointer hover:text-black transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
                       </div>
                    </div>
 
                    {/* Split Content Below */}
-                   <div className="col-span-1 lg:col-span-6 p-12 md:p-24 lg:border-r border-b lg:border-b-0 border-white/[0.1] flex flex-col justify-between min-h-[400px]">
+                   <div className="col-span-1 lg:col-span-6 p-6 sm:p-8 md:p-12 lg:p-24 lg:border-r border-b lg:border-b-0 border-white/[0.1] flex flex-col justify-between min-h-[300px] md:min-h-[400px]">
                       <p className="text-xl md:text-2xl text-[#888] leading-relaxed font-medium tracking-tight mb-12">
                          <span className="text-white">"</span>In the age of AI, getting your product into the market needs to be incredibly fast. We were able to launch Director.ai quickly thanks to Collab Code's primitives like functions, Fluid Compute, AI SDK, and Observability. Launch day was smooth thanks to Collab Code.<span className="text-white">"</span>
                       </p>
@@ -310,9 +310,9 @@ export function Home() {
                       </div>
                    </div>
                    
-                   <div className="col-span-1 lg:col-span-6 p-12 md:p-24 flex flex-col justify-center min-h-[400px]">
+                   <div className="col-span-1 lg:col-span-6 p-6 sm:p-8 md:p-12 lg:p-24 flex flex-col justify-center min-h-[300px] md:min-h-[400px]">
                       <h3 className="text-4xl md:text-[3.5rem] font-bold tracking-tighter text-white mb-6 leading-tight">Security by default.</h3>
-                      <div className="grid grid-cols-2 gap-12 mt-8">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-12 mt-8">
                          <div>
                             <div className="text-white font-medium mb-2 flex items-center gap-2">Global Defense <ArrowRight className="w-4 h-4 text-[#444]" /></div>
                             <p className="text-[#666] text-sm">DDoS mitigation and WAF built into every deployment.</p>
@@ -334,7 +334,7 @@ export function Home() {
                    
                    {/* Left Sticky Column */}
                    <div className="lg:col-span-4 relative border-b lg:border-b-0 lg:border-r border-white/[0.1]">
-                      <div className="lg:sticky lg:top-32 h-auto p-12 md:p-20 flex flex-col justify-start">
+                      <div className="lg:sticky lg:top-32 h-auto p-6 sm:p-12 md:p-20 flex flex-col justify-start">
                          <h2 className="text-4xl md:text-5xl font-bold tracking-tighter leading-[1.1] text-white">
                             Introducing the latest Enterprise tools to power your workflow.
                          </h2>
@@ -348,7 +348,7 @@ export function Home() {
                    <div className="lg:col-span-8 flex flex-col">
                       
                       {/* Block 1: Secure Compute */}
-                      <div className="p-12 md:p-20 border-b border-white/[0.1] bg-[#000] relative overflow-hidden flex flex-col min-h-[600px]">
+                      <div className="p-6 sm:p-8 md:p-12 lg:p-20 border-b border-white/[0.1] bg-[#000] relative overflow-hidden flex flex-col min-h-[400px] md:min-h-[600px]">
                          <div className="flex items-center gap-2 text-[#888] text-xs font-mono tracking-widest mb-4">
                             <Shield className="w-4 h-4" />
                             <span>Secure Compute</span>
@@ -358,9 +358,9 @@ export function Home() {
                          </h3>
                          
                           {/* Diagram Mockup */}
-                          <div className="w-full max-w-2xl mx-auto flex items-center justify-center relative mt-auto border border-white/10 rounded-xl p-8 bg-[#050505] shadow-2xl overflow-hidden">
+                          <div className="w-full max-w-2xl mx-auto flex items-center justify-center relative mt-auto border border-white/10 rounded-xl p-4 md:p-8 bg-[#050505] shadow-2xl overflow-hidden">
                              <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:16px_16px]" />
-                             <div className="relative z-10 w-full flex items-center justify-center gap-0">
+                             <div className="relative z-10 w-full flex items-center justify-center gap-0 overflow-x-auto">
                                 {/* Left Side */}
                                 <div className="flex items-center gap-4 shrink-0">
                                    <div className="bg-[#111] border border-white/10 rounded-md px-4 py-2 flex items-center gap-3">
@@ -374,7 +374,7 @@ export function Home() {
                                 </div>
 
                                 {/* Branching SVG Paths (Fixed size) */}
-                                <div className="relative w-[150px] h-[160px] shrink-0 pointer-events-none">
+                                <div className="relative w-[150px] h-[160px] shrink-0 pointer-events-none hidden sm:block">
                                    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 150 160">
                                       <path d="M 0 80 C 50 80, 50 20, 150 20" stroke="#E24329" strokeWidth="2" fill="none" />
                                       <path d="M 0 80 C 50 80, 50 80, 150 80" stroke="#10b981" strokeWidth="2" fill="none" />
@@ -383,7 +383,7 @@ export function Home() {
                                 </div>
 
                                 {/* Output Nodes */}
-                                <div className="flex flex-col justify-between h-[160px] z-20 shrink-0">
+                                <div className="flex flex-col justify-between h-[160px] z-20 shrink-0 hidden sm:flex">
                                    <div className="w-10 h-10 rounded-md border border-[#444] bg-black flex items-center justify-center relative">
                                       <div className="absolute -left-3 w-6 h-6 bg-black flex items-center justify-center"><div className="w-3 h-3 rounded-sm border border-[#888] flex items-center justify-center"><div className="w-1 h-1 bg-[#888] rounded-full" /></div></div>
                                       <Monitor className="w-4 h-4 text-white" />
@@ -402,7 +402,7 @@ export function Home() {
                       </div>
 
                       {/* Block 2: Rolling Release */}
-                      <div className="p-12 md:p-20 border-b lg:border-b-0 border-white/[0.1] bg-[#000] flex flex-col min-h-[600px]">
+                      <div className="p-6 sm:p-8 md:p-12 lg:p-20 border-b lg:border-b-0 border-white/[0.1] bg-[#000] flex flex-col min-h-[400px] md:min-h-[600px]">
                          <div className="flex items-center gap-2 text-[#888] text-xs font-mono tracking-widest mb-4">
                             <ArrowUpCircle className="w-4 h-4" />
                             <span>Rolling Release</span>
@@ -418,12 +418,12 @@ export function Home() {
                                   <span className="text-white font-medium text-sm">Canary: 25% of traffic</span>
                                   <span className="text-[#888] text-xs">Next stage in 10m</span>
                                </div>
-                               <div className="w-full h-2 bg-[#222] rounded-full overflow-hidden">
+                         <div className="w-full h-2 bg-[#222] rounded-full overflow-hidden">
                                   <div className="w-1/4 h-full bg-blue-500 rounded-full" />
                                </div>
                             </div>
-                            <div className="grid grid-cols-2 divide-x divide-white/10 p-6">
-                               <div className="pr-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 sm:divide-x divide-white/10 p-4 md:p-6 gap-6 sm:gap-0">
+                               <div className="sm:pr-6">
                                   <div className="text-xs text-[#888] mb-4 uppercase tracking-widest font-mono">Canary: 25%</div>
                                   <div className="flex items-start gap-3">
                                      <GitCommit className="w-4 h-4 text-[#666] mt-0.5" />
@@ -433,7 +433,7 @@ export function Home() {
                                      </div>
                                   </div>
                                </div>
-                               <div className="pl-6">
+                               <div className="sm:pl-6 pt-6 sm:pt-0 border-t sm:border-t-0 border-white/10">
                                   <div className="text-xs text-[#888] mb-4 uppercase tracking-widest font-mono">Current: 75%</div>
                                   <div className="flex items-start gap-3">
                                      <GitCommit className="w-4 h-4 text-[#666] mt-0.5" />
@@ -460,7 +460,7 @@ export function Home() {
                    <Crosshair className="-top-1.5 -right-1.5" />
 
                    {/* Left Block: Deep Indigo */}
-                   <div className="h-[600px] lg:border-r border-b lg:border-b-0 border-white/[0.1] bg-[#4f46e5] p-12 lg:p-16 flex flex-col justify-between text-white relative overflow-hidden group">
+                   <div className="h-[400px] md:h-[500px] lg:h-[600px] lg:border-r border-b lg:border-b-0 border-white/[0.1] bg-[#4f46e5] p-6 sm:p-8 md:p-12 lg:p-16 flex flex-col justify-between text-white relative overflow-hidden group">
                       <div className="text-black text-5xl font-black italic tracking-tighter mix-blend-overlay opacity-30">CORE</div>
                       
                       {/* Decorative Element */}
@@ -486,12 +486,12 @@ export function Home() {
                    </div>
 
                    {/* Right Block: Neon Cyan */}
-                   <div className="h-[600px] bg-[#06b6d4] p-12 lg:p-16 flex flex-col justify-between text-black relative overflow-hidden group">
+                   <div className="h-[400px] md:h-[500px] lg:h-[600px] bg-[#06b6d4] p-6 sm:p-8 md:p-12 lg:p-16 flex flex-col justify-between text-black relative overflow-hidden group">
                       <div className="absolute -right-10 -top-10 opacity-20 text-black">
                         <Activity className="w-80 h-80" />
                       </div>
                       
-                      <h3 className="text-4xl md:text-5xl font-bold tracking-tight leading-[1.1] max-w-md mt-12 relative z-10">
+                      <h3 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight leading-[1.1] max-w-md mt-12 relative z-10">
                         "Collab Code has completely eliminated 'it works on my machine' from our vocabulary."
                       </h3>
 

@@ -63,8 +63,8 @@ export function DashboardActivity() {
            <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
         </div>
       ) : (
-        <div className="flex-1 overflow-auto rounded-xl border border-white/[0.1] bg-[#000]">
-           <table className="min-w-full divide-y divide-white/[0.08]">
+        <div className="flex-1 overflow-x-auto rounded-xl border border-white/[0.1] bg-[#000]">
+           <table className="min-w-[700px] w-full divide-y divide-white/[0.08]">
              <thead className="bg-[#020202] sticky top-0 z-10 shadow-[0_1px_0_rgba(255,255,255,0.08)]">
                <tr>
                  <th className="px-4 py-2.5 text-left border-r border-white/[0.08] text-[13px] font-medium text-white tracking-wide">Timestamp</th>

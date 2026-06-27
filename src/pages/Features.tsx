@@ -11,7 +11,7 @@ export function Features() {
         
         {/* ───────────────── SECTION 1: AI APPS ───────────────── */}
         <section className="flex flex-col border-b border-white/[0.1]">
-           <div className="py-24 md:py-32 flex flex-col items-center text-center px-6">
+           <div className="py-16 md:py-32 flex flex-col items-center text-center px-6">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter mb-6">
                  CollabCode is the Home of AI Apps.
               </h1>
@@ -24,7 +24,7 @@ export function Features() {
            <div className="grid grid-cols-1 md:grid-cols-2 border-t border-white/[0.1]">
               
               {/* Card 1: Chatbot */}
-              <div className="p-10 md:p-14 border-b md:border-b-0 md:border-r border-white/[0.1] flex flex-col group cursor-pointer hover:bg-white/[0.02] transition-colors">
+              <div className="p-6 sm:p-10 md:p-14 border-b md:border-b-0 md:border-r border-white/[0.1] flex flex-col group cursor-pointer hover:bg-white/[0.02] transition-colors">
                  <div className="h-[250px] w-full border border-white/[0.1] rounded-lg bg-[#0a0a0a] flex flex-col p-6 mb-8 relative overflow-hidden bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:30px_30px]">
                     <div className="flex-1 space-y-4">
                        <div className="flex items-start gap-3 w-4/5">
@@ -50,7 +50,7 @@ export function Features() {
               </div>
 
               {/* Card 2: Postgres pgvector */}
-              <div className="p-10 md:p-14 flex flex-col group cursor-pointer hover:bg-white/[0.02] transition-colors">
+              <div className="p-6 sm:p-10 md:p-14 flex flex-col group cursor-pointer hover:bg-white/[0.02] transition-colors">
                  <div className="h-[250px] w-full border border-white/[0.1] rounded-lg bg-[#0a0a0a] flex flex-col items-center justify-center p-6 mb-8 relative overflow-hidden bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:30px_30px]">
                     <div className="w-3/4 max-w-sm rounded-xl border border-white/10 bg-black shadow-2xl p-2">
                        <div className="h-10 rounded-lg border border-white/5 bg-[#111] flex items-center px-3 gap-3 mb-2">
@@ -81,7 +81,7 @@ export function Features() {
         {/* ───────────────── SECTION 2: ENTERPRISE TOOLS ───────────────── */}
         <section className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] border-b border-white/[0.1]">
            {/* Left Col */}
-           <div className="p-12 md:p-16 lg:border-r border-white/[0.1] border-b lg:border-b-0 flex flex-col justify-center">
+           <div className="p-6 sm:p-12 md:p-16 lg:border-r border-white/[0.1] border-b lg:border-b-0 flex flex-col justify-center">
               <h2 className="text-3xl md:text-5xl font-bold tracking-tighter leading-tight mb-6">
                  Introducing the latest Enterprise tools to power your workflow.
               </h2>
@@ -93,7 +93,7 @@ export function Features() {
            {/* Right Col */}
            <div className="flex flex-col">
               {/* Secure Compute */}
-              <div className="p-10 md:p-16 border-b border-white/[0.1]">
+              <div className="p-6 sm:p-10 md:p-16 border-b border-white/[0.1]">
                  <div className="flex items-center gap-2 text-[#888] text-sm mb-4">
                     <Lock className="w-4 h-4" /> Secure Compute
                  </div>
@@ -102,7 +102,7 @@ export function Features() {
                  </h3>
                  
                  {/* Git Push to IPs Diagram */}
-                 <div className="relative w-full h-[200px] border border-white/[0.1] rounded-xl bg-[#0a0a0a] flex items-center p-8 overflow-hidden">
+                 <div className="relative w-full h-[200px] border border-white/[0.1] rounded-xl bg-[#0a0a0a] items-center p-8 overflow-hidden hidden md:flex">
                     <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px]" />
                     
                     <div className="absolute z-10 left-[40px] top-[80px] flex items-center gap-2 border border-white/10 bg-black rounded-lg px-4 py-2 shadow-xl">
@@ -138,7 +138,7 @@ export function Features() {
               </div>
 
               {/* Rolling Release */}
-              <div className="p-10 md:p-16">
+              <div className="p-6 sm:p-10 md:p-16">
                  <div className="flex items-center gap-2 text-[#888] text-sm mb-4">
                     <GitBranch className="w-4 h-4" /> Rolling Release
                  </div>
@@ -160,7 +160,7 @@ export function Features() {
                        <div className="h-full bg-[#333] w-[50%] rounded-full" />
                     </div>
                     {/* Commits */}
-                    <div className="grid grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
                        <div>
                           <div className="text-xs text-[#888] mb-2 font-mono">Canary: 25%</div>
                           <div className="text-xs text-white flex items-center gap-2 mb-1"><GitCommit className="w-3 h-3 text-[#666]" /> b4c6756 <span className="text-[#888] truncate">Implement added & removed lin...</span></div>
@@ -178,7 +178,7 @@ export function Features() {
         </section>
 
         {/* ───────────────── SECTION 3: OPTIMIZED RENDERING ───────────────── */}
-        <section className="border-b border-white/[0.1] py-24 md:py-32 flex flex-col items-center">
+        <section className="border-b border-white/[0.1] py-16 md:py-32 flex flex-col items-center">
            <div className="text-center px-6 max-w-3xl mb-24">
               <h2 className="text-3xl md:text-5xl font-bold tracking-tighter leading-tight mb-6">
                  Optimized, automated rendering for the web's favorite frameworks.
@@ -189,7 +189,7 @@ export function Features() {
            </div>
 
            {/* The Massive Framework Connection Diagram */}
-           <div className="relative w-full max-w-4xl h-[400px]">
+           <div className="relative w-full max-w-4xl h-[400px] hidden md:block">
               {/* Framework Nodes */}
               <div className="absolute top-0 left-0 right-0 flex justify-between px-10">
                  {/* Next.js */}
@@ -243,7 +243,7 @@ export function Features() {
         {/* ───────────────── SECTION 4: COLLABORATION ───────────────── */}
         <section className="grid grid-cols-1 lg:grid-cols-2 border-b border-white/[0.1]">
            {/* Left Col */}
-           <div className="p-12 md:p-24 lg:border-r border-white/[0.1] border-b lg:border-b-0 flex flex-col justify-center">
+           <div className="p-6 sm:p-12 md:p-24 lg:border-r border-white/[0.1] border-b lg:border-b-0 flex flex-col justify-center">
               <div className="flex items-center gap-2 text-[#888] text-sm mb-6"><GitBranch className="w-4 h-4" /> Collaboration</div>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tighter leading-tight mb-6">
                  Faster iteration.<br/>More innovation.
@@ -254,7 +254,7 @@ export function Features() {
            </div>
 
            {/* Right Col */}
-           <div className="p-12 md:p-24 flex flex-col justify-center">
+           <div className="p-6 sm:p-12 md:p-24 flex flex-col justify-center">
               <h3 className="text-xl leading-relaxed mb-10">
                  <strong className="text-white">Get to production faster.</strong> <span className="text-[#888]">Zero-config pre-production environments, integrating with your git workflow, with builds in minutes.</span>
               </h3>
@@ -313,7 +313,7 @@ export function Features() {
         {/* ───────────────── Linear-Style Giant CTA Blocks ───────────────── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 relative border-b border-white/[0.1]">
           {/* Block 1 (Cyan) */}
-          <div className="h-[600px] lg:border-r border-b lg:border-b-0 border-white/[0.1] bg-[#22d3ee] p-12 lg:p-16 flex flex-col justify-between text-[#0a0a0a] relative overflow-hidden group">
+          <div className="h-[400px] md:h-[500px] lg:h-[600px] lg:border-r border-b lg:border-b-0 border-white/[0.1] bg-[#22d3ee] p-6 sm:p-8 md:p-12 lg:p-16 flex flex-col justify-between text-[#0a0a0a] relative overflow-hidden group">
              <div className="text-black text-5xl font-black italic tracking-tighter mix-blend-overlay opacity-30">SDK</div>
              
              {/* Decorative code block */}
@@ -332,7 +332,7 @@ export function Features() {
           </div>
 
           {/* Block 2 (Soft Purple) */}
-          <div className="h-[600px] bg-[#c4b5fd] p-12 lg:p-16 flex flex-col justify-between text-[#0a0a0a] relative overflow-hidden">
+          <div className="h-[400px] md:h-[500px] lg:h-[600px] bg-[#c4b5fd] p-6 sm:p-8 md:p-12 lg:p-16 flex flex-col justify-between text-[#0a0a0a] relative overflow-hidden">
              <div className="absolute -right-20 -top-20 opacity-5 text-black">
                <Terminal className="w-96 h-96" />
              </div>

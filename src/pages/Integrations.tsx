@@ -88,8 +88,8 @@ export function Integrations() {
           variants={stagger}
           className="relative z-10 flex flex-col items-center text-center max-w-4xl"
         >
-          <motion.h1 variants={fadeUp} className="text-5xl md:text-7xl lg:text-[80px] font-bold tracking-tighter leading-[1.1] mb-6">
-            Connect your <span className="inline-flex items-center justify-center border border-white/[0.2] rounded-full px-4 py-1 text-4xl md:text-5xl translate-y-[-4px]">toolchain.</span>
+          <motion.h1 variants={fadeUp} className="text-3xl md:text-5xl lg:text-7xl xl:text-[80px] font-bold tracking-tighter leading-[1.1] mb-6">
+            Connect your <span className="inline-flex items-center justify-center border border-white/[0.2] rounded-full px-3 md:px-4 py-1 text-2xl md:text-4xl lg:text-5xl translate-y-[-4px]">toolchain.</span>
           </motion.h1>
           
           <motion.p variants={fadeUp} className="text-xl text-[#888] max-w-2xl leading-relaxed mb-10">
@@ -110,11 +110,11 @@ export function Integrations() {
         <div className="max-w-[1200px] mx-auto border-x border-white/[0.1] relative flex flex-col">
 
            {/* Frameworks Banner inside Grid */}
-           <div className="p-12 md:p-24 border-b border-white/[0.1] text-center flex flex-col items-center">
+           <div className="p-6 md:p-12 lg:p-24 border-b border-white/[0.1] text-center flex flex-col items-center">
              <div className="inline-flex items-center justify-center gap-2 text-[#888] mb-6 text-xs font-mono uppercase tracking-widest">
                 <Workflow className="w-3 h-3" /> Extensibility
              </div>
-             <h2 className="text-4xl md:text-6xl font-bold tracking-tighter text-white mb-6">Seamless ecosystem.</h2>
+             <h2 className="text-3xl md:text-4xl lg:text-6xl font-bold tracking-tighter text-white mb-6">Seamless ecosystem.</h2>
              <p className="text-lg text-[#888] max-w-2xl">
                Connect your codebase to your preferred services via webhooks, native OAuth integrations, and automated pipelines.
              </p>
@@ -126,7 +126,7 @@ export function Integrations() {
               <Crosshair className="-top-1.5 -right-1.5" />
 
               {/* Block 1 (Soft Pink/Red - Code/Git) */}
-              <div className="h-[550px] lg:border-r border-b lg:border-b-0 border-white/[0.1] bg-[#FFA2A2] p-12 lg:p-16 flex flex-col justify-between text-[#0a0a0a] relative overflow-hidden group">
+              <div className="h-auto min-h-[400px] lg:h-[550px] lg:border-r border-b lg:border-b-0 border-white/[0.1] bg-[#FFA2A2] p-6 md:p-12 lg:p-16 flex flex-col justify-between text-[#0a0a0a] relative overflow-hidden group">
                  <div className="absolute -right-10 -top-10 opacity-10 transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-700">
                    <GitBranch className="w-96 h-96" />
                  </div>
@@ -144,7 +144,7 @@ export function Integrations() {
               </div>
 
               {/* Block 2 (Deep Blue/Indigo - Infrastructure) */}
-              <div className="h-[550px] bg-[#A2B2FF] p-12 lg:p-16 flex flex-col justify-between text-[#0a0a0a] relative overflow-hidden group">
+              <div className="h-auto min-h-[400px] lg:h-[550px] bg-[#A2B2FF] p-6 md:p-12 lg:p-16 flex flex-col justify-between text-[#0a0a0a] relative overflow-hidden group">
                  
                  {/* Floating mockup UI */}
                  <div className="absolute top-1/2 left-1/2 w-[110%] -translate-y-1/2 -translate-x-1/4 rounded-xl border border-white/20 bg-white/20 backdrop-blur-md p-6 shadow-2xl transform group-hover:-translate-x-[20%] transition-transform duration-700">
@@ -247,7 +247,7 @@ export function Integrations() {
 
            {/* ───────────────── NEW: Workflow Automation Section (Highly Unique UI) ───────────────── */}
            <div className="flex flex-col md:flex-row relative border-b border-white/[0.1] overflow-hidden bg-[#050505]">
-              <div className="p-12 md:p-24 lg:p-32 md:w-1/2 flex flex-col justify-center border-b md:border-b-0 md:border-r border-white/[0.1] relative z-10">
+              <div className="p-6 md:p-12 lg:p-24 xl:p-32 md:w-1/2 flex flex-col justify-center border-b md:border-b-0 md:border-r border-white/[0.1] relative z-10">
                  <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-white mb-6">Automate your entire lifecycle.</h2>
                  <p className="text-[#888] text-lg leading-relaxed max-w-md font-medium mb-10">
                     Connect your existing tools to CollabCode to create seamless, bidirectional workflows. PRs trigger deployments, comments trigger Jira tickets, and errors alert your Slack channels instantly.
@@ -257,7 +257,7 @@ export function Integrations() {
                  </button>
               </div>
 
-              <div className="p-12 md:p-24 lg:p-32 md:w-1/2 relative min-h-[500px] flex items-center justify-center">
+              <div className="p-6 md:p-12 lg:p-24 xl:p-32 md:w-1/2 relative min-h-[350px] md:min-h-[500px] flex items-center justify-center">
                  {/* Glowing ambient backdrop */}
                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-br from-[#A2B2FF]/20 via-[#D7CAFF]/10 to-transparent rounded-full blur-[100px] pointer-events-none" />
                  
@@ -385,7 +385,7 @@ export function Integrations() {
            </div>
 
            {/* ───────────────── Final CTA (Soft Glowing Dark Mode Block) ───────────────── */}
-           <div className="p-12 md:p-24 lg:p-32 bg-black flex flex-col items-center text-center relative overflow-hidden">
+           <div className="p-6 md:p-12 lg:p-24 xl:p-32 bg-black flex flex-col items-center text-center relative overflow-hidden">
               <Crosshair className="-top-1.5 -left-1.5" />
               <Crosshair className="-top-1.5 -right-1.5" />
               
@@ -397,7 +397,7 @@ export function Integrations() {
                  <Terminal className="w-8 h-8" />
               </div>
 
-              <h2 className="text-5xl md:text-7xl font-bold tracking-tighter text-white mb-6 relative z-10">Start integrating today.</h2>
+              <h2 className="text-3xl md:text-5xl lg:text-7xl font-bold tracking-tighter text-white mb-6 relative z-10">Start integrating today.</h2>
               <p className="text-[#888] text-xl max-w-xl mx-auto mb-10 font-medium relative z-10">
                  From LLMs to full-stack frameworks, supercharge your workspace with a running start.
               </p>

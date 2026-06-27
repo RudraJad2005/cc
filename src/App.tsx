@@ -34,6 +34,7 @@ import { Observability } from './pages/Observability';
 import { Docs } from './pages/Docs';
 import { CICD } from './pages/CICD';
 import { Event } from './pages/Event';
+import { Infrastructure } from './pages/Infrastructure';
 
 import { DashboardLayout } from './layouts/DashboardLayout';
 import { Dashboard } from './pages/Dashboard';
@@ -100,6 +101,7 @@ export default function App() {
 
         <Route element={<MarketingLayout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/infrastructure" element={<Infrastructure />} />
           <Route path="/features" element={<Features />} />
           <Route path="/templates" element={<Templates />} />
           <Route path="/about" element={<About />} />

@@ -92,7 +92,7 @@ export function Compute() {
                       </div>
 
                       {/* Col 3: Datacenter Map */}
-                      <div className="col-span-1 p-10 lg:p-16 flex items-center justify-center h-[300px] relative overflow-hidden">
+                       <div className="col-span-1 p-6 md:p-10 lg:p-16 flex items-center justify-center h-[250px] md:h-[300px] relative overflow-hidden">
                          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.03),_transparent_70%)] pointer-events-none" />
                          <div className="relative w-full aspect-square flex items-center justify-center">
                             <div className="w-16 h-16 rounded-full border border-white/[0.08] bg-[#050505] flex items-center justify-center z-20">
@@ -127,7 +127,7 @@ export function Compute() {
                          <h3 className="text-xl font-medium text-white mb-4">Instant Boot</h3>
                          <p className="text-gray-400 text-sm leading-relaxed">A warm workspace restores from snapshot in under 150ms. Never wait for a build environment again.</p>
                       </div>
-                      <div className="col-span-1 p-10 lg:p-12">
+                       <div className="col-span-1 p-6 md:p-10 lg:p-12">
                          <h3 className="text-xl font-medium text-white mb-4">Global Network</h3>
                          <p className="text-gray-400 text-sm leading-relaxed">Traffic is routed automatically to the region closest to you, spanning 18 global edge locations.</p>
                       </div>
@@ -143,13 +143,13 @@ export function Compute() {
                       <div className="col-span-2 border-r border-white/[0.08] p-16 md:py-32 md:px-24 flex items-center">
                          <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60">From keystroke to deploy.</h2>
                       </div>
-                      <div className="col-span-1 p-16 flex flex-col justify-center gap-4">
+                       <div className="col-span-1 p-8 md:p-16 flex flex-col justify-center gap-4">
                          <p className="text-gray-400 text-sm leading-relaxed">Every workspace flows through four optimized stages — so you get instant boot times without paying for idle compute.</p>
                       </div>
                    </div>
 
                    {/* Lifecycle Features Row */}
-                   <div className="grid grid-cols-1 md:grid-cols-4 relative border-t border-white/[0.08]">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 relative border-t border-white/[0.08]">
                       <Crosshair className="-top-1.5 -left-1.5" />
                       <Crosshair className="-top-1.5 left-[25%] -translate-x-1.5" />
                       <Crosshair className="-top-1.5 left-[50%] -translate-x-1.5" />
@@ -162,7 +162,7 @@ export function Compute() {
                          { n: '03', icon: <Play className="w-4 h-4 text-gray-500"/>, title: 'Run', desc: 'Dedicated cores execute at bare-metal speed.' },
                          { n: '04', icon: <Moon className="w-4 h-4 text-gray-500"/>, title: 'Hibernate', desc: 'Compute billing drops to zero until you return.' },
                       ].map((item, i) => (
-                         <div key={i} className={`col-span-1 p-10 lg:p-12 group hover:bg-white/[0.02] transition-colors ${i < 3 ? 'border-r border-white/[0.08]' : ''}`}>
+                          <div key={i} className={`col-span-1 p-6 md:p-10 lg:p-12 group hover:bg-white/[0.02] transition-colors ${i < 3 ? 'md:border-r border-white/[0.08]' : ''} border-b md:border-b-0`}>
                             <div className="flex justify-between items-center mb-10 pb-6 border-b border-white/[0.08]">
                                <h3 className="text-xl font-medium text-white">{item.title}</h3>
                                <span className="font-mono text-[10px] text-gray-500">{item.n}</span>
@@ -185,7 +185,7 @@ export function Compute() {
                       <div className="col-span-2 border-r border-white/[0.08] p-16 md:py-32 md:px-24 flex items-center">
                          <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60">Built for scale.</h2>
                       </div>
-                      <div className="col-span-1 p-16 flex items-center justify-center gap-6">
+                       <div className="col-span-1 p-8 md:p-16 flex items-center justify-center gap-6">
                          <div className="flex items-center gap-2 text-gray-400 font-mono text-sm border border-white/[0.08] px-4 py-2 rounded-full"><Cpu className="w-4 h-4"/> Hardware</div>
                       </div>
                    </div>
@@ -205,7 +205,7 @@ export function Compute() {
                          { title: 'Network', desc: '10 Gbps symmetrical bandwidth' },
                          { title: 'Virtualization', desc: 'Firecracker KVM-based microVMs' },
                       ].map((item, i) => (
-                         <div key={i} className={`col-span-1 p-8 lg:p-10 border-b border-white/[0.08] ${i % 3 !== 2 ? 'border-r border-white/[0.08]' : ''}`}>
+                          <div key={i} className={`col-span-1 p-6 md:p-8 lg:p-10 border-b border-white/[0.08] ${i % 3 !== 2 ? 'md:border-r border-white/[0.08]' : ''}`}>
                             <div className="text-xs font-mono tracking-widest text-gray-500 uppercase mb-2">{item.title}</div>
                             <div className="text-[15px] text-white">{item.desc}</div>
                          </div>
@@ -219,7 +219,7 @@ export function Compute() {
                    <Crosshair className="-top-1.5 -right-1.5" />
 
                    <div className="grid grid-cols-1 md:grid-cols-3">
-                      <div className="col-span-3 p-16 md:py-24 text-center">
+                       <div className="col-span-1 md:col-span-3 p-8 md:p-16 md:py-24 text-center">
                          <h2 className="text-4xl md:text-5xl font-medium tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60">Right-sized for every workload.</h2>
                       </div>
                    </div>
@@ -235,7 +235,7 @@ export function Compute() {
                          { name: 'Pro', price: '$20', unit: '/mo', desc: 'For professional developers.', specs: ['8 vCPU dedicated', '16GB RAM', 'Unlimited compute'], cta: 'Start Pro trial', glow: true },
                          { name: 'Enterprise', price: 'Custom', unit: '', desc: 'For organizations at scale.', specs: ['16 vCPU + bare metal', '64GB RAM', 'SSO / SAML'], cta: 'Contact sales', glow: false },
                       ].map((t, i) => (
-                         <div key={i} className={`col-span-1 p-10 lg:p-16 flex flex-col relative transition-colors ${i < 2 ? 'border-r border-white/[0.08]' : ''} ${t.glow ? 'bg-white/[0.02]' : 'hover:bg-white/[0.02]'}`}>
+                          <div key={i} className={`col-span-1 p-6 md:p-10 lg:p-16 flex flex-col relative transition-colors ${i < 2 ? 'md:border-r border-white/[0.08]' : ''} border-b md:border-b-0 border-white/[0.08] ${t.glow ? 'bg-white/[0.02]' : 'hover:bg-white/[0.02]'}`}>
                             {t.glow && (
                                <div className="absolute inset-0 glow-ring pointer-events-none z-10" />
                             )}

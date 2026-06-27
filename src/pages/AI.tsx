@@ -82,7 +82,7 @@ export function AI() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[1px]">
             
             {/* AI Gateway */}
-            <div className="bg-black p-12 relative flex flex-col overflow-hidden min-h-[500px]">
+            <div className="bg-black p-6 md:p-12 relative flex flex-col overflow-hidden min-h-[400px] md:min-h-[500px]">
               <Crosshair className="-left-1.5 -top-1.5" />
               <div className="flex items-center justify-between mb-8 z-10">
                 <div className="text-[#888] flex items-center gap-2 text-sm"><Workflow className="w-4 h-4" /> AI Gateway</div>
@@ -136,7 +136,7 @@ export function AI() {
             </div>
 
             {/* Edge Streaming */}
-            <div className="bg-black p-12 relative flex flex-col overflow-hidden min-h-[500px]">
+            <div className="bg-black p-6 md:p-12 relative flex flex-col overflow-hidden min-h-[400px] md:min-h-[500px]">
               <Crosshair className="-right-1.5 -top-1.5" />
               <div className="flex items-center justify-between mb-8 z-10">
                 <div className="text-[#888] flex items-center gap-2 text-sm"><Cpu className="w-4 h-4" /> Fluid Compute</div>
@@ -188,7 +188,7 @@ export function AI() {
           </div>
 
           {/* New Section: Code Playground */}
-          <div className="bg-black p-12 md:p-16 border-t border-white/10 relative">
+          <div className="bg-black p-6 md:p-12 lg:p-16 border-t border-white/10 relative">
             <Crosshair className="-left-1.5 -top-1.5" />
             <Crosshair className="-right-1.5 -top-1.5" />
             <div className="flex flex-col lg:flex-row gap-12 items-center">
@@ -249,7 +249,7 @@ export function AI() {
 
           {/* New Section: Enterprise AI Controls */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[1px]">
-            <div className="bg-black p-12 md:p-16 relative flex flex-col justify-center min-h-[500px]">
+            <div className="bg-black p-6 md:p-12 lg:p-16 relative flex flex-col justify-center min-h-[400px] md:min-h-[500px]">
               <Crosshair className="-left-1.5 -top-1.5" />
               <Crosshair className="-left-1.5 -bottom-1.5" />
               <div className="text-[#888] flex items-center gap-2 text-sm mb-4"><Shield className="w-4 h-4" /> Enterprise Controls</div>
@@ -289,7 +289,7 @@ export function AI() {
             </div>
             
             {/* Semantic Cache Visualization */}
-            <div className="bg-black p-12 md:p-16 relative flex items-center justify-center min-h-[500px]">
+            <div className="bg-black p-6 md:p-12 lg:p-16 relative flex items-center justify-center min-h-[400px] md:min-h-[500px]">
               <Crosshair className="-right-1.5 -top-1.5" />
               <Crosshair className="-right-1.5 -bottom-1.5" />
               <div className="w-full max-w-sm flex flex-col gap-6 relative">
@@ -317,7 +317,7 @@ export function AI() {
           </div>
 
           {/* Table Header Section */}
-          <div className="bg-black p-12 md:px-16 text-center relative">
+          <div className="bg-black p-6 md:p-12 lg:px-16 text-center relative">
             <Crosshair className="-left-1.5 -top-1.5" />
             <Crosshair className="-right-1.5 -top-1.5" />
             <div className="inline-flex items-center gap-2 px-3 py-1 border border-white/10 rounded-md text-xs text-[#888] mb-6">
@@ -330,7 +330,8 @@ export function AI() {
           </div>
 
           {/* Comparison Table */}
-          <div className="grid grid-cols-3 gap-[1px]">
+          <div className="overflow-x-auto">
+          <div className="grid grid-cols-3 gap-[1px] min-w-[600px]">
             {/* Row 1 Headers */}
             <div className="bg-[#050505] p-6 text-sm font-semibold text-white">Metric</div>
             <div className="bg-[#050505] p-6 text-sm font-semibold text-[#888] text-center">Traditional Server</div>
@@ -357,6 +358,7 @@ export function AI() {
               <span className="text-white text-sm">Rich Components</span>
               <span className="text-[10px] text-[#666]">React Server Components</span>
             </div>
+          </div>
           </div>
 
         </div>

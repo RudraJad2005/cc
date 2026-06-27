@@ -54,7 +54,7 @@ export function About() {
                 <Crosshair className="-top-1.5 -right-1.5" />
 
                 {/* Block 1 (Light Purple - Mission) */}
-                <div className="h-[500px] lg:border-r border-b lg:border-b-0 border-white/[0.1] bg-[#D7CAFF] p-12 lg:p-16 flex flex-col justify-between text-[#0a0a0a] relative overflow-hidden group">
+                <div className="h-[400px] md:h-[500px] lg:border-r border-b lg:border-b-0 border-white/[0.1] bg-[#D7CAFF] p-8 md:p-12 lg:p-16 flex flex-col justify-between text-[#0a0a0a] relative overflow-hidden group">
                    <div className="absolute -right-10 -top-10 opacity-10 transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-700">
                      <Rocket className="w-80 h-80" />
                    </div>
@@ -72,7 +72,7 @@ export function About() {
                 </div>
 
                 {/* Block 2 (Neon Green - Story) */}
-                <div className="h-[500px] bg-[#D6FF00] p-12 lg:p-16 flex flex-col justify-between text-[#0a0a0a] relative overflow-hidden group">
+                <div className="h-[400px] md:h-[500px] bg-[#D6FF00] p-8 md:p-12 lg:p-16 flex flex-col justify-between text-[#0a0a0a] relative overflow-hidden group">
                    <div className="absolute -left-10 -top-10 opacity-5 transform group-hover:-scale-y-110 group-hover:rotate-12 transition-all duration-700">
                      <Code2 className="w-80 h-80" />
                    </div>
