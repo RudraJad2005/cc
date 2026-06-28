@@ -5,9 +5,13 @@ export class DockerContainer {
   private projectId: string;
   public fs: any;
 
-  constructor(projectId: string) {
+  constructor(projectId: string, token: string = '') {
     this.projectId = projectId;
-    this.socket = io('wss://52.172.229.65.nip.io');
+    
+    const wsUrl = import.meta.env.VITE_WS_URL || 'wss://52.172.229.65.nip.io';
+    this.socket = io(wsUrl, {
+      auth: { token }
+    });
     
     this.fs = {
       readdir: async (path: string, options: any) => {

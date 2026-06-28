@@ -174,7 +174,9 @@ export function NativeIDE() {
         const dockerFrameworks = ['python', 'pandas', 'tensorflow', 'pytorch', 'scikit-learn', 'jupyter'];
         if (data?.framework && dockerFrameworks.includes(data.framework.toLowerCase())) {
           console.log("Booting Azure Docker OS...");
-          instance = new DockerContainer(projectId);
+          const { data: sessionData } = await supabase.auth.getSession();
+          const token = sessionData?.session?.access_token || '';
+          instance = new DockerContainer(projectId, token);
         } else {
           if (!bootPromise) {
             console.log("Booting WebContainer OS...");

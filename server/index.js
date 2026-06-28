@@ -6,17 +6,41 @@ const Docker = require('dockerode');
 const pty = require('node-pty');
 const fs = require('fs');
 const path = require('path');
+const { createClient } = require('@supabase/supabase-js');
+require('dotenv').config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : '*',
+  credentials: true
+}));
 app.use(express.json());
 
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: '*',
-    methods: ['GET', 'POST']
+    origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : '*',
+    methods: ['GET', 'POST'],
+    credentials: true
   }
+});
+
+const supabase = createClient(
+  process.env.SUPABASE_URL || '',
+  process.env.SUPABASE_ANON_KEY || ''
+);
+
+io.use(async (socket, next) => {
+  const token = socket.handshake.auth?.token;
+  if (!token) return next(new Error('Authentication error: Missing token'));
+
+  const { data, error } = await supabase.auth.getUser(token);
+  if (error || !data.user) {
+    return next(new Error('Authentication error: Invalid token'));
+  }
+  
+  socket.user = data.user;
+  next();
 });
 
 const docker = new Docker({ socketPath: '//./pipe/docker_engine' }); // Windows named pipe for Docker Desktop
@@ -169,6 +193,9 @@ io.on('connection', (socket) => {
   // 3. File System API: Reading/Writing direct to the host folder
   socket.on('readFile', ({ projectId, filePath }) => {
     const fullPath = path.join(WORKSPACES_DIR, projectId, filePath);
+    if (!fullPath.startsWith(path.resolve(WORKSPACES_DIR, projectId) + path.sep) && fullPath !== path.resolve(WORKSPACES_DIR, projectId)) {
+      return socket.emit('fsError', { error: 'Forbidden: Invalid path' });
+    }
     try {
       const content = fs.readFileSync(fullPath, 'utf-8');
       socket.emit('fileRead', { filePath, content });
@@ -179,6 +206,9 @@ io.on('connection', (socket) => {
 
   socket.on('writeFile', ({ projectId, filePath, content }) => {
     const fullPath = path.join(WORKSPACES_DIR, projectId, filePath);
+    if (!fullPath.startsWith(path.resolve(WORKSPACES_DIR, projectId) + path.sep) && fullPath !== path.resolve(WORKSPACES_DIR, projectId)) {
+      return socket.emit('fsError', { error: 'Forbidden: Invalid path' });
+    }
     try {
       fs.mkdirSync(path.dirname(fullPath), { recursive: true });
       fs.writeFileSync(fullPath, content);
@@ -190,6 +220,9 @@ io.on('connection', (socket) => {
 
   socket.on('deleteFile', ({ projectId, filePath }) => {
     const fullPath = path.join(WORKSPACES_DIR, projectId, filePath);
+    if (!fullPath.startsWith(path.resolve(WORKSPACES_DIR, projectId) + path.sep) && fullPath !== path.resolve(WORKSPACES_DIR, projectId)) {
+      return socket.emit('fsError', { error: 'Forbidden: Invalid path' });
+    }
     try {
       fs.rmSync(fullPath, { recursive: true, force: true });
       socket.emit('fileDeleted', { filePath });
