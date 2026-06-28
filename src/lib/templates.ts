@@ -224,6 +224,113 @@ export const getTemplate = (framework: string): any => {
         }
       };
 
+    case 'langchain':
+      return {
+        'main.py': {
+          file: {
+            contents: `"""LangChain Application"""
+import os
+from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+load_dotenv()
+
+# Initialize the LLM
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
+
+# Create a prompt template
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "You are a helpful AI assistant. Respond concisely and accurately."),
+    ("human", "{input}")
+])
+
+# Build the chain
+chain = prompt | llm | StrOutputParser()
+
+def main():
+    print("\\n🦜 LangChain App Ready!\\n")
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() in ("exit", "quit"):
+            break
+        response = chain.invoke({"input": user_input})
+        print(f"AI: {response}\\n")
+
+if __name__ == "__main__":
+    main()
+`
+          }
+        },
+        'chains': {
+          directory: {
+            '__init__.py': {
+              file: { contents: '' }
+            },
+            'retrieval.py': {
+              file: {
+                contents: `"""Retrieval-Augmented Generation (RAG) chain"""
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough
+from langchain_community.vectorstores import FAISS
+
+def build_rag_chain(documents: list[str]):
+    """Build a simple RAG chain from a list of text documents."""
+    embeddings = OpenAIEmbeddings()
+    vectorstore = FAISS.from_texts(documents, embeddings)
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
+
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", "Answer based on the following context:\\n\\n{context}"),
+        ("human", "{question}")
+    ])
+
+    chain = (
+        {"context": retriever, "question": RunnablePassthrough()}
+        | prompt
+        | ChatOpenAI(model="gpt-4o-mini")
+        | StrOutputParser()
+    )
+    return chain
+`
+              }
+            }
+          }
+        },
+        'requirements.txt': {
+          file: {
+            contents: `langchain>=0.3.0
+langchain-openai>=0.2.0
+langchain-community>=0.3.0
+faiss-cpu>=1.8.0
+python-dotenv>=1.0.0
+`
+          }
+        },
+        '.env.example': {
+          file: { contents: `OPENAI_API_KEY=your_openai_api_key_here\n` }
+        },
+        'README.md': {
+          file: {
+            contents: `# 🦜 LangChain Project
+
+## Setup
+1. Copy \`.env.example\` to \`.env\` and add your OpenAI API key
+2. Install dependencies: \`pip install -r requirements.txt\`
+3. Run: \`python main.py\`
+
+## Project Structure
+- \`main.py\` — Interactive chat app using LangChain
+- \`chains/retrieval.py\` — RAG (Retrieval-Augmented Generation) chain
+- \`requirements.txt\` — Python dependencies
+`
+          }
+        }
+      };
+
     default:
       return pythonTemplate;
   }
