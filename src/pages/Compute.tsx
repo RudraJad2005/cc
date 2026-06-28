@@ -20,7 +20,7 @@ export function Compute() {
          {/* Hero */}
          <PageHero
             layout="centered"
-            bgPattern="grid-sm"
+            bgPattern="grid"
             glowColor="rgba(255, 255, 255, 0.05)"
             titleClassName="text-5xl md:text-[6rem] lg:text-[8rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/60 drop-shadow-sm pb-2"
             title="Boundless compute."

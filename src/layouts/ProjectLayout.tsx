@@ -12,7 +12,8 @@ export function ProjectLayout() {
   const { projectId } = useParams();
   const location = useLocation();
 
-  const navItems = [
+  type NavItem = { name?: string; path?: string; exact?: boolean; icon?: React.ReactNode; type?: string; badge?: string };
+  const navItems: NavItem[] = [
     { name: 'Overview', path: `/dashboard/projects/${projectId}`, exact: true, icon: <LayoutDashboard className="w-4 h-4" /> },
     { name: 'Native IDE', path: `/dashboard/projects/${projectId}/editor`, icon: <Code2 className="w-4 h-4" /> },
     { type: 'divider' },

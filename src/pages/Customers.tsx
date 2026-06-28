@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const fadeUp = {
+const fadeUp: any = {
   hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
 };
