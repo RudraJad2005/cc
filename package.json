@@ -44,7 +44,8 @@
     "y-protocols": "^1.0.7",
     "y-webrtc": "^10.3.0",
     "y-websocket": "^3.0.0",
-    "yjs": "^13.6.31"
+    "yjs": "^13.6.31",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.20",
