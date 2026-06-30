@@ -44,9 +44,12 @@ export function ProjectSettings() {
   const [providerToken, setProviderToken] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!session?.user?.id) return;
+    const storageKey = `github_provider_token_${session.user.id}`;
+
     if (sessionProviderToken) {
       setProviderToken(sessionProviderToken);
-      sessionStorage.setItem('github_provider_token', sessionProviderToken);
+      sessionStorage.setItem(storageKey, sessionProviderToken);
       return;
     }
     
@@ -58,7 +61,7 @@ export function ProjectSettings() {
       const token = params.get('provider_token');
       if (token) {
         setProviderToken(token);
-        sessionStorage.setItem('github_provider_token', token);
+        sessionStorage.setItem(storageKey, token);
         // Optionally clean up URL
         window.history.replaceState(null, '', window.location.pathname);
         return;
@@ -66,11 +69,13 @@ export function ProjectSettings() {
     }
 
     // Fallback to session storage
-    const stored = sessionStorage.getItem('github_provider_token');
+    const stored = sessionStorage.getItem(storageKey);
     if (stored) {
       setProviderToken(stored);
+    } else {
+      setProviderToken(null);
     }
-  }, [sessionProviderToken]);
+  }, [sessionProviderToken, session?.user?.id]);
 
   // Environment Variables States
   const [envVars, setEnvVars] = useState<{id: string, key: string, value: string}[]>([]);

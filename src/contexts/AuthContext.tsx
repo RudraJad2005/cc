@@ -35,6 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signOut = async () => {
+    sessionStorage.removeItem('github_provider_token');
     await supabase.auth.signOut();
   };
 
