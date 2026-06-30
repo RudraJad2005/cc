@@ -39,7 +39,38 @@ export function ProjectSettings() {
   
   // Only use the provider token if the user signed in with GitHub
   const isGithubSession = session?.user?.app_metadata?.provider === 'github';
-  const providerToken = isGithubSession ? session?.provider_token : null;
+  const sessionProviderToken = isGithubSession ? session?.provider_token : null;
+  
+  const [providerToken, setProviderToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (sessionProviderToken) {
+      setProviderToken(sessionProviderToken);
+      sessionStorage.setItem('github_provider_token', sessionProviderToken);
+      return;
+    }
+    
+    // Extract from URL hash after linkIdentity redirect
+    const hash = window.location.hash;
+    if (hash && hash.includes('provider_token=')) {
+      // Supabase hash is formatted like #access_token=...&provider_token=...
+      const params = new URLSearchParams(hash.substring(1));
+      const token = params.get('provider_token');
+      if (token) {
+        setProviderToken(token);
+        sessionStorage.setItem('github_provider_token', token);
+        // Optionally clean up URL
+        window.history.replaceState(null, '', window.location.pathname);
+        return;
+      }
+    }
+
+    // Fallback to session storage
+    const stored = sessionStorage.getItem('github_provider_token');
+    if (stored) {
+      setProviderToken(stored);
+    }
+  }, [sessionProviderToken]);
 
   // Environment Variables States
   const [envVars, setEnvVars] = useState<{id: string, key: string, value: string}[]>([]);
