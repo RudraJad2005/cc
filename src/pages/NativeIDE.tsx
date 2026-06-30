@@ -183,7 +183,6 @@ export function NativeIDE() {
             console.log('Server ready on', url);
             setPreviewUrl(url);
           });
-        }
         
 
           
