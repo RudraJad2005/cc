@@ -203,31 +203,35 @@ export function ProjectSettings() {
       
       // Auto-setup webhook on GitHub via Backend
       const { data: sessionData } = await supabase.auth.getSession();
-      const providerToken = sessionData?.session?.provider_token;
+      // Use our React state providerToken that was extracted from the hash, fallback to session
+      const currentProviderToken = providerToken || sessionData?.session?.provider_token;
       
-      if (providerToken) {
-        // Use same base domain as WS, fallback to localhost:5000
+      if (currentProviderToken) {
+        // Use HTTP for the IP-based domain since we don't have SSL configured on the backend
         const backendUrl = import.meta.env.VITE_WS_URL 
-          ? import.meta.env.VITE_WS_URL.replace('ws://', 'http://').replace('wss://', 'https://')
+          ? import.meta.env.VITE_WS_URL.replace('ws://', 'http://').replace('wss://', 'http://')
           : 'http://localhost:5000';
           
-        const setupRes = await fetch(`${backendUrl}/v1/deployments/github/webhook/setup`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${sessionData.session?.access_token}`
-          },
-          body: JSON.stringify({
-            providerToken,
-            repoFullName: repo
-          })
-        });
+        try {
+          const setupRes = await fetch(`${backendUrl}/v1/deployments/github/webhook/setup`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${sessionData.session?.access_token}`
+            },
+            body: JSON.stringify({
+              providerToken: currentProviderToken,
+              repoFullName: repo
+            })
+          });
 
-        if (!setupRes.ok) {
-          const errData = await setupRes.json();
-          console.error('Failed to setup GitHub webhook:', errData);
-          // We can choose to fail the linking if webhook setup fails, 
-          // or just log it and proceed. Let's proceed.
+          if (!setupRes.ok) {
+            const errData = await setupRes.json();
+            console.error('Failed to setup GitHub webhook:', errData);
+          }
+        } catch (fetchErr) {
+          console.error('Failed to contact backend for webhook setup:', fetchErr);
+          // Proceed with saving to Supabase even if webhook setup fails
         }
       }
 
