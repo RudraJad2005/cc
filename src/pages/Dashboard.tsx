@@ -94,9 +94,17 @@ export function Dashboard() {
                     </div>
                     <h3 className="text-lg font-medium text-white mb-2">No projects yet</h3>
                     <p className="text-sm text-gray-400 text-center max-w-sm mb-6">Get started by creating your first project or importing an existing repository.</p>
-                    <Link to="/dashboard/new" className="bg-white text-black px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-                       Create Project
-                    </Link>
+                    <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-md justify-center">
+                       <Link to="/dashboard/new" className="bg-white text-black px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.1)] flex items-center gap-2">
+                          <Plus className="w-4 h-4" /> Create Empty
+                       </Link>
+                       <Link to="/dashboard/new" className="bg-[#111] border border-white/[0.1] hover:bg-[#1a1a1a] text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+                          <Github className="w-4 h-4" /> Import GitHub
+                       </Link>
+                       <button onClick={() => alert('ZIP import coming soon!')} className="bg-[#111] border border-white/[0.1] hover:bg-[#1a1a1a] text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+                          <Upload className="w-4 h-4" /> Import ZIP
+                       </button>
+                    </div>
                  </div>
               ) : (
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
