@@ -14,6 +14,10 @@ export function DashboardImportProject() {
   const [name, setName] = useState('');
   const [file, setFile] = useState<File | null>(null);
   
+  // GitHub Import State
+  const [importType, setImportType] = useState<'zip' | 'github'>('github');
+  const [githubUrl, setGithubUrl] = useState('');
+  
   const [logs, setLogs] = useState<string[]>([]);
   const logsEndRef = useRef<HTMLDivElement>(null);
   const [deployStatus, setDeployStatus] = useState<'idle' | 'uploading' | 'queued' | 'building' | 'ready' | 'error'>('idle');
@@ -28,15 +32,43 @@ export function DashboardImportProject() {
     }
   }, [logs]);
 
-  const handleAnalyze = (e: React.FormEvent) => {
+  const handleAnalyze = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !file) {
-      setErrorMsg('Please provide a project name and upload a ZIP file.');
+    if (!name) {
+      setErrorMsg('Please provide a project name.');
       return;
     }
-    
+
+    if (importType === 'zip' && !file) {
+      setErrorMsg('Please upload a ZIP file.');
+      return;
+    }
+
     setErrorMsg('');
     setAnalysisPhase('scanning');
+
+    if (importType === 'github') {
+      try {
+        let repo = githubUrl.trim();
+        if (repo.includes('github.com/')) {
+          repo = repo.split('github.com/')[1].replace('.git', '');
+        }
+        
+        // Use default branch (GitHub redirects this properly)
+        const zipUrl = `https://api.github.com/repos/${repo}/zipball`;
+        
+        const res = await fetch(zipUrl);
+        if (!res.ok) throw new Error('Repository not found or not public.');
+        
+        const blob = await res.blob();
+        const downloadedFile = new File([blob], `${repo.split('/')[1] || 'repo'}.zip`, { type: 'application/zip' });
+        setFile(downloadedFile);
+      } catch (err: any) {
+        setErrorMsg(err.message || 'Failed to fetch repository from GitHub.');
+        setAnalysisPhase('idle');
+        return;
+      }
+    }
     
     // Simulate 2.5 second scan
     setTimeout(() => {
@@ -170,7 +202,23 @@ export function DashboardImportProject() {
            <form onSubmit={handleAnalyze} className="bg-[#050505] border border-white/[0.08] rounded-2xl p-6 sm:p-8 flex flex-col gap-6 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
               <h2 className="text-lg font-medium text-white mb-2">Select Source</h2>
-              
+              <div className="flex bg-[#020202] border border-white/[0.1] rounded-lg p-1 w-fit mb-4">
+                <button 
+                  type="button"
+                  onClick={() => setImportType('github')}
+                  className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${importType === 'github' ? 'bg-white/[0.1] text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                  GitHub URL
+                </button>
+                <button 
+                  type="button"
+                  onClick={() => setImportType('zip')}
+                  className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${importType === 'zip' ? 'bg-white/[0.1] text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                  Upload ZIP
+                </button>
+              </div>
+
               <div className="flex flex-col gap-2">
                  <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
                     <FolderPlus className="w-4 h-4" /> Project Name
@@ -185,21 +233,38 @@ export function DashboardImportProject() {
                  />
               </div>
 
-              <div className="flex flex-col gap-2">
-                 <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                    <Upload className="w-4 h-4" /> Source Code (.zip)
-                 </label>
-                 <input 
-                    type="file" 
-                    accept=".zip"
-                    onChange={e => setFile(e.target.files?.[0] || null)}
-                    required
-                    className="bg-[#020202] border border-white/[0.1] rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white/[0.3] transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-500/10 file:text-blue-500 hover:file:bg-blue-500/20"
-                 />
-              </div>
+              {importType === 'zip' ? (
+                <div className="flex flex-col gap-2">
+                   <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                      <Upload className="w-4 h-4" /> Source Code (.zip)
+                   </label>
+                   <input 
+                      type="file" 
+                      accept=".zip"
+                      onChange={e => setFile(e.target.files?.[0] || null)}
+                      required
+                      className="bg-[#020202] border border-white/[0.1] rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white/[0.3] transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-500/10 file:text-blue-500 hover:file:bg-blue-500/20"
+                   />
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                   <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-white"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.298 24 12c0-6.627-5.373-12-12-12"/></svg>
+                      Repository URL
+                   </label>
+                   <input 
+                      type="text" 
+                      value={githubUrl}
+                      onChange={e => setGithubUrl(e.target.value)}
+                      placeholder="e.g. RudraJad2005/startup or https://github.com/..."
+                      required
+                      className="bg-[#020202] border border-white/[0.1] rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white/[0.3] transition-colors"
+                   />
+                </div>
+              )}
 
               <div className="flex justify-end pt-4">
-                <button type="submit" disabled={!name || !file} className="bg-white text-black px-6 py-2.5 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center gap-2 disabled:opacity-50">
+                <button type="submit" disabled={!name || (importType === 'zip' && !file) || (importType === 'github' && !githubUrl)} className="bg-white text-black px-6 py-2.5 rounded-lg font-medium hover:bg-gray-200 transition-colors flex items-center gap-2 disabled:opacity-50">
                   <Activity className="w-4 h-4" /> Analyze Repository
                 </button>
               </div>
