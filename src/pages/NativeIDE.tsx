@@ -198,8 +198,15 @@ export function NativeIDE() {
             console.log("Loading file system from Supabase...");
             await instance.mount(data.file_system);
           } else if (ownerStatus) {
-            console.log("Loading default template...");
-            await instance.mount(getTemplate(data?.framework || 'react'));
+            if (data?.framework === 'Imported' || data?.framework === 'Static') {
+              console.log("Waiting for backend to populate imported file system...");
+              // We shouldn't load a default template here, it will overwrite the repo!
+              // Instead, we just wait. The backend will push the files shortly.
+              setError("Still fetching repository files. Please refresh in a few seconds.");
+            } else {
+              console.log("Loading default template...");
+              await instance.mount(getTemplate(data?.framework || 'react'));
+            }
           } else {
             console.log("Guest mode. Waiting for Host to sync file system...");
           }
