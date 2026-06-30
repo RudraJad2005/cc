@@ -171,18 +171,12 @@ export function NativeIDE() {
         }
 
         let instance;
-        const dockerFrameworks = ['python', 'pandas', 'tensorflow', 'pytorch', 'scikit-learn', 'jupyter', 'langchain', 'openai', 'django', 'flask', 'fastapi'];
-        if (data?.framework && dockerFrameworks.includes(data.framework.toLowerCase())) {
-          console.log("Booting Azure Docker OS...");
-          const { data: sessionData } = await supabase.auth.getSession();
-          const token = sessionData?.session?.access_token || '';
-          instance = new DockerContainer(projectId, token);
-        } else {
-          if (!bootPromise) {
-            console.log("Booting WebContainer OS...");
-            bootPromise = WebContainer.boot();
-          }
-          instance = await bootPromise;
+        // Always boot WebContainer OS so the file system works in the browser
+        if (!bootPromise) {
+          console.log("Booting WebContainer OS...");
+          bootPromise = WebContainer.boot();
+        }
+        instance = await bootPromise;
           
           // Listen for the dev server (WebContainer only)
           instance.on('server-ready', (port: number, url: string) => {
