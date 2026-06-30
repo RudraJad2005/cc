@@ -37,7 +37,9 @@ export function ProjectSettings() {
   const [showRepoDropdown, setShowRepoDropdown] = useState(false);
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   
-  const providerToken = session?.provider_token;
+  // Only use the provider token if the user signed in with GitHub
+  const isGithubSession = session?.user?.app_metadata?.provider === 'github';
+  const providerToken = isGithubSession ? session?.provider_token : null;
 
   // Environment Variables States
   const [envVars, setEnvVars] = useState<{id: string, key: string, value: string}[]>([]);
