@@ -39,7 +39,9 @@ export function ProjectOverview() {
       if (data) {
         if (data.user_id) {
           const { data: authData } = await supabase.auth.admin?.getUserById(data.user_id) || { data: { user: null } };
-          setProjectOwner(authData?.user?.email || 'RudraJad2005');
+          setProjectOwner(authData?.user?.email || 'Unknown Owner');
+        } else {
+          setProjectOwner('Unknown Owner');
         }
 
         if (data.framework) setFramework(data.framework);

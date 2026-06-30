@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 export function Settings() {
   const [activeTab, setActiveTab] = useState('general');
+  const { user } = useAuth();
 
   const tabs = [
     { id: 'general', name: 'General', icon: <User className="w-4 h-4" /> },
@@ -53,7 +54,7 @@ export function Settings() {
                      <div className="flex flex-col gap-4">
                         <input 
                            type="text" 
-                           defaultValue="RudraJad2005"
+                           defaultValue={user?.email?.split('@')[0] || 'User Workspace'}
                            className="w-full max-w-md bg-[#050505] border border-white/[0.1] rounded-md px-4 py-2 text-sm text-white focus:outline-none focus:border-white/[0.3] transition-colors"
                         />
                         <button className="w-fit bg-white text-black px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors">

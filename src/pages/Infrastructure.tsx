@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 import { Cpu, Lock, Terminal, Zap, Code2, Rocket, Database, HardDrive, Share2, Globe, Github, ChevronRight } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 export function Infrastructure() {
+  const { user } = useAuth();
   return (
     <div className="flex flex-col w-full relative bg-black font-sans text-white selection:bg-white/30">
       
@@ -175,7 +177,7 @@ export function Infrastructure() {
                 <div className="flex items-center gap-3">
                    <div className="w-8 h-8 rounded-full bg-[#111] flex items-center justify-center border border-white/[0.1]"><Github className="w-4 h-4 text-white"/></div>
                    <div>
-                      <div className="text-white text-sm font-medium">RudraJad2005/startup</div>
+                      <div className="text-white text-sm font-medium">{user?.email?.split('@')[0] || 'User'}/startup</div>
                       <div className="text-[#666] text-xs">Connected to main</div>
                    </div>
                 </div>

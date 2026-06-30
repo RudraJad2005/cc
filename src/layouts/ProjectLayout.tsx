@@ -7,10 +7,12 @@ import {
 } from 'lucide-react';
 import { NotificationInbox } from '../components/NotificationInbox';
 import { DashboardSidebar } from './DashboardLayout';
+import { useAuth } from '../contexts/AuthContext';
 
 export function ProjectLayout() {
   const { projectId } = useParams();
   const location = useLocation();
+  const { user } = useAuth();
 
   type NavItem = { name?: string; path?: string; exact?: boolean; icon?: React.ReactNode; type?: string; badge?: string };
   const navItems: NavItem[] = [
@@ -41,7 +43,9 @@ export function ProjectLayout() {
            <Link to="/dashboard" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 shrink-0 border border-white/[0.1]"></div>
               <div className="flex flex-col min-w-0">
-                 <span className="text-sm font-medium text-white leading-tight flex items-center gap-1">rudrajad2005 <ChevronDown className="w-3 h-3" /></span>
+                 <span className="text-sm font-medium text-white leading-tight flex items-center gap-1">
+                    {user?.email?.split('@')[0] || 'User'} <ChevronDown className="w-3 h-3" />
+                 </span>
                  <span className="text-[10px] text-gray-500 font-mono truncate">{projectId}</span>
               </div>
            </Link>

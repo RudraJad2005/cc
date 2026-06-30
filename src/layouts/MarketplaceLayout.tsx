@@ -1,8 +1,10 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { ChevronLeft, Search } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 export function MarketplaceLayout() {
   const location = useLocation();
+  const { user } = useAuth();
   
   const categories = [
     'AI Agents & Services', 'AI', 'Analytics', 'Authentication', 
@@ -21,7 +23,7 @@ export function MarketplaceLayout() {
         <div className="p-4 border-b border-white/[0.08] flex items-center gap-3">
            <Link to="/dashboard" className="flex items-center gap-2 hover:bg-white/[0.05] p-1.5 rounded-md transition-colors text-sm text-gray-300">
               <div className="w-5 h-5 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 shrink-0"></div>
-              rudrajad2005's...
+              {user?.email?.split('@')[0] || 'User'}'s...
            </Link>
         </div>
 
@@ -73,7 +75,7 @@ export function MarketplaceLayout() {
         <div className="p-4 border-t border-white/[0.08] bg-[#020202]">
           <Link to="/dashboard" className="flex items-center gap-3 hover:bg-white/[0.05] p-2 rounded-md transition-colors text-sm">
              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 shrink-0"></div>
-             rudrajad2005
+             {user?.email?.split('@')[0] || 'User'}
           </Link>
         </div>
       </aside>
