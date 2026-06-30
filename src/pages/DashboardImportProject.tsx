@@ -44,32 +44,14 @@ export function DashboardImportProject() {
       return;
     }
 
+    if (importType === 'github' && !githubUrl) {
+      setErrorMsg('Please provide a GitHub URL.');
+      return;
+    }
+
     setErrorMsg('');
     setAnalysisPhase('scanning');
 
-    if (importType === 'github') {
-      try {
-        let repo = githubUrl.trim();
-        if (repo.includes('github.com/')) {
-          repo = repo.split('github.com/')[1].replace('.git', '');
-        }
-        
-        // Use default branch (GitHub redirects this properly)
-        const zipUrl = `https://api.github.com/repos/${repo}/zipball`;
-        
-        const res = await fetch(zipUrl);
-        if (!res.ok) throw new Error('Repository not found or not public.');
-        
-        const blob = await res.blob();
-        const downloadedFile = new File([blob], `${repo.split('/')[1] || 'repo'}.zip`, { type: 'application/zip' });
-        setFile(downloadedFile);
-      } catch (err: any) {
-        setErrorMsg(err.message || 'Failed to fetch repository from GitHub.');
-        setAnalysisPhase('idle');
-        return;
-      }
-    }
-    
     // Simulate 2.5 second scan
     setTimeout(() => {
       setAnalysisPhase('complete');
@@ -77,7 +59,9 @@ export function DashboardImportProject() {
   };
 
   const handleDeploy = async () => {
-    if (!user || !file) return;
+    if (!user) return;
+    if (importType === 'zip' && !file) return;
+    if (importType === 'github' && !githubUrl) return;
 
     setLoading(true);
     setErrorMsg('');
@@ -115,8 +99,17 @@ export function DashboardImportProject() {
 
     // 3. Prepare FormData
     const formData = new FormData();
-    formData.append('file', file);
     formData.append('projectName', name);
+    
+    if (importType === 'zip' && file) {
+      formData.append('file', file);
+    } else if (importType === 'github' && githubUrl) {
+      let repo = githubUrl.trim();
+      if (repo.includes('github.com/')) {
+        repo = repo.split('github.com/')[1].replace('.git', '');
+      }
+      formData.append('githubUrl', `https://api.github.com/repos/${repo}/zipball`);
+    }
 
     // 4. Send to Azure VM API and Stream Logs
     try {
