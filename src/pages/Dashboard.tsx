@@ -98,7 +98,7 @@ export function Dashboard() {
                        <Link to="/dashboard/new" className="bg-white text-black px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.1)] flex items-center gap-2">
                           <Plus className="w-4 h-4" /> Create Empty
                        </Link>
-                       <Link to="/dashboard/new" className="bg-[#111] border border-white/[0.1] hover:bg-[#1a1a1a] text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
+                       <Link to="/dashboard/import" className="bg-[#111] border border-white/[0.1] hover:bg-[#1a1a1a] text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
                           <Github className="w-4 h-4" /> Import GitHub
                        </Link>
                        <button onClick={() => alert('ZIP import coming soon!')} className="bg-[#111] border border-white/[0.1] hover:bg-[#1a1a1a] text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-2">
